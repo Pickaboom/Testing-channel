@@ -1,0 +1,2549 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Staff Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0b0f0c;
+            --bg-2: #111712;
+            --panel: #171f19;
+            --panel-2: #1d2821;
+            --panel-3: #243128;
+            --stroke: rgba(255,255,255,.08);
+            --stroke-2: rgba(255,255,255,.14);
+            --text: #eef6ef;
+            --muted: #a7b5aa;
+            --brand: #f5c04f;
+            --brand-2: #d9a631;
+            --green: #32d583;
+            --green-2: #1f7a52;
+            --yellow: #f5c04f;
+            --yellow-2: #8d6a1b;
+            --red: #ef6262;
+            --dayPast: #4a1e1e;
+            --dayPast2: #6d2929;
+            --shadow: 0 18px 50px rgba(0,0,0,.28);
+            --radius: 18px;
+            --radius-sm: 14px;
+            --brand-banner: url("file:///C:/Users/levit/OneDrive/Desktop/221.png");
+            --brand-logo: url("file:///C:/Users/levit/OneDrive/Desktop/asda.png");
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, system-ui, Arial, sans-serif;
+            background: radial-gradient(1000px 520px at 10% -10%, rgba(245,192,79,.13), transparent 58%), radial-gradient(900px 500px at 100% 0%, rgba(50,213,131,.10), transparent 55%), linear-gradient(180deg, #0b0f0c 0%, #101611 100%);
+            color: var(--text);
+        }
+
+        body {
+            padding: 18px 18px 140px;
+        }
+
+        .wrap {
+            width: min(1720px, 100%);
+            margin: 0 auto;
+        }
+
+        .hero {
+            position: relative;
+            border: 1px solid var(--stroke);
+            border-radius: 28px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(245,192,79,.18), rgba(50,213,131,.10)), var(--bg-2);
+            min-height: 180px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+        }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(8,12,10,.52), rgba(8,12,10,.52)), var(--brand-banner);
+                background-size: cover;
+                background-position: center;
+                opacity: .42;
+                pointer-events: none;
+            }
+
+        .heroInner {
+            position: relative;
+            z-index: 1;
+            padding: 28px 28px 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .brandLogo {
+            width: 76px;
+            height: 76px;
+            border-radius: 20px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(255,255,255,.12);
+            background: linear-gradient(135deg, rgba(245,192,79,.18), rgba(50,213,131,.18)), #18211b;
+            background-image: var(--brand-logo);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,.22);
+        }
+
+        .brandText h1 {
+            margin: 0;
+            font-size: clamp(28px, 5vw, 54px);
+            font-weight: 800;
+            line-height: 1.02;
+            letter-spacing: -.03em;
+        }
+
+        .brandText p {
+            margin: 10px 0 0;
+            font-size: 14px;
+            color: #d7e2d7;
+            max-width: 760px;
+            line-height: 1.5;
+        }
+
+        .heroRight {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .topUser {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .topAvatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,.12);
+            display: none;
+            background: #223028;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 38px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.05);
+            font-size: 12px;
+            color: var(--text);
+        }
+
+            .pill b {
+                font-weight: 800;
+            }
+
+        .menuButtons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 40px; /* space below buttons */
+            gap: 15px;
+        }
+
+        .menuCardBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 52px;
+            padding: 0 18px;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 16px;
+            background: linear-gradient(180deg, #1a241d, #151d18);
+            color: var(--text);
+            cursor: pointer;
+            text-align: center;
+            font: inherit;
+            font-weight: 700;
+            transition: .18s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,.18);
+        }
+
+            .menuCardBtn:hover {
+                transform: translateY(-2px);
+                border-color: rgba(245,192,79,.28);
+                background: linear-gradient(180deg, #202b23, #18211b);
+            }
+
+        .btn {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,.10);
+            background: #1b241d;
+            color: var(--text);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 11px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .15s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px);
+                border-color: rgba(255,255,255,.18);
+                background: #222d25;
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .btn.small {
+                padding: 9px 12px;
+                border-radius: 12px;
+                font-size: 12px;
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg, #f5c04f, #d9a631);
+                border-color: rgba(245,192,79,.26);
+                color: #16120a;
+            }
+
+                .btn.primary:hover {
+                    background: linear-gradient(135deg, #f7c75f, #dfaf3c);
+                }
+
+            .btn.ok {
+                background: #1b5b40;
+                border-color: rgba(50,213,131,.26);
+            }
+
+                .btn.ok:hover {
+                    background: #216c4d;
+                }
+
+            .btn.warn {
+                background: #6b5319;
+                border-color: rgba(245,192,79,.24);
+            }
+
+                .btn.warn:hover {
+                    background: #7a601c;
+                }
+
+            .btn.danger {
+                background: #612936;
+                border-color: rgba(239,98,98,.24);
+            }
+
+                .btn.danger:hover {
+                    background: #75303f;
+                }
+
+            .btn.ghost {
+                background: rgba(255,255,255,.04);
+            }
+
+        .actionsRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .mainGrid {
+            display: grid;
+            grid-template-columns: minmax(0, 2.2fr) minmax(360px, .95fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .panel {
+            border: 1px solid var(--stroke);
+            border-radius: 24px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #161f19, #121913);
+            box-shadow: var(--shadow);
+        }
+
+        .calendarTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            flex-wrap: wrap;
+        }
+
+        .calendarTopLeft {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .monthTitle {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-left: 6px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            padding: 18px 20px 10px;
+        }
+
+            .weekdays div {
+                text-align: center;
+                font-size: 15px;
+                font-weight: 700;
+                color: #d7e3d7;
+                padding: 6px 4px 0;
+                letter-spacing: -.01em;
+            }
+
+        .calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            padding: 8px 20px 20px;
+        }
+
+        .day {
+            min-height: 160px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.10);
+            background: linear-gradient(180deg, #243127, #1c261e);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: .15s ease;
+            position: relative;
+        }
+
+            .day:hover {
+                transform: translateY(-2px);
+                border-color: rgba(245,192,79,.22);
+            }
+
+            .day.muted {
+                opacity: .42;
+            }
+
+            .day.selected {
+                outline: 2px solid rgba(245,192,79,.85);
+                outline-offset: -2px;
+            }
+
+            .day.past {
+                background: linear-gradient(180deg, var(--dayPast2), var(--dayPast));
+            }
+
+            .day.today {
+                box-shadow: inset 0 0 0 2px rgba(245,192,79,.35);
+            }
+
+        .dayTopBar {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 12px;
+            background: rgba(6,9,7,.34);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        .dayDate {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+        }
+
+        .dayIcon {
+            font-size: 12px;
+            color: #f8f2de;
+            opacity: .9;
+        }
+
+        .dayBody {
+            flex: 1;
+            padding: 10px 12px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+
+        .miniTime {
+            font-size: 12px;
+            font-weight: 800;
+            color: #f5c04f;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+        }
+
+        .miniItem {
+            font-size: 13px;
+            line-height: 1.24;
+            color: #f4f8f4;
+            font-weight: 700;
+        }
+
+        .miniMeta {
+            font-size: 12px;
+            color: #d1ddd2;
+            margin-top: auto;
+            padding-top: 6px;
+        }
+
+        .hostPreviewRow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .sideHead {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+            .sideHead h2 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 800;
+                letter-spacing: -.01em;
+            }
+
+            .sideHead p {
+                margin: 8px 0 0;
+                font-size: 13px;
+                color: var(--muted);
+                line-height: 1.45;
+            }
+
+        .sideBody {
+            padding: 18px 20px 20px;
+        }
+
+        .infoBlock,
+        .detailCard,
+        .eventBlock,
+        .pickEntry,
+        .availabilityBlock,
+        .pfpBtn,
+        .infoBox {
+            background: #18211b;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+        }
+
+        .infoBlock {
+            padding: 16px;
+        }
+
+        .infoLabel {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .infoValue {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,.06);
+            margin: 18px 0;
+        }
+
+        .sectionTitle {
+            font-size: 13px;
+            font-weight: 800;
+            color: #dce7dc;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .detailList {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detailCard {
+            padding: 14px;
+        }
+
+        .detailCardTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+            .detailCardTop h4 {
+                margin: 0;
+                font-size: 15px;
+                font-weight: 800;
+            }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.04);
+        }
+
+            .badge.brand {
+                background: rgba(245,192,79,.10);
+                border-color: rgba(245,192,79,.22);
+                color: #f8ddb0;
+            }
+
+            .badge.ok {
+                background: rgba(50,213,131,.10);
+                border-color: rgba(50,213,131,.22);
+            }
+
+            .badge.warn {
+                background: rgba(245,192,79,.08);
+                border-color: rgba(245,192,79,.18);
+            }
+
+        .emptyState {
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px dashed rgba(255,255,255,.10);
+            color: var(--muted);
+            font-size: 13px;
+            background: rgba(255,255,255,.02);
+        }
+
+        .eventBlock,
+        .pickEntry,
+        .availabilityBlock {
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .eventTitle {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 0 6px;
+        }
+
+        .metaText {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .pickEntry {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .pickEntryLeft {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .pickEntryName {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .pickEntryMeta {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+            word-break: break-word;
+        }
+
+        .pfpPickerBox {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .pfpGrid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pfpBtn {
+            padding: 12px;
+            cursor: pointer;
+            min-height: 52px;
+            transition: .15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+            .pfpBtn:hover {
+                background: #202b23;
+                border-color: rgba(255,255,255,.16);
+            }
+
+            .pfpBtn.active {
+                border-color: rgba(50,213,131,.36);
+                background: #1b3528;
+            }
+
+            .pfpBtn[aria-disabled="true"] {
+                opacity: .45;
+                cursor: not-allowed;
+            }
+
+        .pfpName {
+            min-width: 0;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .hostBar {
+            position: fixed;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            width: min(1180px, calc(100vw - 22px));
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 20px;
+            background: #131b15;
+            box-shadow: 0 14px 40px rgba(0,0,0,.35);
+            padding: 12px 14px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            z-index: 1500;
+        }
+
+        .hostBarLeft {
+            min-width: 170px;
+        }
+
+        .hostBarTitle {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .hostBarDate {
+            margin-top: 4px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .hostChips {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #1d2821;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+            .chip b {
+                font-size: 12px;
+            }
+
+        .hostBarRight {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .modalBackdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(5,10,7,.62);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999;
+        }
+
+        .modal {
+            width: min(560px, 100%);
+            background: #141c16;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 22px 65px rgba(0,0,0,.38);
+            max-height: calc(100vh - 36px);
+            overflow-y: auto;
+        }
+
+            .modal.slim {
+                width: min(500px, 100%);
+            }
+
+        .modalTop {
+            padding: 18px 18px 14px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+            .modalTop h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 800;
+            }
+
+            .modalTop p {
+                margin: 8px 0 0;
+                font-size: 13px;
+                color: var(--muted);
+                line-height: 1.45;
+            }
+
+        .modalBody {
+            padding: 16px 18px 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+            .field label {
+                font-size: 12px;
+                font-weight: 700;
+                color: #dce8dd;
+            }
+
+        input, textarea {
+            width: 100%;
+            font: inherit;
+            color: var(--text);
+            background: #1a241d;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 14px;
+            padding: 12px 13px;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+            input:focus, textarea:focus {
+                border-color: rgba(245,192,79,.45);
+            }
+
+        .modalActions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .authTabs, .settingsTabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .authTab, .settingsTab {
+            flex: 1;
+            text-align: center;
+            padding: 11px 12px;
+            border-radius: 14px;
+            background: #1a241d;
+            border: 1px solid rgba(255,255,255,.08);
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+            .authTab.active, .settingsTab.active {
+                background: #2a342c;
+                border-color: rgba(245,192,79,.24);
+            }
+
+        .settingsPanel {
+            display: none;
+        }
+
+            .settingsPanel.active {
+                display: block;
+            }
+
+        .infoBox {
+            padding: 12px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .avatarPreviewWrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .avatarPreview {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,.10);
+            background: #223028;
+        }
+
+        .tiny {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            max-width: min(700px, calc(100vw - 26px));
+            background: #131b15;
+            border: 1px solid rgba(255,255,255,.10);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 12px 16px;
+            font-size: 12px;
+            display: none;
+            z-index: 20000;
+            box-shadow: 0 14px 35px rgba(0,0,0,.30);
+        }
+
+        .editorMiniGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 1220px) {
+            .mainGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 860px) {
+            body {
+                padding: 12px 12px 150px;
+            }
+
+            .heroInner {
+                padding: 20px;
+            }
+
+            .brandLogo {
+                width: 60px;
+                height: 60px;
+                border-radius: 16px;
+            }
+
+            .brandText p {
+                font-size: 13px;
+            }
+
+            .weekdays div {
+                font-size: 13px;
+            }
+
+            .calGrid {
+                gap: 8px;
+                padding: 6px 12px 14px;
+            }
+
+            .weekdays {
+                gap: 8px;
+                padding: 14px 12px 8px;
+            }
+
+            .day {
+                min-height: 118px;
+            }
+
+            .dayTopBar {
+                min-height: 40px;
+                padding: 8px 9px;
+            }
+
+            .dayDate {
+                font-size: 12px;
+            }
+
+            .miniTime {
+                font-size: 10px;
+            }
+
+            .miniItem {
+                font-size: 11px;
+            }
+
+            .miniMeta {
+                font-size: 10px;
+            }
+
+            .pfpGrid {
+                grid-template-columns: repeat(2, minmax(0,1fr));
+            }
+
+            .hostBar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .hostBarLeft,
+            .hostBarRight {
+                min-width: 0;
+            }
+
+            .hostBarRight {
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .heroRight {
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .topUser,
+            .actionsRow {
+                justify-content: flex-start;
+            }
+
+            .weekdays div {
+                font-size: 11px;
+                padding-top: 6px;
+            }
+
+            .day {
+                min-height: 92px;
+            }
+
+            .dayBody {
+                padding: 8px;
+                gap: 5px;
+            }
+
+            .miniItem {
+                font-size: 10px;
+            }
+
+            .miniMeta {
+                font-size: 9px;
+            }
+
+            .authTabs, .settingsTabs {
+                flex-direction: column;
+            }
+
+            .editorMiniGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="hero">
+            <div class="heroInner">
+                <div class="brand">
+                    <div class="brandLogo"></div>
+                    <div class="brandText">
+                        <h1>Staff Calendar</h1>
+                        <p id="whoLine">Loading...</p>
+                    </div>
+                </div>
+
+                <div class="heroRight">
+                    <div class="topUser">
+                        <img id="topAvatar" class="topAvatar" alt="Profile">
+                        <div class="pill" id="rolePill" style="display:none;">Role: <b>STAFF</b></div>
+                    </div>
+
+                    <div class="actionsRow">
+                        <button class="btn ghost" id="btnSettings" style="display:none;">Settings</button>
+                        <button class="btn ghost" id="btnLogin" style="display:none;">Login</button>
+                        <button class="btn" id="btnLogout" style="display:none;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menuButtons">
+            <button class="menuCardBtn" onclick="window.location.href='tutorial.html'">
+                Open Tutorial (MUST DO FIRST)
+            </button>
+
+            <button class="menuCardBtn" onclick="window.location.href='techtree.html'">
+                Open Resources
+            </button>
+        </div>
+
+        <div class="mainGrid">
+            <div class="panel">
+                <div class="calendarTop">
+                    <div class="calendarTopLeft">
+                        <button class="btn small" id="prevMonth">◀</button>
+                        <button class="btn small" id="todayBtn">Today</button>
+                        <button class="btn small" id="nextMonth">▶</button>
+                        <div class="monthTitle" id="monthTitle">March 2026</div>
+                    </div>
+                    <div class="actionsRow">
+                        <span class="pill" id="viewHint">Click a day</span>
+                    </div>
+                </div>
+
+                <div class="weekdays">
+                    <div>Monday</div>
+                    <div>Tuesday</div>
+                    <div>Wednesday</div>
+                    <div>Thursday</div>
+                    <div>Friday</div>
+                    <div>Saturday</div>
+                    <div>Sunday</div>
+                </div>
+
+                <div class="calGrid" id="calGrid"></div>
+            </div>
+
+            <div class="panel">
+                <div class="sideHead">
+                    <div>
+                        <h2>Details</h2>
+                        <p id="sideSub">Staff: view only • Admin: manage calendar</p>
+                    </div>
+
+                    <div class="actionsRow">
+                        <button class="btn small" id="viewModeBtn" style="display:none;">View: OFF</button>
+                        <button class="btn small danger" id="clearAllBtn" style="display:none;">Clear ALL</button>
+                        <button class="btn small ok" id="addEventBtn" style="display:none;">+ Add event</button>
+                        <button class="btn small primary" id="addAvailBtn" style="display:none;">+ Add availability</button>
+                    </div>
+                </div>
+
+                <div class="sideBody">
+                    <div class="infoBlock">
+                        <div class="infoLabel">Selected date</div>
+                        <div class="infoValue" id="selectedDateText">None</div>
+                        <div class="tiny" id="selectedHint" style="margin-top:10px;">
+                            Staff can pick themselves. Admins can edit and remove anything.
+                        </div>
+                    </div>
+
+                    <div class="pfpPickerBox" id="pfpPickerBox">
+                        <div class="sectionTitle">Quick host picker</div>
+                        <div class="tiny">Uses names instead of profile images.</div>
+                        <div class="pfpGrid" id="pfpGrid"></div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="detailList" id="detailList"></div>
+
+                    <div class="divider"></div>
+
+                    <div class="actionsRow" style="justify-content:space-between;">
+                        <div class="tiny" id="storageNote">Syncing with Firebase...</div>
+                        <button class="btn small danger" id="resetBtn" style="display:none;">Reset local cache</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hostBar" id="hostBar">
+        <div class="hostBarLeft">
+            <div class="hostBarTitle">Hosting on</div>
+            <div class="hostBarDate" id="hostBarDate"></div>
+        </div>
+        <div class="hostChips" id="hostChips"></div>
+        <div class="hostBarRight">
+            <button class="btn small" id="clearMyPickBtn" style="display:none;">Remove my pick</button>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="authBackdrop">
+        <div class="modal slim" role="dialog" aria-modal="true">
+            <div class="modalTop">
+                <h3>Account</h3>
+                <p>Create an account or log in.</p>
+            </div>
+            <div class="modalBody">
+                <div class="authTabs">
+                    <div class="authTab active" id="tabLogin">Login</div>
+                    <div class="authTab" id="tabRegister">Register</div>
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input id="authEmail" type="email" placeholder="name@email.com" autocomplete="email">
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
+                </div>
+
+                <div class="field" id="confirmField" style="display:none;">
+                    <label>Confirm password</label>
+                    <input id="authPassword2" type="password" placeholder="Confirm password" autocomplete="new-password">
+                </div>
+
+                <div class="tiny">Admins still need their role set in Firestore.</div>
+
+                <div class="modalActions">
+                    <button class="btn" id="authClose" type="button">Close</button>
+                    <button class="btn primary" id="authGo" type="button">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="settingsBackdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modalTop">
+                <h3>Settings</h3>
+                <p>Update your profile and account details.</p>
+            </div>
+            <div class="modalBody">
+                <div class="settingsTabs">
+                    <div class="settingsTab active" id="settingsProfileTab">Profile</div>
+                    <div class="settingsTab" id="settingsAccountTab">Account</div>
+                </div>
+
+                <div class="settingsPanel active" id="settingsProfilePanel">
+                    <div class="field">
+                        <label>Display name</label>
+                        <input id="profileName" maxlength="24" placeholder="e.g. Nugg">
+                    </div>
+
+                    <div class="field">
+                        <label>Profile picture</label>
+                        <div class="avatarPreviewWrap">
+                            <img id="profilePreview" class="avatarPreview" alt="Preview">
+                            <div class="actionsRow">
+                                <input id="profileFile" type="file" accept="image/*" style="max-width:240px;">
+                                <button class="btn small" id="removeProfilePic" type="button">Use default</button>
+                            </div>
+                        </div>
+                        <div class="tiny">Profile image is optional, but host picks now use names.</div>
+                    </div>
+
+                    <div class="modalActions">
+                        <button class="btn primary" id="saveProfileBtn" type="button">Save profile</button>
+                    </div>
+                </div>
+
+                <div class="settingsPanel" id="settingsAccountPanel">
+                    <div class="infoBox">
+                        To change your email or password, enter your current password first.
+                    </div>
+
+                    <div class="field">
+                        <label>Current email</label>
+                        <input id="accountCurrentEmail" type="email" disabled>
+                    </div>
+
+                    <div class="field">
+                        <label>New email</label>
+                        <input id="accountNewEmail" type="email" placeholder="Leave blank to keep current email">
+                    </div>
+
+                    <div class="field">
+                        <label>Current password</label>
+                        <input id="accountCurrentPassword" type="password" placeholder="Required for email/password changes">
+                    </div>
+
+                    <div class="field">
+                        <label>New password</label>
+                        <input id="accountNewPassword" type="password" placeholder="Leave blank to keep current password">
+                    </div>
+
+                    <div class="field">
+                        <label>Confirm new password</label>
+                        <input id="accountNewPassword2" type="password" placeholder="Confirm new password">
+                    </div>
+
+                    <div class="modalActions">
+                        <button class="btn warn" id="saveAccountBtn" type="button">Save account changes</button>
+                    </div>
+                </div>
+
+                <div class="modalActions">
+                    <button class="btn" id="settingsClose" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="dayBackdrop">
+        <div class="modal slim" role="dialog" aria-modal="true">
+            <div class="modalTop">
+                <h3 id="dayModalTitle"></h3>
+                <p id="dayModalSub"></p>
+            </div>
+            <div class="modalBody" id="dayModalBody"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut,
+            updateEmail,
+            updatePassword,
+            EmailAuthProvider,
+            reauthenticateWithCredential
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        import {
+            getFirestore,
+            collection,
+            doc,
+            setDoc,
+            getDoc,
+            getDocs,
+            deleteDoc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3PvEamzNh4_fYIRAG9YxfVDZyucBC2b4",
+            authDomain: "staff-calendar-b25d4.firebaseapp.com",
+            projectId: "staff-calendar-b25d4",
+            storageBucket: "staff-calendar-b25d4.firebasestorage.app",
+            messagingSenderId: "771150169498",
+            appId: "1:771150169498:web:707d19b860fff00572a623"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const KEY_EVENTS = "staffCal.events.v5";
+        const KEY_AVAIL = "staffCal.availability.v5";
+        const KEY_PICKS = "staffCal.hostPicks.v5";
+        const KEY_VIEWMODE = "staffCal.viewMode.v5";
+
+        const saveJSON = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+        const loadJSON = (key, fallback) => {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch {
+                return fallback;
+            }
+        };
+
+        let session = null;
+        let usersMap = new Map();
+        let hosts = [];
+        let events = loadJSON(KEY_EVENTS, []);
+        let avail = loadJSON(KEY_AVAIL, []);
+        let hostPicks = loadJSON(KEY_PICKS, []);
+        let viewMode = loadJSON(KEY_VIEWMODE, false);
+
+        let viewDate = new Date();
+        let selectedDate = null;
+        let pendingOpenDate = null;
+        let authMode = "login";
+        let profileImageData = null;
+        let unsubscribers = [];
+
+        const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
+        const pad2 = n => String(n).padStart(2, "0");
+        const toISODate = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        const fromISODate = s => {
+            const [y, m, d] = s.split("-").map(Number);
+            return new Date(y, m - 1, d);
+        };
+        const startOfMonth = d => new Date(d.getFullYear(), d.getMonth(), 1);
+        const monthLabel = d => d.toLocaleString(undefined, { month: "long", year: "numeric" });
+        const mondayIndex = jsDay => (jsDay + 6) % 7;
+
+        const prettyDate = iso => fromISODate(iso).toLocaleDateString(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+
+        const isPastDay = iso => {
+            const today = new Date();
+            const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            return fromISODate(iso) < t;
+        };
+
+        const isToday = iso => iso === toISODate(new Date());
+
+        const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[c]));
+
+        function toast(msg) {
+            const t = document.getElementById("toast");
+            t.textContent = msg;
+            t.style.display = "block";
+            clearTimeout(toast._tm);
+            toast._tm = setTimeout(() => t.style.display = "none", 2600);
+        }
+
+        function initialsFromName(name) {
+            const clean = String(name || "").trim();
+            if (!clean) return "U";
+            return clean
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(p => p[0]?.toUpperCase() || "")
+                .join("") || "U";
+        }
+
+        function defaultAvatarDataURL(name) {
+            const initials = initialsFromName(name);
+            const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                                <stop stop-color="#f5c04f"/>
+                                <stop offset="1" stop-color="#32d583"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="160" height="160" rx="34" fill="url(#g)"/>
+                        <text x="80" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#15120c">${initials}</text>
+                    </svg>
+                `;
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+        }
+
+        async function fileToAvatarDataURL(file) {
+            const img = await new Promise((resolve, reject) => {
+                const fr = new FileReader();
+                fr.onload = () => {
+                    const image = new Image();
+                    image.onload = () => resolve(image);
+                    image.onerror = reject;
+                    image.src = fr.result;
+                };
+                fr.onerror = reject;
+                fr.readAsDataURL(file);
+            });
+
+            const size = 180;
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext("2d");
+
+            const sw = img.width;
+            const sh = img.height;
+            const side = Math.min(sw, sh);
+            const sx = (sw - side) / 2;
+            const sy = (sh - side) / 2;
+
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+            return canvas.toDataURL("image/jpeg", 0.82);
+        }
+
+        const profilePhotoOrDefault = userLike =>
+            userLike?.photoURL || defaultAvatarDataURL(userLike?.name || userLike?.displayName || userLike?.email || "User");
+
+        const hostLabelFromUser = userLike =>
+            userLike?.name || (userLike?.email ? userLike.email.split("@")[0] : "User");
+
+        const hostLabelFromPick = pick =>
+            pick?.hostName || (pick?.email ? pick.email.split("@")[0] : "Host");
+
+        async function ensureUserDoc(firebaseUser) {
+            const ref = doc(db, "users", firebaseUser.uid);
+            const snap = await getDoc(ref);
+
+            if (!snap.exists()) {
+                const fallbackName = (firebaseUser.email || "User").split("@")[0];
+                await setDoc(ref, {
+                    name: fallbackName,
+                    email: firebaseUser.email || "",
+                    role: "staff",
+                    photoURL: "",
+                    createdAt: Date.now()
+                }, { merge: true });
+            }
+        }
+
+        async function loadSessionFromAuth(firebaseUser) {
+            if (!firebaseUser) {
+                session = null;
+                return;
+            }
+
+            await ensureUserDoc(firebaseUser);
+
+            const snap = await getDoc(doc(db, "users", firebaseUser.uid));
+            const data = snap.exists() ? snap.data() : {};
+
+            session = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email || "",
+                name: data.name || (firebaseUser.email || "User").split("@")[0],
+                role: data.role || "staff",
+                photoURL: data.photoURL || ""
+            };
+        }
+
+        const canClickHost = host => {
+            if (!session) return false;
+            if (session.role === "admin") return true;
+            return host.uid === session.uid;
+        };
+
+        const upsertEvent = ev => setDoc(doc(db, "events", ev.id), ev, { merge: true });
+        const removeEvent = id => deleteDoc(doc(db, "events", id));
+        const upsertAvail = a => setDoc(doc(db, "availability", a.id), a, { merge: true });
+        const removeAvail = id => deleteDoc(doc(db, "availability", id));
+
+        const pickDocId = (dateIso, hostUid) => `${dateIso}_${hostUid}`;
+
+        function setPick(dateIso, host) {
+            const id = pickDocId(dateIso, host.uid);
+            return setDoc(doc(db, "host_picks", id), {
+                id,
+                date: dateIso,
+                hostUid: host.uid,
+                hostName: host.name || (host.email ? host.email.split("@")[0] : "User"),
+                hostImg: "",
+                email: host.email || ""
+            }, { merge: true });
+        }
+
+        const removePick = (dateIso, hostUid) =>
+            deleteDoc(doc(db, "host_picks", pickDocId(dateIso, hostUid)));
+
+        async function clearPicksForDate(dateIso) {
+            const picks = hostPicks.filter(p => p.date === dateIso);
+            await Promise.all(picks.map(p => removePick(dateIso, p.hostUid)));
+        }
+
+        const picksForDate = dateIso => hostPicks.filter(p => p.date === dateIso);
+        const isPicked = (dateIso, hostUid) => hostPicks.some(p => p.date === dateIso && p.hostUid === hostUid);
+
+        const whoLine = document.getElementById("whoLine");
+        const topAvatar = document.getElementById("topAvatar");
+        const rolePill = document.getElementById("rolePill");
+        const btnSettings = document.getElementById("btnSettings");
+        const btnLogin = document.getElementById("btnLogin");
+        const btnLogout = document.getElementById("btnLogout");
+        const calGrid = document.getElementById("calGrid");
+        const monthTitle = document.getElementById("monthTitle");
+        const selectedDateText = document.getElementById("selectedDateText");
+        const detailList = document.getElementById("detailList");
+        const sideSub = document.getElementById("sideSub");
+        const addEventBtn = document.getElementById("addEventBtn");
+        const addAvailBtn = document.getElementById("addAvailBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const storageNote = document.getElementById("storageNote");
+        const viewModeBtn = document.getElementById("viewModeBtn");
+        const clearAllBtn = document.getElementById("clearAllBtn");
+        const pfpPickerBox = document.getElementById("pfpPickerBox");
+        const pfpGrid = document.getElementById("pfpGrid");
+        const hostBar = document.getElementById("hostBar");
+        const hostBarDate = document.getElementById("hostBarDate");
+        const hostChips = document.getElementById("hostChips");
+        const clearMyPickBtn = document.getElementById("clearMyPickBtn");
+
+        const authBackdrop = document.getElementById("authBackdrop");
+        const tabLogin = document.getElementById("tabLogin");
+        const tabRegister = document.getElementById("tabRegister");
+        const authEmail = document.getElementById("authEmail");
+        const authPassword = document.getElementById("authPassword");
+        const authPassword2 = document.getElementById("authPassword2");
+        const confirmField = document.getElementById("confirmField");
+        const authGo = document.getElementById("authGo");
+
+        const settingsBackdrop = document.getElementById("settingsBackdrop");
+        const settingsProfileTab = document.getElementById("settingsProfileTab");
+        const settingsAccountTab = document.getElementById("settingsAccountTab");
+        const settingsProfilePanel = document.getElementById("settingsProfilePanel");
+        const settingsAccountPanel = document.getElementById("settingsAccountPanel");
+        const profileName = document.getElementById("profileName");
+        const profileFile = document.getElementById("profileFile");
+        const profilePreview = document.getElementById("profilePreview");
+        const accountCurrentEmail = document.getElementById("accountCurrentEmail");
+        const accountNewEmail = document.getElementById("accountNewEmail");
+        const accountCurrentPassword = document.getElementById("accountCurrentPassword");
+        const accountNewPassword = document.getElementById("accountNewPassword");
+        const accountNewPassword2 = document.getElementById("accountNewPassword2");
+
+        const dayBackdrop = document.getElementById("dayBackdrop");
+        const dayModalTitle = document.getElementById("dayModalTitle");
+        const dayModalSub = document.getElementById("dayModalSub");
+        const dayModalBody = document.getElementById("dayModalBody");
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            const loginActive = mode === "login";
+            tabLogin.classList.toggle("active", loginActive);
+            tabRegister.classList.toggle("active", !loginActive);
+            confirmField.style.display = loginActive ? "none" : "block";
+            authGo.textContent = loginActive ? "Login" : "Register";
+        }
+
+        function openAuth() {
+            setAuthMode("login");
+            authBackdrop.style.display = "flex";
+        }
+
+        const closeAuth = () => authBackdrop.style.display = "none";
+
+        function setSettingsTab(tab) {
+            const profileActive = tab === "profile";
+            settingsProfileTab.classList.toggle("active", profileActive);
+            settingsAccountTab.classList.toggle("active", !profileActive);
+            settingsProfilePanel.classList.toggle("active", profileActive);
+            settingsAccountPanel.classList.toggle("active", !profileActive);
+        }
+
+        function openSettings() {
+            if (!session) return;
+            profileName.value = session.name || "";
+            profileImageData = session.photoURL || "";
+            profilePreview.src = profilePhotoOrDefault(session);
+            accountCurrentEmail.value = session.email || "";
+            accountNewEmail.value = "";
+            accountCurrentPassword.value = "";
+            accountNewPassword.value = "";
+            accountNewPassword2.value = "";
+            setSettingsTab("profile");
+            settingsBackdrop.style.display = "flex";
+        }
+
+        const closeSettings = () => settingsBackdrop.style.display = "none";
+
+        function renderTop() {
+            if (!session) {
+                whoLine.textContent = "Login required";
+                topAvatar.style.display = "none";
+                rolePill.style.display = "none";
+                btnSettings.style.display = "none";
+                btnLogin.style.display = "inline-block";
+                btnLogout.style.display = "none";
+                addEventBtn.style.display = "none";
+                addAvailBtn.style.display = "none";
+                resetBtn.style.display = "none";
+                viewModeBtn.style.display = "none";
+                clearAllBtn.style.display = "none";
+                sideSub.textContent = "Log in to view and manage the calendar";
+                return;
+            }
+
+            whoLine.textContent = `Logged in as ${session.name}`;
+            topAvatar.src = profilePhotoOrDefault(session);
+            topAvatar.style.display = "block";
+            rolePill.style.display = "inline-flex";
+            rolePill.innerHTML = `Role: <b>${escapeHTML(session.role.toUpperCase())}</b>`;
+            btnSettings.style.display = "inline-block";
+            btnLogin.style.display = "none";
+            btnLogout.style.display = "inline-block";
+            viewModeBtn.style.display = "inline-block";
+            viewModeBtn.textContent = "View: " + (viewMode ? "ON" : "OFF");
+
+            clearAllBtn.style.display = session.role === "admin" ? "inline-block" : "inline-block".replace("inline-block", "none");
+            resetBtn.style.display = session.role === "admin" ? "inline-block" : "none";
+            addEventBtn.style.display = (session.role === "admin" && !viewMode) ? "inline-block" : "none";
+            addAvailBtn.style.display = (session.role === "admin" && !viewMode) ? "inline-block" : "none";
+
+            sideSub.textContent = viewMode
+                ? "View mode: clicking days will not open editor"
+                : (session.role === "admin"
+                    ? "Admin: manage events, availability, and all picks"
+                    : "Staff: click dates and pick yourself as host");
+        }
+
+        function renderHostPicker() {
+            const show = !!session && !!selectedDate && !viewMode && hosts.length > 0;
+            pfpPickerBox.style.display = show ? "block" : "none";
+            if (!show) return;
+
+            pfpGrid.innerHTML = "";
+
+            hosts.forEach(host => {
+                const btn = document.createElement("div");
+                btn.className = "pfpBtn";
+                if (isPicked(selectedDate, host.uid)) btn.classList.add("active");
+
+                const allowed = canClickHost(host);
+                btn.setAttribute("aria-disabled", allowed ? "false" : "true");
+
+                btn.innerHTML = `<div class="pfpName">${escapeHTML(host.name || (host.email ? host.email.split("@")[0] : "User"))}</div>`;
+
+                btn.addEventListener("click", async e => {
+                    e.stopPropagation();
+
+                    if (!allowed) {
+                        toast("You can only pick your own profile");
+                        return;
+                    }
+
+                    try {
+                        if (isPicked(selectedDate, host.uid)) {
+                            await removePick(selectedDate, host.uid);
+                        } else {
+                            await setPick(selectedDate, host);
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not update host pick");
+                    }
+                });
+
+                pfpGrid.appendChild(btn);
+            });
+        }
+
+        function renderHostBar() {
+            if (!selectedDate) {
+                hostBar.style.display = "none";
+                return;
+            }
+
+            hostBar.style.display = "flex";
+            hostBarDate.textContent = prettyDate(selectedDate);
+
+            const picks = picksForDate(selectedDate).slice().sort((a, b) => hostLabelFromPick(a).localeCompare(hostLabelFromPick(b)));
+            hostChips.innerHTML = "";
+
+            if (!picks.length) {
+                const empty = document.createElement("div");
+                empty.className = "chip";
+                empty.innerHTML = `<b style="color:rgba(238,241,246,.78)">No hosts picked yet</b>`;
+                hostChips.appendChild(empty);
+            } else {
+                picks.forEach(p => {
+                    const chip = document.createElement("div");
+                    chip.className = "chip";
+                    chip.innerHTML = `<b>${escapeHTML(p.hostName || (p.email ? p.email.split("@")[0] : "Host"))}</b>`;
+                    hostChips.appendChild(chip);
+                });
+            }
+
+            clearMyPickBtn.style.display = session && isPicked(selectedDate, session.uid) ? "inline-flex" : "none";
+        }
+
+        function getDayHeaderLabel(cellDate) {
+            const mon = cellDate.toLocaleString(undefined, { month: "short" }).toUpperCase();
+            return `${mon} ${cellDate.getDate()}`;
+        }
+
+        function getDaySymbol({ dayEvents, dayAvail, dayPicks, iso }) {
+            if (isPastDay(iso)) return "⏺";
+            if (dayEvents.length) return "★";
+            if (dayPicks.length) return "👥";
+            if (dayAvail.length) return "•";
+            return "";
+        }
+
+        function renderCalendar() {
+            monthTitle.textContent = monthLabel(viewDate);
+            calGrid.innerHTML = "";
+
+            const first = startOfMonth(viewDate);
+            const lead = mondayIndex(first.getDay());
+            const startCellDate = new Date(first);
+            startCellDate.setDate(first.getDate() - lead);
+
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startCellDate);
+                cellDate.setDate(startCellDate.getDate() + i);
+                const iso = toISODate(cellDate);
+                const inMonth = cellDate.getMonth() === viewDate.getMonth();
+
+                const dayEvents = events.filter(e => e.date === iso);
+                const dayAvail = avail.filter(a => a.date === iso);
+                const dayPicks = hostPicks.filter(p => p.date === iso);
+
+                const div = document.createElement("div");
+                div.className = "day";
+                if (!inMonth) div.classList.add("muted");
+                if (selectedDate === iso) div.classList.add("selected");
+                if (isPastDay(iso)) div.classList.add("past");
+                if (isToday(iso)) div.classList.add("today");
+
+                const topBar = document.createElement("div");
+                topBar.className = "dayTopBar";
+
+                const dayDate = document.createElement("div");
+                dayDate.className = "dayDate";
+                dayDate.textContent = getDayHeaderLabel(cellDate);
+
+                const dayIcon = document.createElement("div");
+                dayIcon.className = "dayIcon";
+                dayIcon.textContent = getDaySymbol({ dayEvents, dayAvail, dayPicks, iso });
+
+                const body = document.createElement("div");
+                body.className = "dayBody";
+
+                topBar.append(dayDate, dayIcon);
+
+                if (dayEvents.length) {
+                    const ev = dayEvents[0];
+
+                    if (ev.time) {
+                        const time = document.createElement("div");
+                        time.className = "miniTime";
+                        time.textContent = ev.time;
+                        body.appendChild(time);
+                    }
+
+                    const title = document.createElement("div");
+                    title.className = "miniItem";
+                    title.textContent = ev.title;
+                    body.appendChild(title);
+
+                    const meta = document.createElement("div");
+                    meta.className = "miniMeta";
+                    meta.textContent = ev.note || (ev.host ? `with ${ev.host}` : "");
+                    body.appendChild(meta);
+                } else if (dayAvail.length) {
+                    const txt = document.createElement("div");
+                    txt.className = "miniItem";
+                    txt.textContent = `${dayAvail.length} availability added`;
+                    body.appendChild(txt);
+                } else if (dayPicks.length) {
+                    const txt = document.createElement("div");
+                    txt.className = "miniItem";
+                    txt.textContent = `${dayPicks.length} host pick${dayPicks.length === 1 ? "" : "s"}`;
+                    body.appendChild(txt);
+                }
+
+                if (dayPicks.length) {
+                    const hostPreviewRow = document.createElement("div");
+                    hostPreviewRow.className = "hostPreviewRow";
+
+                    dayPicks.slice(0, 3).forEach(p => {
+                        const nameTag = document.createElement("div");
+                        nameTag.className = "badge ok";
+                        nameTag.textContent = p.hostName || (p.email ? p.email.split("@")[0] : "Host");
+                        hostPreviewRow.appendChild(nameTag);
+                    });
+
+                    if (dayPicks.length > 3) {
+                        const extra = document.createElement("div");
+                        extra.className = "miniMeta";
+                        extra.textContent = `+${dayPicks.length - 3}`;
+                        hostPreviewRow.appendChild(extra);
+                    }
+
+                    body.appendChild(hostPreviewRow);
+                }
+
+                if (!dayEvents.length && !dayAvail.length && !dayPicks.length) {
+                    const spacer = document.createElement("div");
+                    spacer.className = "miniMeta";
+                    spacer.textContent = isPastDay(iso) ? "Past day" : "";
+                    body.appendChild(spacer);
+                }
+
+                div.append(topBar, body);
+
+                div.addEventListener("click", () => {
+                    selectedDate = iso;
+                    renderCalendar();
+                    renderDetails();
+                    renderHostPicker();
+                    renderHostBar();
+
+                    if (viewMode) return;
+
+                    if (!session) {
+                        pendingOpenDate = iso;
+                        openAuth();
+                        return;
+                    }
+
+                    if (session.role !== "admin") return;
+                    openDayModal(iso);
+                });
+
+                calGrid.appendChild(div);
+            }
+        }
+
+        function renderDetails() {
+            selectedDateText.textContent = selectedDate ? prettyDate(selectedDate) : "None";
+            detailList.innerHTML = "";
+            renderHostBar();
+            renderHostPicker();
+
+            if (!session) {
+                detailList.innerHTML = `<div class="emptyState">Login required. Create an account or log in to use the calendar.</div>`;
+                return;
+            }
+
+            if (!selectedDate) {
+                detailList.innerHTML = `<div class="emptyState">Pick a date to view events, picks, and availability.</div>`;
+                return;
+            }
+
+            const dayEvents = events.filter(e => e.date === selectedDate);
+            const dayAvail = avail.filter(a => a.date === selectedDate);
+            const dayPicks = picksForDate(selectedDate);
+
+            const picksCard = document.createElement("div");
+            picksCard.className = "detailCard";
+            picksCard.innerHTML = `
+                    <div class="detailCardTop">
+                        <h4>Picked hosts (${dayPicks.length})</h4>
+                        <div class="badge ok">Host picks</div>
+                    </div>
+                `;
+
+            if (!dayPicks.length) {
+                picksCard.innerHTML += `<div class="emptyState">No host picks yet.</div>`;
+            } else {
+                dayPicks.forEach(pick => {
+                    const row = document.createElement("div");
+                    row.className = "pickEntry";
+
+                    row.innerHTML = `
+                            <div class="pickEntryLeft">
+                                <div>
+                                    <div class="pickEntryName">${escapeHTML(pick.hostName || (pick.email ? pick.email.split("@")[0] : "Host"))}</div>
+                                    <div class="pickEntryMeta">${escapeHTML(pick.email || "")}</div>
+                                </div>
+                            </div>
+                        `;
+
+                    const actions = document.createElement("div");
+                    actions.className = "actionsRow";
+
+                    const isMine = session && pick.hostUid === session.uid;
+
+                    if (!viewMode && (session.role === "admin" || isMine)) {
+                        const removeBtn = document.createElement("button");
+                        removeBtn.className = "btn small danger";
+                        removeBtn.textContent = session.role === "admin" && !isMine ? "Remove pick" : "Remove";
+                        removeBtn.onclick = async () => {
+                            try {
+                                await removePick(selectedDate, pick.hostUid);
+                                toast("Pick removed");
+                            } catch (err) {
+                                console.error(err);
+                                toast("Could not remove pick");
+                            }
+                        };
+                        actions.appendChild(removeBtn);
+                    }
+
+                    row.appendChild(actions);
+                    picksCard.appendChild(row);
+                });
+
+                if (!viewMode && session.role === "admin" && dayPicks.length) {
+                    const clearWrap = document.createElement("div");
+                    clearWrap.className = "actionsRow";
+                    clearWrap.style.marginTop = "10px";
+
+                    const clearBtn = document.createElement("button");
+                    clearBtn.className = "btn small danger";
+                    clearBtn.textContent = "Clear date picks";
+                    clearBtn.onclick = async () => {
+                        if (!confirm("Remove all host picks for this date?")) return;
+                        try {
+                            await clearPicksForDate(selectedDate);
+                            toast("Cleared picks");
+                        } catch (err) {
+                            console.error(err);
+                            toast("Could not clear picks");
+                        }
+                    };
+
+                    clearWrap.appendChild(clearBtn);
+                    picksCard.appendChild(clearWrap);
+                }
+            }
+
+            detailList.appendChild(picksCard);
+
+            const evCard = document.createElement("div");
+            evCard.className = "detailCard";
+            evCard.innerHTML = `
+                    <div class="detailCardTop">
+                        <h4>Official events (${dayEvents.length})</h4>
+                        <div class="badge brand">${session.role === "admin" ? "Admin" : "Staff"}</div>
+                    </div>
+                `;
+
+            if (!dayEvents.length) {
+                evCard.innerHTML += `<div class="emptyState">No official events on this day yet.</div>`;
+            } else {
+                dayEvents
+                    .slice()
+                    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+                    .forEach(ev => {
+                        const wrap = document.createElement("div");
+                        wrap.className = "eventBlock";
+                        wrap.innerHTML = `
+                                <div class="eventTitle">${escapeHTML(ev.title)}</div>
+                                <div class="metaText">${escapeHTML(ev.time || "Time TBA")} • ${escapeHTML(ev.location || "Location TBA")} • ${escapeHTML(ev.host ? `Host: ${ev.host}` : "Host: Unassigned")}</div>
+                                ${ev.note ? `<div class="metaText" style="margin-top:8px;">${escapeHTML(ev.note)}</div>` : ""}
+                            `;
+
+                        if (!viewMode && session.role === "admin") {
+                            const controls = document.createElement("div");
+                            controls.className = "actionsRow";
+                            controls.style.marginTop = "10px";
+
+                            const setHostBtn = document.createElement("button");
+                            setHostBtn.className = "btn small primary";
+                            setHostBtn.textContent = "Set host";
+                            setHostBtn.onclick = async () => {
+                                const name = prompt("Host name:", ev.host || "");
+                                if (name === null) return;
+                                await upsertEvent({ ...ev, host: name.trim() });
+                                toast("Host updated");
+                            };
+
+                            const delBtn = document.createElement("button");
+                            delBtn.className = "btn small danger";
+                            delBtn.textContent = "Remove";
+                            delBtn.onclick = async () => {
+                                await removeEvent(ev.id);
+                                toast("Event removed");
+                            };
+
+                            controls.append(setHostBtn, delBtn);
+                            wrap.appendChild(controls);
+                        }
+
+                        evCard.appendChild(wrap);
+                    });
+            }
+
+            detailList.appendChild(evCard);
+
+            const avCard = document.createElement("div");
+            avCard.className = "detailCard";
+            avCard.innerHTML = `
+                    <div class="detailCardTop">
+                        <h4>Staff availability (${dayAvail.length})</h4>
+                        <div class="badge warn">Availability</div>
+                    </div>
+                `;
+
+            if (!dayAvail.length) {
+                avCard.innerHTML += `<div class="emptyState">No availability added yet.</div>`;
+            } else {
+                dayAvail.forEach(a => {
+                    const line = document.createElement("div");
+                    line.className = "availabilityBlock";
+                    line.innerHTML = `
+                            <div class="eventTitle" style="margin-bottom:4px;">${escapeHTML(a.name)}</div>
+                            <div class="metaText">${escapeHTML(a.note || "Available to host")}</div>
+                        `;
+
+                    if (!viewMode && session.role === "admin") {
+                        const del = document.createElement("button");
+                        del.className = "btn small danger";
+                        del.textContent = "Remove";
+                        del.style.marginTop = "10px";
+                        del.onclick = async () => {
+                            await removeAvail(a.id);
+                            toast("Availability removed");
+                        };
+                        line.appendChild(del);
+                    }
+
+                    avCard.appendChild(line);
+                });
+            }
+
+            detailList.appendChild(avCard);
+        }
+
+        function openDayModal(iso) {
+            if (!session || viewMode || session.role !== "admin") return;
+
+            dayBackdrop.style.display = "flex";
+            dayModalTitle.textContent = prettyDate(iso);
+            dayModalSub.textContent = "Small quick editor for admins.";
+
+            dayModalBody.innerHTML = `
+                    <div class="actionsRow" style="justify-content:space-between; margin-bottom:12px;">
+                        <div class="pill">Selected: <b>${escapeHTML(iso)}</b></div>
+                        <button class="btn" id="closeDayModal" type="button">Close</button>
+                    </div>
+
+                    <div class="field">
+                        <label>Event title</label>
+                        <input id="evTitle" placeholder="e.g. Time Trial" maxlength="50">
+                    </div>
+
+                    <div class="editorMiniGrid">
+                        <div class="field">
+                            <label>Time</label>
+                            <input id="evTime" placeholder="e.g. 6:00PM AEST" maxlength="30">
+                        </div>
+                        <div class="field">
+                            <label>Location</label>
+                            <input id="evLoc" placeholder="e.g. Spider cave" maxlength="40">
+                        </div>
+                    </div>
+
+                    <div class="editorMiniGrid">
+                        <div class="field">
+                            <label>Host</label>
+                            <input id="evHost" placeholder="e.g. Nugg" maxlength="24">
+                        </div>
+                        <div class="field">
+                            <label>Availability name</label>
+                            <input id="avName" placeholder="e.g. Nugg" maxlength="24">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Notes</label>
+                        <textarea id="evNote" placeholder="Extra details or availability note"></textarea>
+                    </div>
+
+                    <div class="modalActions">
+                        <button class="btn primary" id="saveEvent" type="button">Add event</button>
+                        <button class="btn ok" id="saveAvail" type="button">Add availability</button>
+                    </div>
+                `;
+
+            document.getElementById("closeDayModal").onclick = () => dayBackdrop.style.display = "none";
+
+            document.getElementById("saveEvent").onclick = async () => {
+                const title = document.getElementById("evTitle").value.trim();
+                const time = document.getElementById("evTime").value.trim();
+                const loc = document.getElementById("evLoc").value.trim();
+                const host = document.getElementById("evHost").value.trim();
+                const note = document.getElementById("evNote").value.trim();
+
+                if (!title) {
+                    toast("Event title required");
+                    return;
+                }
+
+                await upsertEvent({ id: uid(), date: iso, title, time, location: loc, host, note });
+                toast("Event added");
+                dayBackdrop.style.display = "none";
+            };
+
+            document.getElementById("saveAvail").onclick = async () => {
+                const name = document.getElementById("avName").value.trim();
+                const note = document.getElementById("evNote").value.trim();
+
+                if (!name) {
+                    toast("Availability name required");
+                    return;
+                }
+
+                await upsertAvail({ id: uid(), date: iso, name, note });
+                toast("Availability added");
+                dayBackdrop.style.display = "none";
+            };
+        }
+
+        function clearListeners() {
+            unsubscribers.forEach(fn => {
+                try { fn(); } catch { }
+            });
+            unsubscribers = [];
+        }
+
+        function startListeners() {
+            clearListeners();
+            storageNote.textContent = "Syncing with Firebase...";
+
+            unsubscribers.push(onSnapshot(collection(db, "users"), snap => {
+                usersMap.clear();
+                hosts = snap.docs.map(d => {
+                    const data = d.data();
+                    const user = {
+                        uid: d.id,
+                        name: data.name || "User",
+                        email: data.email || "",
+                        role: data.role || "staff",
+                        photoURL: data.photoURL || ""
+                    };
+                    usersMap.set(d.id, user);
+                    return user;
+                }).sort((a, b) => hostLabelFromUser(a).localeCompare(hostLabelFromUser(b)));
+
+                if (session && usersMap.has(session.uid)) {
+                    session = { ...session, ...usersMap.get(session.uid) };
+                    renderTop();
+                }
+
+                renderHostPicker();
+                renderDetails();
+            }));
+
+            unsubscribers.push(onSnapshot(collection(db, "events"), snap => {
+                events = snap.docs.map(d => d.data());
+                saveJSON(KEY_EVENTS, events);
+                renderCalendar();
+                renderDetails();
+                storageNote.textContent = "Synced with Firebase";
+            }));
+
+            unsubscribers.push(onSnapshot(collection(db, "availability"), snap => {
+                avail = snap.docs.map(d => d.data());
+                saveJSON(KEY_AVAIL, avail);
+                renderCalendar();
+                renderDetails();
+            }));
+
+            unsubscribers.push(onSnapshot(collection(db, "host_picks"), snap => {
+                hostPicks = snap.docs.map(d => d.data());
+                saveJSON(KEY_PICKS, hostPicks);
+                renderCalendar();
+                renderDetails();
+                renderHostPicker();
+                renderHostBar();
+            }));
+        }
+
+        btnLogin.addEventListener("click", openAuth);
+
+        btnLogout.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                toast("Logged out");
+            } catch (err) {
+                console.error(err);
+                toast("Logout failed");
+            }
+        });
+
+        btnSettings.addEventListener("click", openSettings);
+
+        tabLogin.addEventListener("click", () => setAuthMode("login"));
+        tabRegister.addEventListener("click", () => setAuthMode("register"));
+        document.getElementById("authClose").addEventListener("click", closeAuth);
+
+        authGo.addEventListener("click", async () => {
+            const email = authEmail.value.trim();
+            const password = authPassword.value;
+            const password2 = authPassword2.value;
+
+            if (!email || !password) {
+                toast("Enter email and password");
+                return;
+            }
+
+            if (authMode === "register") {
+                if (password.length < 6) {
+                    toast("Password must be at least 6 characters");
+                    return;
+                }
+
+                if (password !== password2) {
+                    toast("Passwords do not match");
+                    return;
+                }
+
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    closeAuth();
+                    toast("Account created");
+                } catch (err) {
+                    console.error("REGISTER ERROR:", err);
+                    toast(err.code || err.message || "Could not register");
+                }
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                closeAuth();
+                toast("Logged in");
+            } catch (err) {
+                console.error("LOGIN ERROR:", err);
+                toast(err.code || err.message || "Login failed");
+            }
+        });
+
+        settingsProfileTab.addEventListener("click", () => setSettingsTab("profile"));
+        settingsAccountTab.addEventListener("click", () => setSettingsTab("account"));
+        document.getElementById("settingsClose").addEventListener("click", closeSettings);
+
+        profileFile.addEventListener("change", async () => {
+            const file = profileFile.files?.[0];
+            if (!file) return;
+
+            try {
+                profileImageData = await fileToAvatarDataURL(file);
+                profilePreview.src = profileImageData;
+            } catch (err) {
+                console.error(err);
+                toast("Could not read image");
+            }
+        });
+
+        document.getElementById("removeProfilePic").addEventListener("click", () => {
+            profileImageData = "";
+            profileFile.value = "";
+            profilePreview.src = defaultAvatarDataURL(profileName.value || session?.name || "User");
+        });
+
+        profileName.addEventListener("input", () => {
+            if (!profileImageData) {
+                profilePreview.src = defaultAvatarDataURL(profileName.value || "User");
+            }
+        });
+
+        document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+            if (!session) return;
+
+            const name = profileName.value.trim();
+            if (name.length < 2) {
+                toast("Display name must be at least 2 characters");
+                return;
+            }
+
+            try {
+                const existing = await getDoc(doc(db, "users", session.uid));
+                const current = existing.exists() ? existing.data() : {};
+                await setDoc(doc(db, "users", session.uid), {
+                    name,
+                    email: session.email || current.email || "",
+                    role: current.role || "staff",
+                    photoURL: profileImageData || ""
+                }, { merge: true });
+
+                session = {
+                    ...session,
+                    name,
+                    photoURL: profileImageData || "",
+                    role: current.role || session.role || "staff"
+                };
+
+                topAvatar.src = profilePhotoOrDefault(session);
+                renderTop();
+                renderHostPicker();
+                renderDetails();
+                toast("Profile saved");
+            } catch (err) {
+                console.error(err);
+                toast("Could not save profile");
+            }
+        });
+
+        document.getElementById("saveAccountBtn").addEventListener("click", async () => {
+            const user = auth.currentUser;
+            if (!user || !session) return;
+
+            const newEmail = accountNewEmail.value.trim();
+            const currentPassword = accountCurrentPassword.value;
+            const newPassword = accountNewPassword.value;
+            const newPassword2 = accountNewPassword2.value;
+
+            if (!newEmail && !newPassword) {
+                toast("No account changes entered");
+                return;
+            }
+
+            if (!currentPassword) {
+                toast("Enter your current password");
+                return;
+            }
+
+            if (newPassword && newPassword.length < 6) {
+                toast("New password must be at least 6 characters");
+                return;
+            }
+
+            if (newPassword && newPassword !== newPassword2) {
+                toast("New passwords do not match");
+                return;
+            }
+
+            try {
+                const credential = EmailAuthProvider.credential(user.email, currentPassword);
+                await reauthenticateWithCredential(user, credential);
+
+                if (newEmail) await updateEmail(user, newEmail);
+                if (newPassword) await updatePassword(user, newPassword);
+
+                await setDoc(doc(db, "users", session.uid), {
+                    email: newEmail || user.email || session.email || ""
+                }, { merge: true });
+
+                session.email = newEmail || user.email || session.email || "";
+                accountCurrentEmail.value = session.email;
+                accountNewEmail.value = "";
+                accountCurrentPassword.value = "";
+                accountNewPassword.value = "";
+                accountNewPassword2.value = "";
+
+                toast("Account updated");
+            } catch (err) {
+                console.error("ACCOUNT UPDATE ERROR:", err);
+                toast(err.code || err.message || "Could not update account");
+            }
+        });
+
+        clearMyPickBtn.addEventListener("click", async () => {
+            if (!session || !selectedDate) return;
+
+            try {
+                await removePick(selectedDate, session.uid);
+                toast("Removed your pick");
+            } catch (err) {
+                console.error(err);
+                toast("Could not remove pick");
+            }
+        });
+
+        document.getElementById("prevMonth").addEventListener("click", () => {
+            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+            renderCalendar();
+        });
+
+        document.getElementById("nextMonth").addEventListener("click", () => {
+            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+            renderCalendar();
+        });
+
+        document.getElementById("todayBtn").addEventListener("click", () => {
+            viewDate = new Date();
+            selectedDate = toISODate(new Date());
+            renderCalendar();
+            renderDetails();
+
+            if (viewMode) return;
+
+            if (!session) {
+                pendingOpenDate = selectedDate;
+                openAuth();
+                return;
+            }
+
+            if (session.role === "admin") openDayModal(selectedDate);
+        });
+
+        addEventBtn.addEventListener("click", () => {
+            if (viewMode) return;
+            if (!session) {
+                pendingOpenDate = selectedDate || toISODate(new Date());
+                openAuth();
+                return;
+            }
+            if (session.role !== "admin") return;
+            if (!selectedDate) selectedDate = toISODate(new Date());
+            openDayModal(selectedDate);
+        });
+
+        addAvailBtn.addEventListener("click", () => {
+            if (viewMode) return;
+            if (!session) {
+                pendingOpenDate = selectedDate || toISODate(new Date());
+                openAuth();
+                return;
+            }
+            if (session.role !== "admin") return;
+            if (!selectedDate) selectedDate = toISODate(new Date());
+            openDayModal(selectedDate);
+        });
+
+        viewModeBtn.addEventListener("click", () => {
+            viewMode = !viewMode;
+            saveJSON(KEY_VIEWMODE, viewMode);
+            toast("View mode " + (viewMode ? "ON" : "OFF"));
+            renderTop();
+            renderCalendar();
+            renderDetails();
+        });
+
+        clearAllBtn.addEventListener("click", async () => {
+            if (!session || session.role !== "admin") return;
+
+            const ok = confirm(
+                "CLEAR ALL?\n\nThis deletes:\n- All Events\n- All Availability\n- All Host Picks\n\nThis cannot be undone."
+            );
+            if (!ok) return;
+
+            try {
+                const [evSnap, avSnap, pkSnap] = await Promise.all([
+                    getDocs(collection(db, "events")),
+                    getDocs(collection(db, "availability")),
+                    getDocs(collection(db, "host_picks"))
+                ]);
+
+                const deletes = [];
+                evSnap.forEach(d => deletes.push(deleteDoc(doc(db, "events", d.id))));
+                avSnap.forEach(d => deletes.push(deleteDoc(doc(db, "availability", d.id))));
+                pkSnap.forEach(d => deletes.push(deleteDoc(doc(db, "host_picks", d.id))));
+                await Promise.all(deletes);
+
+                toast("Cleared everything");
+            } catch (err) {
+                console.error(err);
+                toast("Clear failed");
+            }
+        });
+
+        resetBtn.addEventListener("click", () => {
+            if (!session || session.role !== "admin") return;
+            saveJSON(KEY_EVENTS, []);
+            saveJSON(KEY_AVAIL, []);
+            saveJSON(KEY_PICKS, []);
+            toast("Local cache cleared");
+        });
+
+        authBackdrop.addEventListener("click", e => {
+            if (e.target === authBackdrop) closeAuth();
+        });
+
+        settingsBackdrop.addEventListener("click", e => {
+            if (e.target === settingsBackdrop) closeSettings();
+        });
+
+        dayBackdrop.addEventListener("click", e => {
+            if (e.target === dayBackdrop) dayBackdrop.style.display = "none";
+        });
+
+        onAuthStateChanged(auth, async firebaseUser => {
+            try {
+                if (!firebaseUser) {
+                    session = null;
+                    renderTop();
+                    renderCalendar();
+                    renderDetails();
+                    return;
+                }
+
+                await loadSessionFromAuth(firebaseUser);
+                renderTop();
+                renderCalendar();
+                renderDetails();
+                startListeners();
+
+                if (pendingOpenDate && session?.role === "admin" && !viewMode) {
+                    const dateToOpen = pendingOpenDate;
+                    pendingOpenDate = null;
+                    selectedDate = dateToOpen;
+                    renderCalendar();
+                    renderDetails();
+                    openDayModal(dateToOpen);
+                } else {
+                    pendingOpenDate = null;
+                }
+            } catch (err) {
+                console.error(err);
+                toast("Could not load account");
+            }
+        });
+
+        function boot() {
+            selectedDate = toISODate(new Date());
+            renderTop();
+            renderCalendar();
+            renderDetails();
+            startListeners();
+        }
+
+        boot();
+    </script>
+</body>
+</html>

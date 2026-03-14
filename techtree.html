@@ -1,0 +1,1573 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Pickaboom Hosting Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070b10;
+            --panel: #101821;
+            --panel2: #16212d;
+            --stroke: rgba(255,255,255,.10);
+            --text: #eef7f1;
+            --muted: #97aaa2;
+            --yellow: #f5c04f;
+            --green: #32d583;
+            --blue: #63a8ff;
+            --purple: #ae7cff;
+            --red: #ef6262;
+            --shadow: 0 18px 50px rgba(0,0,0,.35);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            font-family: Inter,system-ui,Arial,sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg,#06090c 0%,#0a1015 100%);
+        }
+
+        body {
+            overflow: hidden
+        }
+
+        .topBar {
+            height: 72px;
+            border-bottom: 1px solid var(--stroke);
+            background: rgba(8,13,17,.92);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 16px;
+            z-index: 30;
+            position: relative;
+        }
+
+        .brandWrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0
+        }
+
+        .brandIcon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--yellow);
+            background: linear-gradient(135deg,rgba(245,192,79,.22),rgba(50,213,131,.16)),#121b23;
+            border: 1px solid rgba(255,255,255,.12);
+        }
+
+        .brandText h1 {
+            margin: 0;
+            font-size: 19px;
+            color: var(--yellow)
+        }
+
+        .brandText p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .topActions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
+        .pill, .btn {
+            min-height: 36px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.12);
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,.04)
+        }
+
+        .btn {
+            appearance: none;
+            padding: 9px 13px;
+            background: #182430;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 700
+        }
+
+            .btn:hover {
+                background: #223141
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg,#1f7f57,#32d583);
+                color: #06120d;
+                border-color: rgba(50,213,131,.35)
+            }
+
+            .btn.warn {
+                background: #4b3816;
+                color: #fff3d1
+            }
+
+            .btn.danger {
+                background: #4a2020
+            }
+
+        .workspace {
+            position: relative;
+            height: calc(100vh - 72px);
+            overflow: hidden
+        }
+
+        .canvasWrap {
+            position: absolute;
+            inset: 0;
+            overflow: auto;
+            background: radial-gradient(circle at 1px 1px,rgba(255,255,255,.08) 1px,transparent 0);
+            background-size: 28px 28px;
+            cursor: default;
+        }
+
+            .canvasWrap.panning {
+                cursor: grabbing !important
+            }
+
+        .zoomLayer {
+            position: relative;
+            width: 10000px;
+            height: 8000px;
+            transform-origin: top left;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        .canvas {
+            position: relative;
+            width: 10000px;
+            height: 8000px;
+        }
+
+        #lines {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        .frame, .sectionBox, .node {
+            position: absolute;
+            user-select: none;
+            box-shadow: var(--shadow);
+        }
+
+        .frame, .sectionBox {
+            min-width: 260px;
+            min-height: 180px;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .frame {
+            z-index: 1;
+            background: linear-gradient(180deg,rgba(99,168,255,.08),rgba(99,168,255,.02)),rgba(17,27,38,.55);
+            border: 2px solid rgba(99,168,255,.35);
+        }
+
+        .sectionBox {
+            z-index: 2;
+            background: linear-gradient(180deg,rgba(174,124,255,.08),rgba(174,124,255,.02)),rgba(24,18,34,.5);
+            border: 2px dashed rgba(174,124,255,.38);
+        }
+
+        .node {
+            width: 260px;
+            min-height: 120px;
+            padding: 14px;
+            border-radius: 18px;
+            background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015)),#101821;
+            border: 1px solid rgba(255,255,255,.12);
+            z-index: 10;
+        }
+
+            .node:hover {
+                border-color: rgba(50,213,131,.35)
+            }
+
+        .selected {
+            box-shadow: 0 0 0 2px rgba(245,192,79,.18),var(--shadow)
+        }
+
+        .dragging {
+            box-shadow: 0 22px 60px rgba(0,0,0,.46)
+        }
+
+        .frameTop, .sectionTop {
+            height: 42px;
+            padding: 8px 10px 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: rgba(8,12,18,.28)
+        }
+
+        .frameTitle, .sectionTitle, .nodeTitle {
+            outline: none;
+            font-weight: 800
+        }
+
+        .frameTitle {
+            font-size: 13px;
+            color: var(--blue)
+        }
+
+        .sectionTitle {
+            font-size: 13px;
+            color: var(--purple)
+        }
+
+        .frameDesc, .sectionDesc {
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+            outline: none;
+            white-space: pre-wrap
+        }
+
+        .nodeTop {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px
+        }
+
+        .nodeType {
+            min-height: 24px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            border: 1px solid;
+        }
+
+            .nodeType.event {
+                background: rgba(245,192,79,.10);
+                border-color: rgba(245,192,79,.24);
+                color: var(--yellow)
+            }
+
+            .nodeType.setup {
+                background: rgba(99,168,255,.10);
+                border-color: rgba(99,168,255,.24);
+                color: var(--blue)
+            }
+
+            .nodeType.rule {
+                background: rgba(239,98,98,.10);
+                border-color: rgba(239,98,98,.24);
+                color: #ff9b9b
+            }
+
+            .nodeType.tip {
+                background: rgba(50,213,131,.10);
+                border-color: rgba(50,213,131,.24);
+                color: var(--green)
+            }
+
+        .nodeTools {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .iconBtn {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800
+        }
+
+            .iconBtn:hover {
+                background: rgba(255,255,255,.08)
+            }
+
+        .nodeTitle {
+            font-size: 18px;
+            color: var(--yellow);
+            line-height: 1.15;
+            margin-bottom: 8px;
+            word-break: break-word
+        }
+
+        .nodeDesc {
+            font-size: 13px;
+            color: #d7e5dc;
+            line-height: 1.5;
+            outline: none;
+            word-break: break-word;
+            white-space: pre-wrap
+        }
+
+            .nodeTitle[contenteditable="true"]:focus,
+            .nodeDesc[contenteditable="true"]:focus,
+            .frameTitle[contenteditable="true"]:focus,
+            .frameDesc[contenteditable="true"]:focus,
+            .sectionTitle[contenteditable="true"]:focus,
+            .sectionDesc[contenteditable="true"]:focus {
+                background: rgba(255,255,255,.04);
+                border-radius: 10px;
+            }
+
+        .resizeHandle {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 8px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.16);
+            cursor: nwse-resize;
+        }
+
+        .zoomHud {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(12,18,24,.92);
+            border: 1px solid var(--stroke)
+        }
+
+        .zoomBadge {
+            min-width: 58px;
+            text-align: center;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.10);
+            font-weight: 800
+        }
+
+        .hintBox {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            z-index: 25;
+            max-width: 420px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--stroke);
+            background: rgba(12,18,24,.92);
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5
+        }
+
+            .hintBox b {
+                color: var(--text)
+            }
+
+        .floatingTools {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            z-index: 25;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
+        .emptyMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: min(460px,calc(100vw - 28px));
+            padding: 22px 24px;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed rgba(255,255,255,.14);
+            background: rgba(255,255,255,.03);
+            border-radius: 22px;
+            z-index: 3
+        }
+
+            .emptyMessage h3 {
+                margin: 0 0 8px;
+                color: var(--text)
+            }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 99999;
+            background: rgba(12,18,24,.96);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 999px;
+            padding: 12px 16px;
+            font-size: 12px
+        }
+
+        .modalBackdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(2,4,6,.60);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999
+        }
+
+        .modal {
+            width: min(500px,100%);
+            background: #111a22;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 22px;
+            overflow: hidden
+        }
+
+        .modalTop {
+            padding: 18px 18px 14px;
+            border-bottom: 1px solid rgba(255,255,255,.08)
+        }
+
+            .modalTop h3 {
+                margin: 0;
+                font-size: 18px
+            }
+
+            .modalTop p {
+                margin: 8px 0 0;
+                font-size: 13px;
+                color: var(--muted)
+            }
+
+        .modalBody {
+            padding: 16px 18px 18px
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 12px
+        }
+
+            .field label {
+                font-size: 12px;
+                font-weight: 700;
+                color: #d8e5dd
+            }
+
+        input, select, textarea {
+            width: 100%;
+            font: inherit;
+            color: var(--text);
+            background: #16212d;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 14px;
+            padding: 12px 13px;
+            outline: none;
+            resize: vertical
+        }
+
+        .modalActions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+
+        @media (max-width:860px) {
+            .topBar {
+                height: auto;
+                min-height: 72px;
+                padding: 12px;
+                flex-direction: column;
+                align-items: stretch
+            }
+
+            .topActions {
+                justify-content: flex-start
+            }
+
+            .workspace {
+                height: calc(100vh - 122px)
+            }
+
+            .hintBox {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                max-width: none
+            }
+
+            .floatingTools {
+                left: 12px;
+                right: 12px;
+                bottom: 122px
+            }
+
+            .zoomHud {
+                left: 12px;
+                top: 12px;
+                flex-wrap: wrap;
+                max-width: calc(100vw - 24px)
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topBar">
+        <div class="brandWrap">
+            <div class="brandIcon">PB</div>
+            <div class="brandText">
+                <h1>Pickaboom Hosting Guide</h1>
+                <p id="userLine">Loading account...</p>
+            </div>
+        </div>
+
+        <div class="topActions">
+            <div class="pill" id="rolePill" style="display:none;">Role: <b id="roleText">STAFF</b></div>
+            <button class="btn" onclick="location.href='index.html'">Back to Calendar</button>
+            <button class="btn" id="connectModeBtn" style="display:none;">Connect: OFF</button>
+            <button class="btn primary" id="addNodeBtn" style="display:none;">+ Node</button>
+            <button class="btn" id="addFrameBtn" style="display:none;">+ Frame</button>
+            <button class="btn" id="addSectionBtn" style="display:none;">+ Section</button>
+            <button class="btn" id="loginBtn" style="display:none;">Login</button>
+            <button class="btn danger" id="logoutBtn" style="display:none;">Logout</button>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div class="canvasWrap" id="canvasWrap">
+            <div class="zoomLayer" id="zoomLayer">
+                <div class="canvas" id="canvas">
+                    <svg id="lines"></svg>
+                    <div class="emptyMessage" id="emptyMessage" style="display:none;">
+                        <h3>No guide items yet</h3>
+                        <div>Admins can add nodes, frames and sections here.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="zoomHud">
+            <button class="btn" id="zoomOutBtn" type="button">−</button>
+            <div class="zoomBadge" id="zoomLabel">100%</div>
+            <button class="btn" id="zoomInBtn" type="button">+</button>
+            <button class="btn" id="resetViewBtn" type="button">Reset</button>
+            <button class="btn" id="fitViewBtn" type="button">Fit</button>
+        </div>
+
+        <div class="hintBox">
+            <b>Controls:</b><br>
+            Middle mouse = pan<br>
+            Space + drag = pan<br>
+            Ctrl/Cmd + wheel = zoom<br>
+            + / - = zoom, 0 = reset, F = fit<br>
+            Admins can drag, resize, edit, and connect items.
+        </div>
+
+        <div class="floatingTools">
+            <button class="btn warn" id="clearSelectionBtn" style="display:none;">Clear selected link</button>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="authBackdrop">
+        <div class="modal">
+            <div class="modalTop">
+                <h3>Login</h3>
+                <p>Use the same account as your calendar page.</p>
+            </div>
+            <div class="modalBody">
+                <div class="field">
+                    <label>Email</label>
+                    <input id="authEmail" type="email" placeholder="name@email.com" autocomplete="email">
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
+                </div>
+                <div class="modalActions">
+                    <button class="btn" id="authClose" type="button">Close</button>
+                    <button class="btn primary" id="authGo" type="button">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="createBackdrop">
+        <div class="modal">
+            <div class="modalTop">
+                <h3 id="createTitle">Create item</h3>
+                <p id="createText">Add something new.</p>
+            </div>
+            <div class="modalBody">
+                <div class="field">
+                    <label>Title</label>
+                    <input id="createName" type="text" placeholder="Enter a title">
+                </div>
+                <div class="field" id="createTypeWrap">
+                    <label>Node type</label>
+                    <select id="createType">
+                        <option value="event">Event</option>
+                        <option value="Location">Location</option>
+                        <option value="Resources">Resources</option>
+                        <option value="How to host">How to host</option>
+                        <option value="What not to do">What not to do</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea id="createDesc" rows="4" placeholder="Write a short description"></textarea>
+                </div>
+                <div class="modalActions">
+                    <button class="btn" id="createClose" type="button">Cancel</button>
+                    <button class="btn primary" id="createGo" type="button">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import {
+            getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import {
+            getFirestore, doc, getDoc, setDoc, deleteDoc, collection, onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3PvEamzNh4_fYIRAG9YxfVDZyucBC2b4",
+            authDomain: "staff-calendar-b25d4.firebaseapp.com",
+            projectId: "staff-calendar-b25d4",
+            storageBucket: "staff-calendar-b25d4.firebasestorage.app",
+            messagingSenderId: "771150169498",
+            appId: "1:771150169498:web:707d19b860fff00572a623"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const CANVAS_W = 10000;
+        const CANVAS_H = 8000;
+        const NODE_W = 260;
+        const NODE_H = 120;
+        const FRAME_W = 620;
+        const FRAME_H = 380;
+        const SECTION_W = 480;
+        const SECTION_H = 280;
+
+        const userLine = document.getElementById("userLine");
+        const rolePill = document.getElementById("rolePill");
+        const roleText = document.getElementById("roleText");
+        const loginBtn = document.getElementById("loginBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const addNodeBtn = document.getElementById("addNodeBtn");
+        const addFrameBtn = document.getElementById("addFrameBtn");
+        const addSectionBtn = document.getElementById("addSectionBtn");
+        const connectModeBtn = document.getElementById("connectModeBtn");
+        const clearSelectionBtn = document.getElementById("clearSelectionBtn");
+        const authBackdrop = document.getElementById("authBackdrop");
+        const authEmail = document.getElementById("authEmail");
+        const authPassword = document.getElementById("authPassword");
+        const authGo = document.getElementById("authGo");
+        const authClose = document.getElementById("authClose");
+        const createBackdrop = document.getElementById("createBackdrop");
+        const createTitle = document.getElementById("createTitle");
+        const createText = document.getElementById("createText");
+        const createName = document.getElementById("createName");
+        const createDesc = document.getElementById("createDesc");
+        const createType = document.getElementById("createType");
+        const createTypeWrap = document.getElementById("createTypeWrap");
+        const createGo = document.getElementById("createGo");
+        const createClose = document.getElementById("createClose");
+        const canvasWrap = document.getElementById("canvasWrap");
+        const zoomLayer = document.getElementById("zoomLayer");
+        const canvas = document.getElementById("canvas");
+        const svg = document.getElementById("lines");
+        const emptyMessage = document.getElementById("emptyMessage");
+        const zoomLabel = document.getElementById("zoomLabel");
+        const zoomInBtn = document.getElementById("zoomInBtn");
+        const zoomOutBtn = document.getElementById("zoomOutBtn");
+        const resetViewBtn = document.getElementById("resetViewBtn");
+        const fitViewBtn = document.getElementById("fitViewBtn");
+
+        let session = null;
+        let items = [];
+        let links = [];
+        let connectMode = false;
+        let selectedSourceNodeId = null;
+        let selectedItemId = null;
+        let createMode = "node";
+        let unsubItems = null;
+        let unsubLinks = null;
+        let activeEditingId = null;
+        let pendingRender = false;
+        let isSpacePressed = false;
+        let isPanning = false;
+        let panStartX = 0;
+        let panStartY = 0;
+        let lineFrame = null;
+
+        const view = { scale: 1, min: 0.5, max: 1.8 };
+
+        function toast(msg) {
+            const t = document.getElementById("toast");
+            t.textContent = msg;
+            t.style.display = "block";
+            clearTimeout(toast._tm);
+            toast._tm = setTimeout(() => t.style.display = "none", 2200);
+        }
+        function uid() { return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+        function isAdmin() { return !!session && session.role === "admin"; }
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+        function esc(s) {
+            return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        }
+        function nodeTypeLabel(type) {
+            if (type === "rule") return "Rule";
+            if (type === "setup") return "Setup";
+            if (type === "tip") return "Tip";
+            return "Event";
+        }
+        function getItem(id) { return items.find(i => i.id === id) || null; }
+        function getNodes() { return items.filter(i => i.kind === "node"); }
+        function getFrames() { return items.filter(i => i.kind === "frame"); }
+        function getSections() { return items.filter(i => i.kind === "section"); }
+        function updateZoomUi() { zoomLabel.textContent = Math.round(view.scale * 100) + "%"; }
+        function applyZoom() {
+            zoomLayer.style.transform = `translateZ(0) scale(${view.scale})`;
+            updateZoomUi();
+            scheduleDrawLines();
+        }
+        function scheduleDrawLines() {
+            if (lineFrame) return;
+            lineFrame = requestAnimationFrame(() => {
+                lineFrame = null;
+                drawLines();
+            });
+        }
+        function screenToCanvas(clientX, clientY) {
+            const r = canvasWrap.getBoundingClientRect();
+            return {
+                x: (canvasWrap.scrollLeft + (clientX - r.left)) / view.scale,
+                y: (canvasWrap.scrollTop + (clientY - r.top)) / view.scale
+            };
+        }
+        function getViewCenter() {
+            return {
+                x: (canvasWrap.scrollLeft + canvasWrap.clientWidth / 2) / view.scale,
+                y: (canvasWrap.scrollTop + canvasWrap.clientHeight / 2) / view.scale
+            };
+        }
+        function zoomAt(clientX, clientY, nextScale) {
+            const oldScale = view.scale;
+            nextScale = clamp(nextScale, view.min, view.max);
+            if (Math.abs(nextScale - oldScale) < 0.0001) return;
+
+            const rect = canvasWrap.getBoundingClientRect();
+            const offsetX = clientX - rect.left;
+            const offsetY = clientY - rect.top;
+            const contentX = (canvasWrap.scrollLeft + offsetX) / oldScale;
+            const contentY = (canvasWrap.scrollTop + offsetY) / oldScale;
+
+            view.scale = nextScale;
+            applyZoom();
+
+            canvasWrap.scrollLeft = contentX * nextScale - offsetX;
+            canvasWrap.scrollTop = contentY * nextScale - offsetY;
+            scheduleDrawLines();
+        }
+        function zoomBy(dir) {
+            const f = dir > 0 ? 1.1 : 1 / 1.1;
+            const r = canvasWrap.getBoundingClientRect();
+            zoomAt(r.left + r.width / 2, r.top + r.height / 2, view.scale * f);
+        }
+        function resetView(center = true) {
+            view.scale = 1;
+            applyZoom();
+            if (center) {
+                canvasWrap.scrollLeft = Math.max(0, (CANVAS_W - canvasWrap.clientWidth) / 2);
+                canvasWrap.scrollTop = Math.max(0, (CANVAS_H - canvasWrap.clientHeight) / 2);
+            }
+            scheduleDrawLines();
+        }
+        function fitView() {
+            if (!items.length) {
+                view.scale = 0.7;
+                applyZoom();
+                canvasWrap.scrollLeft = Math.max(0, (CANVAS_W * view.scale - canvasWrap.clientWidth) / 2);
+                canvasWrap.scrollTop = Math.max(0, (CANVAS_H * view.scale - canvasWrap.clientHeight) / 2);
+                scheduleDrawLines();
+                return;
+            }
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            items.forEach(i => {
+                minX = Math.min(minX, i.x || 0);
+                minY = Math.min(minY, i.y || 0);
+                maxX = Math.max(maxX, (i.x || 0) + (i.w || NODE_W));
+                maxY = Math.max(maxY, (i.y || 0) + (i.h || NODE_H));
+            });
+            const boxW = maxX - minX;
+            const boxH = maxY - minY;
+            const pad = 140;
+            view.scale = clamp(Math.min(canvasWrap.clientWidth / (boxW + pad), canvasWrap.clientHeight / (boxH + pad)), view.min, 1.1);
+            applyZoom();
+            canvasWrap.scrollLeft = (minX + boxW / 2) * view.scale - canvasWrap.clientWidth / 2;
+            canvasWrap.scrollTop = (minY + boxH / 2) * view.scale - canvasWrap.clientHeight / 2;
+            scheduleDrawLines();
+        }
+        function openAuth() { authBackdrop.style.display = "flex"; }
+        function closeAuth() { authBackdrop.style.display = "none"; }
+        function openCreate(mode) {
+            createMode = mode;
+            createName.value = "";
+            createDesc.value = "";
+            createTypeWrap.style.display = mode === "node" ? "" : "none";
+            if (mode === "node") {
+                createTitle.textContent = "Create node";
+                createText.textContent = "Add a new guide node.";
+                createType.value = "event";
+            } else if (mode === "frame") {
+                createTitle.textContent = "Create frame";
+                createText.textContent = "Frames are big group boxes like Figma.";
+            } else {
+                createTitle.textContent = "Create section";
+                createText.textContent = "Sections help organise a smaller area.";
+            }
+            createBackdrop.style.display = "flex";
+            setTimeout(() => createName.focus(), 30);
+        }
+        function closeCreate() { createBackdrop.style.display = "none"; }
+
+        async function loadSession(user) {
+            if (!user) { session = null; return; }
+            const snap = await getDoc(doc(db, "users", user.uid));
+            const data = snap.exists() ? snap.data() : {};
+            session = {
+                uid: user.uid,
+                email: user.email || "",
+                name: data.name || (user.email || "User").split("@")[0],
+                role: data.role || "staff"
+            };
+        }
+        function renderTop() {
+            if (!session) {
+                userLine.textContent = "Not logged in";
+                rolePill.style.display = "none";
+                loginBtn.style.display = "inline-block";
+                logoutBtn.style.display = "none";
+                addNodeBtn.style.display = "none";
+                addFrameBtn.style.display = "none";
+                addSectionBtn.style.display = "none";
+                connectModeBtn.style.display = "none";
+                clearSelectionBtn.style.display = "none";
+                return;
+            }
+            userLine.textContent = `Logged in as ${session.name}`;
+            rolePill.style.display = "inline-flex";
+            roleText.textContent = session.role.toUpperCase();
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+
+            if (isAdmin()) {
+                addNodeBtn.style.display = "inline-block";
+                addFrameBtn.style.display = "inline-block";
+                addSectionBtn.style.display = "inline-block";
+                connectModeBtn.style.display = "inline-block";
+                connectModeBtn.textContent = `Connect: ${connectMode ? "ON" : "OFF"}`;
+                clearSelectionBtn.style.display = selectedSourceNodeId ? "inline-block" : "none";
+            } else {
+                addNodeBtn.style.display = "none";
+                addFrameBtn.style.display = "none";
+                addSectionBtn.style.display = "none";
+                connectModeBtn.style.display = "none";
+                clearSelectionBtn.style.display = "none";
+            }
+        }
+
+        async function saveItem(item) { await setDoc(doc(db, "guide_items", item.id), item, { merge: true }); }
+        async function deleteItem(id) {
+            await deleteDoc(doc(db, "guide_items", id));
+            const related = links.filter(l => l.from === id || l.to === id);
+            await Promise.all(related.map(l => deleteDoc(doc(db, "guide_links", l.id))));
+        }
+        async function saveLink(link) { await setDoc(doc(db, "guide_links", link.id), link, { merge: true }); }
+        async function deleteLink(id) { await deleteDoc(doc(db, "guide_links", id)); }
+
+        function drawLines() {
+            svg.innerHTML = "";
+            links.forEach(link => {
+                const aEl = document.querySelector(`[data-id="${link.from}"]`);
+                const bEl = document.querySelector(`[data-id="${link.to}"]`);
+                if (!aEl || !bEl) return;
+
+                const x1 = aEl.offsetLeft + aEl.offsetWidth / 2;
+                const y1 = aEl.offsetTop + aEl.offsetHeight / 2;
+                const x2 = bEl.offsetLeft + bEl.offsetWidth / 2;
+                const y2 = bEl.offsetTop + bEl.offsetHeight / 2;
+                const dx = Math.max(80, Math.abs(x2 - x1) * 0.35);
+                const d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+
+                const visible = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                visible.setAttribute("d", d);
+                visible.setAttribute("fill", "none");
+                visible.setAttribute("stroke", "#32d583");
+                visible.setAttribute("stroke-width", "4");
+                visible.setAttribute("stroke-linecap", "round");
+                visible.style.pointerEvents = "none";
+
+                const hit = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                hit.setAttribute("d", d);
+                hit.setAttribute("fill", "none");
+                hit.setAttribute("stroke", "transparent");
+                hit.setAttribute("stroke-width", "18");
+                hit.setAttribute("stroke-linecap", "round");
+                hit.style.pointerEvents = isAdmin() ? "stroke" : "none";
+                hit.style.cursor = isAdmin() ? "pointer" : "default";
+
+                if (isAdmin()) {
+                    hit.addEventListener("mouseenter", () => {
+                        visible.setAttribute("stroke", "#f5c04f");
+                        visible.setAttribute("stroke-width", "5");
+                    });
+                    hit.addEventListener("mouseleave", () => {
+                        visible.setAttribute("stroke", "#32d583");
+                        visible.setAttribute("stroke-width", "4");
+                    });
+                    hit.addEventListener("click", async (e) => {
+                        e.stopPropagation();
+                        if (!confirm("Delete this connection?")) return;
+                        try {
+                            await deleteLink(link.id);
+                            toast("Connection deleted");
+                        } catch (err) {
+                            console.error(err);
+                            toast("Could not delete connection");
+                        }
+                    });
+                }
+
+                svg.appendChild(visible);
+                svg.appendChild(hit);
+            });
+        }
+        function emptyState() { emptyMessage.style.display = items.length ? "none" : "block"; }
+
+        function plainPaste(el) {
+            el.addEventListener("paste", e => {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData("text");
+                document.execCommand("insertText", false, text);
+            });
+        }
+
+        function bindEdit(el, item, mode) {
+            const titleEl = el.querySelector(".nodeTitle,.frameTitle,.sectionTitle");
+            const descEl = el.querySelector(".nodeDesc,.frameDesc,.sectionDesc");
+
+            if (isAdmin()) {
+                const begin = () => activeEditingId = item.id;
+                const finish = async () => {
+                    activeEditingId = null;
+                    const nextTitle = (titleEl?.innerText || "").trim() || (mode === "node" ? "Untitled" : mode === "frame" ? "New Frame" : "New Section");
+                    const nextDesc = (descEl?.innerText || "").trim();
+
+                    if (nextTitle === (item.title || "") && nextDesc === (item.desc || "")) {
+                        if (pendingRender) { pendingRender = false; render(); }
+                        return;
+                    }
+
+                    item.title = nextTitle;
+                    item.desc = nextDesc;
+                    try {
+                        await saveItem({ ...item, title: nextTitle, desc: nextDesc });
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not save text");
+                    }
+                    if (pendingRender) { pendingRender = false; render(); }
+                };
+
+                if (titleEl) {
+                    titleEl.addEventListener("focus", begin);
+                    titleEl.addEventListener("blur", finish);
+                    plainPaste(titleEl);
+                    titleEl.addEventListener("keydown", e => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            titleEl.blur();
+                        }
+                    });
+                }
+                if (descEl) {
+                    descEl.addEventListener("focus", begin);
+                    descEl.addEventListener("blur", finish);
+                    plainPaste(descEl);
+                    descEl.addEventListener("keydown", e => {
+                        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "enter") {
+                            e.preventDefault();
+                            descEl.blur();
+                        }
+                    });
+                }
+            }
+
+            const del = el.querySelector('[data-action="delete"]');
+            if (del) {
+                del.addEventListener("click", async e => {
+                    e.stopPropagation();
+                    if (!isAdmin()) return;
+                    if (!confirm(`Delete this ${mode}?`)) return;
+                    try {
+                        await deleteItem(item.id);
+                        if (selectedItemId === item.id) selectedItemId = null;
+                        if (selectedSourceNodeId === item.id) selectedSourceNodeId = null;
+                        toast(`${mode} deleted`);
+                    } catch (err) {
+                        console.error(err);
+                        toast(`Could not delete ${mode}`);
+                    }
+                });
+            }
+
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                selectedItemId = item.id;
+                render();
+            });
+        }
+
+        function enableMoveResize(el, item, options) {
+            let dragging = false;
+            let resizing = false;
+            let offsetX = 0, offsetY = 0;
+            let startX = 0, startY = 0, startW = 0, startH = 0;
+
+            el.addEventListener("mousedown", e => {
+                if (!isAdmin() || isPanning || isSpacePressed || e.button !== 0) return;
+                if (e.target.closest('[contenteditable="true"]')) return;
+                if (e.target.closest('[data-action="delete"]')) return;
+
+                const resizeHandle = e.target.closest('[data-action="resize"]');
+                if (resizeHandle && options.resize) {
+                    resizing = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startW = item.w || options.w;
+                    startH = item.h || options.h;
+                    el.classList.add("dragging");
+                    e.preventDefault();
+                    return;
+                }
+
+                dragging = true;
+                const p = screenToCanvas(e.clientX, e.clientY);
+                offsetX = p.x - (item.x || 0);
+                offsetY = p.y - (item.y || 0);
+                el.classList.add("dragging");
+                e.preventDefault();
+            });
+
+            window.addEventListener("mousemove", e => {
+                if (!dragging && !resizing) return;
+
+                if (dragging) {
+                    const p = screenToCanvas(e.clientX, e.clientY);
+                    const w = item.w || options.w;
+                    const h = item.h || options.h;
+                    const x = clamp(p.x - offsetX, 0, CANVAS_W - w - 20);
+                    const y = clamp(p.y - offsetY, 0, CANVAS_H - h - 20);
+
+                    el.style.left = x + "px";
+                    el.style.top = y + "px";
+                    item._draftX = x;
+                    item._draftY = y;
+                    scheduleDrawLines();
+                }
+
+                if (resizing) {
+                    let w = Math.max(options.minW, startW + (e.clientX - startX) / view.scale);
+                    let h = Math.max(options.minH, startH + (e.clientY - startY) / view.scale);
+                    w = clamp(w, options.minW, CANVAS_W - (item.x || 0));
+                    h = clamp(h, options.minH, CANVAS_H - (item.y || 0));
+
+                    el.style.width = w + "px";
+                    el.style.height = h + "px";
+                    item._draftW = w;
+                    item._draftH = h;
+                    scheduleDrawLines();
+                }
+            });
+
+            window.addEventListener("mouseup", async () => {
+                if (!dragging && !resizing) return;
+                dragging = false;
+                resizing = false;
+                el.classList.remove("dragging");
+
+                const update = { ...item };
+                let changed = false;
+
+                if (typeof item._draftX === "number") { item.x = item._draftX; update.x = item._draftX; delete item._draftX; changed = true; }
+                if (typeof item._draftY === "number") { item.y = item._draftY; update.y = item._draftY; delete item._draftY; changed = true; }
+                if (typeof item._draftW === "number") { item.w = item._draftW; update.w = item._draftW; delete item._draftW; changed = true; }
+                if (typeof item._draftH === "number") { item.h = item._draftH; update.h = item._draftH; delete item._draftH; changed = true; }
+
+                if (!changed) return;
+                try {
+                    await saveItem(update);
+                } catch (err) {
+                    console.error(err);
+                    toast("Could not save position/size");
+                }
+            });
+        }
+
+        function makeFrame(item) {
+            const el = document.createElement("div");
+            el.className = "frame" + (selectedItemId === item.id ? " selected" : "");
+            el.dataset.id = item.id;
+            el.style.left = (item.x || 120) + "px";
+            el.style.top = (item.y || 120) + "px";
+            el.style.width = (item.w || FRAME_W) + "px";
+            el.style.height = (item.h || FRAME_H) + "px";
+            el.innerHTML = `
+            <div class="frameTop">
+                <div class="frameTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Frame")}</div>
+                <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
+            </div>
+            <div class="frameDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+            ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
+        `;
+            bindEdit(el, item, "frame");
+            if (isAdmin()) enableMoveResize(el, item, { resize: true, w: FRAME_W, h: FRAME_H, minW: 260, minH: 180 });
+            return el;
+        }
+
+        function makeSection(item) {
+            const el = document.createElement("div");
+            el.className = "sectionBox" + (selectedItemId === item.id ? " selected" : "");
+            el.dataset.id = item.id;
+            el.style.left = (item.x || 140) + "px";
+            el.style.top = (item.y || 140) + "px";
+            el.style.width = (item.w || SECTION_W) + "px";
+            el.style.height = (item.h || SECTION_H) + "px";
+            el.innerHTML = `
+            <div class="sectionTop">
+                <div class="sectionTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Section")}</div>
+                <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
+            </div>
+            <div class="sectionDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+            ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
+        `;
+            bindEdit(el, item, "section");
+            if (isAdmin()) enableMoveResize(el, item, { resize: true, w: SECTION_W, h: SECTION_H, minW: 260, minH: 180 });
+            return el;
+        }
+
+        function makeNode(item) {
+            const el = document.createElement("div");
+            const selected = selectedItemId === item.id || selectedSourceNodeId === item.id;
+            el.className = "node" + (selected ? " selected" : "");
+            el.dataset.id = item.id;
+            el.style.left = (item.x || 180) + "px";
+            el.style.top = (item.y || 160) + "px";
+            el.innerHTML = `
+            <div class="nodeTop">
+                <div class="nodeType ${esc(item.type || "event")}">${nodeTypeLabel(item.type)}</div>
+                <div class="nodeTools">
+                    ${isAdmin() ? `<button class="iconBtn" data-action="connect">↔</button>` : ``}
+                    ${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}
+                </div>
+            </div>
+            <div class="nodeTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "Untitled")}</div>
+            <div class="nodeDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+        `;
+            bindEdit(el, item, "node");
+
+            const connectBtn = el.querySelector('[data-action="connect"]');
+            if (connectBtn) {
+                connectBtn.addEventListener("click", e => {
+                    e.stopPropagation();
+                    if (!isAdmin()) return;
+                    if (!connectMode) { toast("Turn Connect ON first"); return; }
+                    handleConnect(item.id);
+                });
+            }
+
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                selectedItemId = item.id;
+                if (!isAdmin()) { render(); return; }
+                if (connectMode && !e.target.closest("[data-action]") && !e.target.isContentEditable) {
+                    handleConnect(item.id);
+                    return;
+                }
+                render();
+            });
+
+            if (isAdmin()) enableMoveResize(el, item, { resize: false, w: NODE_W, h: NODE_H, minW: NODE_W, minH: NODE_H });
+            return el;
+        }
+
+        async function handleConnect(nodeId) {
+            if (!selectedSourceNodeId) {
+                selectedSourceNodeId = nodeId;
+                renderTop();
+                render();
+                toast("First node selected");
+                return;
+            }
+            if (selectedSourceNodeId === nodeId) {
+                selectedSourceNodeId = null;
+                renderTop();
+                render();
+                toast("Selection cleared");
+                return;
+            }
+            const exists = links.some(l =>
+                (l.from === selectedSourceNodeId && l.to === nodeId) ||
+                (l.from === nodeId && l.to === selectedSourceNodeId)
+            );
+            if (exists) {
+                toast("Those nodes are already connected");
+                return;
+            }
+            try {
+                await saveLink({ id: uid(), from: selectedSourceNodeId, to: nodeId });
+                selectedSourceNodeId = null;
+                renderTop();
+                render();
+                toast("Nodes connected");
+            } catch (err) {
+                console.error(err);
+                toast("Could not create link");
+            }
+        }
+
+        function render() {
+            if (activeEditingId) {
+                pendingRender = true;
+                scheduleDrawLines();
+                return;
+            }
+
+            [...canvas.querySelectorAll(".frame,.sectionBox,.node")].forEach(el => el.remove());
+
+            getFrames().forEach(item => canvas.appendChild(makeFrame(item)));
+            getSections().forEach(item => canvas.appendChild(makeSection(item)));
+            getNodes().forEach(item => canvas.appendChild(makeNode(item)));
+
+            emptyState();
+            scheduleDrawLines();
+        }
+
+        function startRealtime() {
+            if (unsubItems) unsubItems();
+            if (unsubLinks) unsubLinks();
+
+            unsubItems = onSnapshot(collection(db, "guide_items"), snap => {
+                items = snap.docs.map(d => d.data()).sort((a, b) => {
+                    const order = { frame: 1, section: 2, node: 3 };
+                    return (order[a.kind] || 9) - (order[b.kind] || 9) || (a.createdAt || 0) - (b.createdAt || 0);
+                });
+
+                if (activeEditingId) {
+                    pendingRender = true;
+                    scheduleDrawLines();
+                    return;
+                }
+                render();
+            });
+
+            unsubLinks = onSnapshot(collection(db, "guide_links"), snap => {
+                links = snap.docs.map(d => d.data());
+                scheduleDrawLines();
+            });
+        }
+
+        function spawnPoint() {
+            const c = getViewCenter();
+            return {
+                x: clamp(c.x - 180, 40, CANVAS_W - 700),
+                y: clamp(c.y - 120, 40, CANVAS_H - 500)
+            };
+        }
+        async function createItem() {
+            if (!isAdmin()) return;
+            const title = (createName.value || "").trim() || (
+                createMode === "node" ? "New Node" :
+                    createMode === "frame" ? "New Frame" : "New Section"
+            );
+            const desc = (createDesc.value || "").trim();
+            const p = spawnPoint();
+
+            let item;
+            if (createMode === "node") {
+                item = {
+                    id: uid(), kind: "node", type: createType.value || "event",
+                    title, desc, x: p.x, y: p.y, w: NODE_W, h: NODE_H, createdAt: Date.now()
+                };
+            } else if (createMode === "frame") {
+                item = {
+                    id: uid(), kind: "frame",
+                    title, desc, x: p.x, y: p.y, w: FRAME_W, h: FRAME_H, createdAt: Date.now()
+                };
+            } else {
+                item = {
+                    id: uid(), kind: "section",
+                    title, desc, x: p.x, y: p.y, w: SECTION_W, h: SECTION_H, createdAt: Date.now()
+                };
+            }
+
+            try {
+                await saveItem(item);
+                closeCreate();
+                toast(`${createMode} added`);
+            } catch (err) {
+                console.error(err);
+                toast(`Could not add ${createMode}`);
+            }
+        }
+
+        function startPan(clientX, clientY) {
+            isPanning = true;
+            panStartX = clientX;
+            panStartY = clientY;
+            canvasWrap.classList.add("panning");
+        }
+        function stopPan() {
+            isPanning = false;
+            canvasWrap.classList.remove("panning");
+        }
+        function initPanZoom() {
+            canvasWrap.addEventListener("mousedown", e => {
+                const editable = e.target.closest('[contenteditable="true"]');
+                const tool = e.target.closest("[data-action]");
+                const item = e.target.closest(".node,.frame,.sectionBox");
+
+                if (e.button === 1) {
+                    e.preventDefault();
+                    startPan(e.clientX, e.clientY);
+                    return;
+                }
+
+                if (isSpacePressed && e.button === 0 && !editable && !tool) {
+                    e.preventDefault();
+                    startPan(e.clientX, e.clientY);
+                    return;
+                }
+
+                if (!item && e.button === 0) {
+                    selectedItemId = null;
+                    if (connectMode && isAdmin()) selectedSourceNodeId = null;
+                    renderTop();
+                    render();
+                }
+            });
+
+            window.addEventListener("mousemove", e => {
+                if (!isPanning) return;
+                const dx = e.clientX - panStartX;
+                const dy = e.clientY - panStartY;
+                canvasWrap.scrollLeft -= dx;
+                canvasWrap.scrollTop -= dy;
+                panStartX = e.clientX;
+                panStartY = e.clientY;
+                scheduleDrawLines();
+            });
+
+            window.addEventListener("mouseup", stopPan);
+
+            canvasWrap.addEventListener("wheel", e => {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    zoomAt(e.clientX, e.clientY, view.scale * Math.exp(-e.deltaY * 0.0014));
+                    return;
+                }
+                if (e.shiftKey) {
+                    e.preventDefault();
+                    canvasWrap.scrollLeft += e.deltaY;
+                    scheduleDrawLines();
+                }
+            }, { passive: false });
+        }
+
+        loginBtn.addEventListener("click", openAuth);
+        authClose.addEventListener("click", closeAuth);
+        authBackdrop.addEventListener("click", e => { if (e.target === authBackdrop) closeAuth(); });
+
+        authGo.addEventListener("click", async () => {
+            const email = (authEmail.value || "").trim();
+            const password = authPassword.value || "";
+            if (!email || !password) { toast("Enter email and password"); return; }
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                closeAuth();
+                toast("Logged in");
+            } catch (err) {
+                console.error(err);
+                toast(err.code || "Login failed");
+            }
+        });
+
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                toast("Logged out");
+            } catch (err) {
+                console.error(err);
+                toast("Logout failed");
+            }
+        });
+
+        addNodeBtn.addEventListener("click", () => openCreate("node"));
+        addFrameBtn.addEventListener("click", () => openCreate("frame"));
+        addSectionBtn.addEventListener("click", () => openCreate("section"));
+
+        createClose.addEventListener("click", closeCreate);
+        createBackdrop.addEventListener("click", e => { if (e.target === createBackdrop) closeCreate(); });
+        createGo.addEventListener("click", createItem);
+
+        connectModeBtn.addEventListener("click", () => {
+            if (!isAdmin()) return;
+            connectMode = !connectMode;
+            if (!connectMode) selectedSourceNodeId = null;
+            renderTop();
+            render();
+            toast(`Connect mode ${connectMode ? "ON" : "OFF"}`);
+        });
+
+        clearSelectionBtn.addEventListener("click", () => {
+            selectedSourceNodeId = null;
+            renderTop();
+            render();
+            toast("Selected link cleared");
+        });
+
+        zoomInBtn.addEventListener("click", () => zoomBy(1));
+        zoomOutBtn.addEventListener("click", () => zoomBy(-1));
+        resetViewBtn.addEventListener("click", () => resetView(true));
+        fitViewBtn.addEventListener("click", fitView);
+
+        canvasWrap.addEventListener("scroll", scheduleDrawLines);
+        window.addEventListener("resize", scheduleDrawLines);
+
+        document.addEventListener("keydown", e => {
+            const tag = (document.activeElement?.tagName || "").toLowerCase();
+            const typing = ["input", "textarea", "select"].includes(tag) || document.activeElement?.isContentEditable;
+
+            if (e.code === "Space" && !typing) {
+                isSpacePressed = true;
+                document.body.style.userSelect = "none";
+            }
+
+            if (typing) {
+                if (e.key === "Escape") document.activeElement.blur();
+                if (e.key === "Enter" && createBackdrop.style.display === "flex" && document.activeElement === createName) {
+                    e.preventDefault();
+                    createItem();
+                }
+                return;
+            }
+
+            if (e.key === "Escape") {
+                selectedSourceNodeId = null;
+                selectedItemId = null;
+                connectMode = false;
+                stopPan();
+                renderTop();
+                render();
+            }
+            if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomBy(1); }
+            if (e.key === "-") { e.preventDefault(); zoomBy(-1); }
+            if (e.key === "0") { e.preventDefault(); resetView(true); }
+            if (e.key.toLowerCase() === "f") { e.preventDefault(); fitView(); }
+        });
+        document.addEventListener("keyup", e => {
+            if (e.code === "Space") {
+                isSpacePressed = false;
+                document.body.style.userSelect = "";
+            }
+        });
+
+        onAuthStateChanged(auth, async user => {
+            try {
+                await loadSession(user);
+                renderTop();
+                render();
+            } catch (err) {
+                console.error(err);
+                toast("Could not load account");
+            }
+        });
+
+        initPanZoom();
+        startRealtime();
+        renderTop();
+        render();
+        resetView(true);
+        setTimeout(() => { if (!items.length) fitView(); }, 200);
+    </script>
+</body>
+</html>

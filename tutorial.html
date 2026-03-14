@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resources Tutorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06090c;
+            --panel: #101821;
+            --stroke: rgba(255,255,255,.10);
+            --text: #eef7f1;
+            --muted: #96a8a0;
+            --yellow: #f5c04f;
+            --green: #32d583;
+            --blue: #63a8ff;
+            --purple: #ae7cff;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter,system-ui,Arial,sans-serif;
+            color: var(--text);
+            background: radial-gradient(700px 380px at 0% 0%, rgba(50,213,131,.10), transparent 60%), radial-gradient(700px 380px at 100% 0%, rgba(245,192,79,.08), transparent 60%), linear-gradient(180deg,#06090c 0%,#0a1015 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .wrap {
+            width: min(980px,100%);
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--stroke);
+            border-radius: 28px;
+            box-shadow: 0 22px 70px rgba(0,0,0,.35);
+        }
+
+        .left {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 600px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--stroke);
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--yellow);
+            width: max-content;
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-size: 40px;
+            line-height: 1.05;
+            color: var(--yellow);
+        }
+
+        .desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 15px;
+            max-width: 580px;
+        }
+
+        .stepBox {
+            margin-top: 22px;
+            height: 220px;
+            max-height: 220px;
+            position: relative;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .step {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: .35s ease;
+            pointer-events: none;
+        }
+
+            .step.active {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .step h2 {
+                margin: 0 0 10px;
+                font-size: 24px;
+            }
+
+            .step p {
+                margin: 0 0 12px;
+                color: var(--muted);
+                line-height: 1.6;
+            }
+
+        .miniList {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .miniItem {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.07);
+            color: #dce8e1;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.14);
+            transition: .2s ease;
+        }
+
+            .dot.active {
+                width: 28px;
+                background: var(--green);
+            }
+
+        .btnRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        button {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,.12);
+            background: #182430;
+            color: var(--text);
+            font: inherit;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #213140
+            }
+
+        .primary {
+            background: linear-gradient(135deg,#1f7f57,#32d583);
+            color: #07130d;
+            border-color: rgba(50,213,131,.34);
+        }
+
+        .right {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+        }
+
+        .demo {
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: #0c131a;
+            position: relative;
+            overflow: hidden;
+            transition: .3s ease;
+        }
+
+        .demoGrid {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 1px 1px, rgba(255,255,255,.08) 1px, transparent 0);
+            background-size: 28px 28px;
+        }
+
+        .fakeHud {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            display: flex;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(12,18,24,.92);
+            border: 1px solid rgba(255,255,255,.08);
+            z-index: 4;
+            font-size: 12px;
+            color: #dce8e1;
+        }
+
+        .hudBtn {
+            padding: 6px 9px;
+            border-radius: 10px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .fakeFrame, .fakeSection, .fakeNode, .line, .spot, .dragHand, .zoomRing {
+            position: absolute;
+            transition: .35s ease;
+        }
+
+        .fakeFrame {
+            left: 10%;
+            top: 14%;
+            width: 72%;
+            height: 56%;
+            border-radius: 24px;
+            border: 2px solid rgba(99,168,255,.45);
+            background: rgba(99,168,255,.08);
+        }
+
+        .fakeSection {
+            left: 17%;
+            top: 24%;
+            width: 48%;
+            height: 26%;
+            border-radius: 20px;
+            border: 2px dashed rgba(174,124,255,.45);
+            background: rgba(174,124,255,.08);
+        }
+
+        .fakeNode {
+            border-radius: 18px;
+            background: #101821;
+            border: 1px solid rgba(255,255,255,.12);
+            box-shadow: 0 14px 30px rgba(0,0,0,.28);
+        }
+
+            .fakeNode.one {
+                left: 20%;
+                top: 30%;
+                width: 30%;
+                height: 20%;
+            }
+
+            .fakeNode.two {
+                left: 56%;
+                top: 42%;
+                width: 24%;
+                height: 18%;
+            }
+
+        .line {
+            left: 45%;
+            top: 40%;
+            width: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #32d583, transparent);
+            transform: rotate(16deg);
+            opacity: .9;
+        }
+
+        .spot {
+            border: 2px solid rgba(245,192,79,.95);
+            border-radius: 20px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,.18);
+            opacity: 0;
+        }
+
+        .dragHand {
+            right: 12%;
+            bottom: 14%;
+            width: 54px;
+            height: 54px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            opacity: 0;
+        }
+
+        .zoomRing {
+            width: 84px;
+            height: 84px;
+            border-radius: 999px;
+            border: 3px solid rgba(50,213,131,.85);
+            opacity: 0;
+        }
+
+        .demo.step1 .spot {
+            opacity: 1;
+            left: 10%;
+            top: 14%;
+            width: 72%;
+            height: 56%;
+        }
+
+        .demo.step2 .dragHand {
+            opacity: 1;
+            transform: translate(-24px,-16px);
+        }
+
+        .demo.step3 .zoomRing {
+            opacity: 1;
+            left: 63%;
+            top: 20%;
+        }
+
+        .demo.step4 .spot {
+            opacity: 1;
+            left: 17%;
+            top: 24%;
+            width: 48%;
+            height: 26%;
+        }
+
+        .demo.step5 .spot {
+            opacity: 1;
+            left: 19%;
+            top: 29%;
+            width: 32%;
+            height: 22%;
+        }
+
+        .demo.step6 .spot {
+            opacity: 1;
+            left: 44%;
+            top: 37%;
+            width: 23%;
+            height: 12%;
+            border-radius: 30px;
+        }
+
+        .status {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            min-height: 18px;
+        }
+
+        @media (max-width: 860px) {
+            .wrap {
+                grid-template-columns: 1fr
+            }
+
+            .left, .right {
+                min-height: auto
+            }
+
+            h1 {
+                font-size: 32px
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="panel left">
+            <div>
+                <div class="eyebrow">RESOURCES TUTORIAL</div>
+                <h1>How to use the resources board</h1>
+                <p class="desc">
+                    This quick walkthrough shows people how to explore the page, move around, zoom in, and understand what they are looking at.
+                </p>
+
+                <div class="stepBox">
+                    <div class="step active">
+                        <h2>What this page is for</h2>
+                        <p>This page is a visual board for Pickaboom resources, guides, hosting info, event ideas, rules, and connected topics.</p>
+                        <div class="miniList">
+                            <div class="miniItem">Use it to read information instead of searching through lots of messages.</div>
+                            <div class="miniItem">Related ideas are grouped together to make things easier to understand.</div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <h2>How to move around</h2>
+                        <p>The board can be larger than your screen, so you will need to pan around to explore it.</p>
+                        <div class="miniList">
+                            <div class="miniItem">Middle mouse drag = move around the board</div>
+                            <div class="miniItem">Space + drag = another way to pan</div>
+                            <div class="miniItem">Normal scrolling also helps move through the page</div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <h2>How to zoom</h2>
+                        <p>You can zoom in to read details and zoom out to understand the bigger layout.</p>
+                        <div class="miniList">
+                            <div class="miniItem">Ctrl/Cmd + mouse wheel = zoom</div>
+                            <div class="miniItem">Press <b>+</b> or <b>-</b> to zoom with keys</div>
+                            <div class="miniItem">Press <b>0</b> to reset and <b>F</b> to fit the full board</div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <h2>Frames and sections</h2>
+                        <p>Big boxes help organise the board so you know where each topic starts and what belongs together.</p>
+                        <div class="miniList">
+                            <div class="miniItem"><b>Frames</b> = big topic areas</div>
+                            <div class="miniItem"><b>Sections</b> = smaller grouped parts inside a topic</div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <h2>Nodes are the main info cards</h2>
+                        <p>Nodes usually contain the actual information you want to read, like steps, notes, rules, or tips.</p>
+                        <div class="miniList">
+                            <div class="miniItem">Read titles first to find what you need faster</div>
+                            <div class="miniItem">Then open your focus on the description text inside each card</div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <h2>Lines show related topics</h2>
+                        <p>Connections between cards help show flow, related ideas, next steps, or linked information.</p>
+                        <div class="miniList">
+                            <div class="miniItem">If two cards are linked, they probably belong to the same topic or path</div>
+                            <div class="miniItem">Follow lines when you want the “next part” of something</div>
+                            <div class="miniItem">Most users are here to view and learn, while admins may manage the layout</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="controls">
+                    <div class="dots">
+                        <div class="dot active"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+
+                    <div class="btnRow">
+                        <button id="prevBtn" type="button">Back</button>
+                        <button id="nextBtn" type="button">Next</button>
+                        <button id="continueBtn" class="primary" type="button" style="display:none;"
+                                onclick="window.location.href='techtree.html'">
+                            Continue to Resources
+                        </button>
+                    </div>
+                </div>
+                <div class="status" id="statusText"></div>
+            </div>
+        </div>
+
+        <div class="panel right">
+            <div class="demo step1" id="demo">
+                <div class="demoGrid"></div>
+
+                <div class="fakeHud">
+                    <div class="hudBtn">−</div>
+                    <div class="hudBtn">100%</div>
+                    <div class="hudBtn">+</div>
+                    <div class="hudBtn">Fit</div>
+                </div>
+
+                <div class="fakeFrame"></div>
+                <div class="fakeSection"></div>
+                <div class="fakeNode one"></div>
+                <div class="fakeNode two"></div>
+                <div class="line"></div>
+                <div class="spot"></div>
+                <div class="dragHand">✋</div>
+                <div class="zoomRing"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3PvEamzNh4_fYIRAG9YxfVDZyucBC2b4",
+            authDomain: "staff-calendar-b25d4.firebaseapp.com",
+            projectId: "staff-calendar-b25d4",
+            storageBucket: "staff-calendar-b25d4.firebasestorage.app",
+            messagingSenderId: "771150169498",
+            appId: "1:771150169498:web:707d19b860fff00572a623"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const steps = [...document.querySelectorAll(".step")];
+        const dots = [...document.querySelectorAll(".dot")];
+        const demo = document.getElementById("demo");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const continueBtn = document.getElementById("continueBtn");
+        const statusText = document.getElementById("statusText");
+
+        let stepIndex = 0;
+        let currentUser = null;
+
+        function renderStep() {
+            steps.forEach((step, i) => step.classList.toggle("active", i === stepIndex));
+            dots.forEach((dot, i) => dot.classList.toggle("active", i === stepIndex));
+            demo.className = "demo step" + (stepIndex + 1);
+
+            prevBtn.style.visibility = stepIndex === 0 ? "hidden" : "visible";
+            nextBtn.style.display = stepIndex === steps.length - 1 ? "inline-block" : "inline-block";
+            continueBtn.style.display = stepIndex === steps.length - 1 ? "inline-block" : "none";
+
+            if (stepIndex === steps.length - 1) {
+                nextBtn.style.display = "none";
+            }
+        }
+
+        prevBtn.addEventListener("click", () => {
+            stepIndex = Math.max(0, stepIndex - 1);
+            renderStep();
+        });
+
+        nextBtn.addEventListener("click", () => {
+            stepIndex = Math.min(steps.length - 1, stepIndex + 1);
+            renderStep();
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user || null;
+            statusText.textContent = user
+                ? `Logged in as ${user.email}`
+                : "Not logged in. Tutorial progress only saves when using an account.";
+        });
+
+        continueBtn.addEventListener("click", async () => {
+            try {
+                if (currentUser) {
+                    await setDoc(doc(db, "users", currentUser.uid), {
+                        resourcesTutorialSeen: true
+                    }, { merge: true });
+                }
+
+                window.location.href = "resources.html";
+            } catch (err) {
+                console.error(err);
+                statusText.textContent = "Could not save tutorial progress, but you can still continue.";
+                setTimeout(() => {
+                    window.location.href = "resources.html";
+                }, 500);
+            }
+        });
+
+        renderStep();
+    </script>
+</body>
+</html>
