@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -7,18 +7,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #070b10;
-            --panel: #101821;
-            --panel2: #16212d;
-            --stroke: rgba(255,255,255,.10);
-            --text: #eef7f1;
-            --muted: #97aaa2;
+            --bg: #1f1f1f;
+            --bg2: #252525;
+            --bg3: #2c2c2c;
+            --panel: #181818;
+            --panel2: #202020;
+            --panel3: #262626;
+            --stroke: rgba(255,255,255,.08);
+            --stroke2: rgba(255,255,255,.14);
+            --text: #f5f5f5;
+            --muted: #a6a6a6;
             --yellow: #f5c04f;
             --green: #32d583;
             --blue: #63a8ff;
             --purple: #ae7cff;
             --red: #ef6262;
-            --shadow: 0 18px 50px rgba(0,0,0,.35);
+            --shadow: 0 20px 55px rgba(0,0,0,.4);
+            --radius: 14px;
+            --radius-lg: 18px;
+            --grid: 28px;
+            --topbar-h: 52px;
+            --leftbar-w: 260px;
+            --rightbar-w: 280px;
         }
 
         * {
@@ -29,123 +39,322 @@
             margin: 0;
             height: 100%;
             font-family: Inter,system-ui,Arial,sans-serif;
+            background: var(--bg);
             color: var(--text);
-            background: linear-gradient(180deg,#06090c 0%,#0a1015 100%);
+            overflow: hidden;
         }
 
-        body {
-            overflow: hidden
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        .app {
+            height: 100%;
+            display: grid;
+            grid-template-columns: var(--leftbar-w) 1fr var(--rightbar-w);
+            grid-template-rows: var(--topbar-h) 1fr;
+            grid-template-areas:
+                "top top top"
+                "left center right";
+            background: var(--bg);
         }
 
         .topBar {
-            height: 72px;
-            border-bottom: 1px solid var(--stroke);
-            background: rgba(8,13,17,.92);
+            grid-area: top;
+            height: var(--topbar-h);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
-            padding: 0 16px;
-            z-index: 30;
-            position: relative;
-        }
-
-        .brandWrap {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            min-width: 0
+            padding: 0 12px;
+            background: #242424;
+            border-bottom: 1px solid var(--stroke);
+            position: relative;
+            z-index: 40;
         }
 
-        .brandIcon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: var(--yellow);
-            background: linear-gradient(135deg,rgba(245,192,79,.22),rgba(50,213,131,.16)),#121b23;
-            border: 1px solid rgba(255,255,255,.12);
-        }
-
-        .brandText h1 {
-            margin: 0;
-            font-size: 19px;
-            color: var(--yellow)
-        }
-
-        .brandText p {
-            margin: 4px 0 0;
-            font-size: 12px;
-            color: var(--muted)
-        }
-
-        .topActions {
+        .topLeft,
+        .topCenter,
+        .topRight {
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end
+            min-width: 0;
         }
 
-        .pill, .btn {
-            min-height: 36px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,.12);
-            font: inherit;
-            font-size: 13px;
+        .topCenter {
+            justify-content: center;
+            flex: 1;
         }
 
-        .pill {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .brandIcon {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #0e0e0e;
+            background: var(--yellow);
+            flex: none;
+        }
+
+        .brandText {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+            .brandText strong {
+                font-size: 13px;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+
+            .brandText span {
+                font-size: 11px;
+                color: var(--muted);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .chip,
+        .btn,
+        .miniSelect {
+            min-height: 32px;
+            border-radius: 10px;
+            border: 1px solid var(--stroke2);
+            background: #2a2a2a;
+            color: var(--text);
+        }
+
+        .chip {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
-            background: rgba(255,255,255,.04)
+            padding: 0 10px;
+            font-size: 12px;
+            white-space: nowrap;
         }
 
         .btn {
             appearance: none;
-            padding: 9px 13px;
-            background: #182430;
-            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 12px;
             cursor: pointer;
-            font-weight: 700
+            font-size: 12px;
+            font-weight: 700;
+            transition: .14s ease;
+            white-space: nowrap;
         }
 
             .btn:hover {
-                background: #223141
+                background: #333
+            }
+
+            .btn.active {
+                background: #313e51;
+                border-color: rgba(99,168,255,.45);
+                box-shadow: 0 0 0 1px rgba(99,168,255,.25) inset;
             }
 
             .btn.primary {
-                background: linear-gradient(135deg,#1f7f57,#32d583);
-                color: #06120d;
-                border-color: rgba(50,213,131,.35)
+                background: #303b28;
+                border-color: rgba(50,213,131,.32);
+                color: #dff7ea;
             }
 
             .btn.warn {
-                background: #4b3816;
-                color: #fff3d1
+                background: #43381f;
+                border-color: rgba(245,192,79,.28);
+                color: #fff3d1;
             }
 
             .btn.danger {
-                background: #4a2020
+                background: #412222;
+                border-color: rgba(239,98,98,.28);
+                color: #ffdada;
             }
 
+        .miniSelect {
+            padding: 0 10px;
+            outline: none;
+            min-width: 112px;
+        }
+
+        .sidePanel {
+            background: #222;
+            border-right: 1px solid var(--stroke);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leftPanel {
+            grid-area: left
+        }
+
+        .rightPanel {
+            grid-area: right;
+            border-right: none;
+            border-left: 1px solid var(--stroke);
+        }
+
+        .panelHead {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--stroke);
+            background: #242424;
+            flex: none;
+        }
+
+            .panelHead strong {
+                font-size: 12px;
+                letter-spacing: .02em;
+            }
+
+        .panelBody {
+            flex: 1;
+            overflow: auto;
+            padding: 10px;
+        }
+
+        .layerList {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .layerItem {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+            .layerItem:hover {
+                background: #2a2a2a;
+                border-color: var(--stroke);
+            }
+
+            .layerItem.active {
+                background: #313131;
+                border-color: rgba(99,168,255,.35);
+            }
+
+        .layerDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            flex: none;
+        }
+
+        .layerMeta {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+            .layerMeta strong {
+                font-size: 12px;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .layerMeta span {
+                font-size: 11px;
+                color: var(--muted);
+            }
+
+        .propGroup {
+            border: 1px solid var(--stroke);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: #272727;
+        }
+
+        .propTitle {
+            padding: 10px 12px;
+            background: #2c2c2c;
+            border-bottom: 1px solid var(--stroke);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .propBody {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .propRow {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .propRow label {
+                font-size: 11px;
+                color: var(--muted);
+                font-weight: 700;
+            }
+
+        .propInput {
+            width: 100%;
+            min-height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--stroke2);
+            background: #1f1f1f;
+            color: var(--text);
+            padding: 8px 10px;
+            outline: none;
+        }
+
+        .propGrid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
         .workspace {
+            grid-area: center;
             position: relative;
-            height: calc(100vh - 72px);
-            overflow: hidden
+            overflow: hidden;
+            background: #1f1f1f;
         }
 
         .canvasWrap {
             position: absolute;
             inset: 0;
             overflow: auto;
-            background: radial-gradient(circle at 1px 1px,rgba(255,255,255,.08) 1px,transparent 0);
-            background-size: 28px 28px;
+            background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+            background-size: var(--grid) var(--grid);
+            background-color: #1f1f1f;
             cursor: default;
         }
 
@@ -158,8 +367,6 @@
             width: 10000px;
             height: 8000px;
             transform-origin: top left;
-            will-change: transform;
-            backface-visibility: hidden;
         }
 
         .canvas {
@@ -173,12 +380,12 @@
             inset: 0;
             width: 100%;
             height: 100%;
-            z-index: 6;
-            overflow: visible;
+            z-index: 5;
             pointer-events: none;
+            overflow: visible;
         }
 
-        .frame, .sectionBox, .node {
+        .frame, .sectionBox, .node, .shapeItem {
             position: absolute;
             user-select: none;
             box-shadow: var(--shadow);
@@ -187,444 +394,598 @@
         .frame, .sectionBox {
             min-width: 260px;
             min-height: 180px;
-            border-radius: 22px;
+            border-radius: 18px;
             overflow: hidden;
         }
 
         .frame {
             z-index: 1;
-            background: linear-gradient(180deg,rgba(99,168,255,.08),rgba(99,168,255,.02)),rgba(17,27,38,.55);
-            border: 2px solid rgba(99,168,255,.35);
+            background: rgba(99,168,255,.06);
+            border: 1px solid rgba(99,168,255,.35);
         }
 
         .sectionBox {
             z-index: 2;
-            background: linear-gradient(180deg,rgba(174,124,255,.08),rgba(174,124,255,.02)),rgba(24,18,34,.5);
-            border: 2px dashed rgba(174,124,255,.38);
-        }
-
-        .node {
-            width: 260px;
-            min-height: 120px;
-            padding: 14px;
-            border-radius: 18px;
-            background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015)),#101821;
-            border: 1px solid rgba(255,255,255,.12);
-            z-index: 10;
-        }
-
-            .node:hover {
-                border-color: rgba(50,213,131,.35)
-            }
-
-        .selected {
-            box-shadow: 0 0 0 2px rgba(245,192,79,.18),var(--shadow)
-        }
-
-        .dragging {
-            box-shadow: 0 22px 60px rgba(0,0,0,.46)
+            background: rgba(174,124,255,.06);
+            border: 1px dashed rgba(174,124,255,.42);
         }
 
         .frameTop, .sectionTop {
-            height: 42px;
-            padding: 8px 10px 8px 12px;
-            border-bottom: 1px solid rgba(255,255,255,.08);
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            background: rgba(8,12,18,.28)
+            gap: 8px;
+            padding: 0 10px;
+            background: rgba(0,0,0,.18);
+            border-bottom: 1px solid rgba(255,255,255,.08);
         }
 
-        .frameTitle, .sectionTitle, .nodeTitle {
+        .frameTitle, .sectionTitle, .nodeTitle, .shapeLabel {
             outline: none;
-            font-weight: 800
+            font-weight: 700;
         }
 
         .frameTitle {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--blue)
         }
 
         .sectionTitle {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--purple)
         }
 
         .frameDesc, .sectionDesc {
-            padding: 10px 12px;
+            padding: 12px;
             font-size: 12px;
-            color: var(--muted);
-            line-height: 1.45;
+            color: #d3d3d3;
+            line-height: 1.5;
+            white-space: pre-wrap;
             outline: none;
-            white-space: pre-wrap
         }
+
+        .node {
+            z-index: 10;
+            width: 280px;
+            min-height: 122px;
+            padding: 14px;
+            border-radius: 16px;
+            background: #272727;
+            border: 1px solid rgba(255,255,255,.10);
+        }
+
+            .node:hover {
+                border-color: rgba(255,255,255,.18);
+            }
 
         .nodeTop {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
-            margin-bottom: 10px
+            margin-bottom: 10px;
         }
 
         .nodeType {
+            display: inline-flex;
+            align-items: center;
             min-height: 24px;
             padding: 4px 9px;
             border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: .04em;
+            letter-spacing: .06em;
             border: 1px solid;
         }
 
             .nodeType.event {
-                background: rgba(245,192,79,.10);
-                border-color: rgba(245,192,79,.24);
-                color: var(--yellow)
+                color: var(--yellow);
+                border-color: rgba(245,192,79,.28);
+                background: rgba(245,192,79,.09);
             }
 
-            .nodeType.setup {
-                background: rgba(99,168,255,.10);
-                border-color: rgba(99,168,255,.24);
-                color: var(--blue)
+            .nodeType.location {
+                color: var(--blue);
+                border-color: rgba(99,168,255,.28);
+                background: rgba(99,168,255,.09);
             }
 
-            .nodeType.rule {
-                background: rgba(239,98,98,.10);
-                border-color: rgba(239,98,98,.24);
-                color: #ff9b9b
+            .nodeType.resources {
+                color: var(--purple);
+                border-color: rgba(174,124,255,.28);
+                background: rgba(174,124,255,.09);
             }
 
-            .nodeType.tip {
-                background: rgba(50,213,131,.10);
-                border-color: rgba(50,213,131,.24);
-                color: var(--green)
+            .nodeType.hosting {
+                color: var(--green);
+                border-color: rgba(50,213,131,.28);
+                background: rgba(50,213,131,.09);
             }
 
-        .nodeTools {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap
-        }
-
-        .iconBtn {
-            width: 30px;
-            height: 30px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,.10);
-            background: rgba(255,255,255,.04);
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 800
-        }
-
-            .iconBtn:hover {
-                background: rgba(255,255,255,.08)
+            .nodeType.warning {
+                color: #ffaaaa;
+                border-color: rgba(239,98,98,.28);
+                background: rgba(239,98,98,.09);
             }
 
         .nodeTitle {
             font-size: 18px;
-            color: var(--yellow);
-            line-height: 1.15;
+            line-height: 1.16;
+            color: #fff;
             margin-bottom: 8px;
-            word-break: break-word
+            word-break: break-word;
         }
 
         .nodeDesc {
             font-size: 13px;
-            color: #d7e5dc;
             line-height: 1.5;
+            color: #dbdbdb;
             outline: none;
+            white-space: pre-wrap;
             word-break: break-word;
-            white-space: pre-wrap
         }
 
-            .nodeTitle[contenteditable="true"]:focus,
-            .nodeDesc[contenteditable="true"]:focus,
-            .frameTitle[contenteditable="true"]:focus,
-            .frameDesc[contenteditable="true"]:focus,
-            .sectionTitle[contenteditable="true"]:focus,
-            .sectionDesc[contenteditable="true"]:focus {
-                background: rgba(255,255,255,.04);
-                border-radius: 10px;
+        .shapeItem {
+            z-index: 9;
+            min-width: 80px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            overflow: visible;
+        }
+
+        .shapeInner {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(255,255,255,.16);
+            background: rgba(245,192,79,.22);
+            pointer-events: none;
+        }
+
+        .shape-square .shapeInner {
+            border-radius: 10px
+        }
+
+        .shape-rectangle .shapeInner {
+            border-radius: 14px
+        }
+
+        .shape-circle .shapeInner {
+            border-radius: 999px
+        }
+
+        .shape-triangle .shapeInner {
+            clip-path: polygon(50% 0%,0% 100%,100% 100%);
+            border-radius: 0
+        }
+
+        .shape-diamond .shapeInner {
+            clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+            border-radius: 0
+        }
+
+        .shape-parallelogram .shapeInner {
+            clip-path: polygon(18% 0%,100% 0%,82% 100%,0% 100%);
+            border-radius: 0
+        }
+
+        .shape-hexagon .shapeInner {
+            clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+            border-radius: 0
+        }
+
+        .shapeLabel {
+            position: absolute;
+            left: 50%;
+            bottom: -30px;
+            transform: translateX(-50%);
+            padding: 5px 10px;
+            border-radius: 999px;
+            min-width: 72px;
+            max-width: 180px;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 11px;
+            background: #222;
+            border: 1px solid rgba(255,255,255,.12);
+            color: #fff;
+        }
+
+        .nodeTools,
+        .shapeTools {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .shapeTools {
+            position: absolute;
+            top: -16px;
+            right: -10px;
+            z-index: 4;
+        }
+
+        .iconBtn {
+            width: 28px;
+            height: 28px;
+            border-radius: 9px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: #2f2f2f;
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+            .iconBtn:hover {
+                background: #373737
             }
 
         .resizeHandle {
             position: absolute;
-            right: 10px;
-            bottom: 10px;
-            width: 18px;
-            height: 18px;
-            border-radius: 8px;
-            background: rgba(255,255,255,.10);
-            border: 1px solid rgba(255,255,255,.16);
+            right: 8px;
+            bottom: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 6px;
+            background: #3a3a3a;
+            border: 1px solid rgba(255,255,255,.14);
             cursor: nwse-resize;
+            z-index: 4;
+        }
+
+        .selected {
+            box-shadow: 0 0 0 2px rgba(99,168,255,.45), var(--shadow);
+        }
+
+        .dragging {
+            box-shadow: 0 24px 60px rgba(0,0,0,.55);
+        }
+
+        .selectionBox {
+            position: absolute;
+            border: 1px solid rgba(99,168,255,.95);
+            background: rgba(99,168,255,.16);
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .emptyMessage {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: min(440px,calc(100vw - 40px));
+            padding: 22px;
+            text-align: center;
+            border: 1px dashed rgba(255,255,255,.14);
+            border-radius: 18px;
+            color: var(--muted);
+            background: rgba(255,255,255,.03);
+            z-index: 2;
+        }
+
+            .emptyMessage h3 {
+                margin: 0 0 8px;
+                color: var(--text);
+                font-size: 18px;
+            }
+
+        .bottomDock {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 16px;
+            background: rgba(31,31,31,.96);
+            border: 1px solid var(--stroke2);
+            box-shadow: var(--shadow);
+            z-index: 60;
+            backdrop-filter: blur(10px);
+            max-width: calc(100% - 40px);
+            overflow: auto;
+        }
+
+        .dockDivider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255,255,255,.08);
+            flex: none;
         }
 
         .zoomHud {
             position: absolute;
             left: 16px;
             top: 16px;
-            z-index: 25;
+            z-index: 35;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 12px;
-            border-radius: 16px;
-            background: rgba(12,18,24,.92);
-            border: 1px solid var(--stroke)
+            padding: 8px;
+            border-radius: 14px;
+            background: rgba(31,31,31,.96);
+            border: 1px solid var(--stroke2);
+            box-shadow: var(--shadow);
         }
 
         .zoomBadge {
             min-width: 58px;
-            text-align: center;
-            padding: 8px 10px;
-            border-radius: 12px;
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.10);
-            font-weight: 800
-        }
-
-        .hintBox {
-            position: absolute;
-            left: 16px;
-            bottom: 16px;
-            z-index: 25;
-            max-width: 420px;
-            padding: 12px 14px;
-            border-radius: 16px;
-            border: 1px solid var(--stroke);
-            background: rgba(12,18,24,.92);
-            color: var(--muted);
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #2a2a2a;
+            border: 1px solid var(--stroke2);
             font-size: 12px;
-            line-height: 1.5
+            font-weight: 800;
         }
-
-            .hintBox b {
-                color: var(--text)
-            }
-
-        .floatingTools {
-            position: absolute;
-            right: 16px;
-            bottom: 16px;
-            z-index: 25;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end
-        }
-
-        .emptyMessage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            width: min(460px,calc(100vw - 28px));
-            padding: 22px 24px;
-            text-align: center;
-            color: var(--muted);
-            border: 1px dashed rgba(255,255,255,.14);
-            background: rgba(255,255,255,.03);
-            border-radius: 22px;
-            z-index: 3
-        }
-
-            .emptyMessage h3 {
-                margin: 0 0 8px;
-                color: var(--text)
-            }
 
         .toast {
             position: fixed;
             left: 50%;
-            bottom: 22px;
+            bottom: 82px;
             transform: translateX(-50%);
             display: none;
             z-index: 99999;
-            background: rgba(12,18,24,.96);
+            background: rgba(20,20,20,.97);
             color: var(--text);
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 999px;
-            padding: 12px 16px;
-            font-size: 12px
+            padding: 10px 14px;
+            font-size: 12px;
         }
 
         .modalBackdrop {
             position: fixed;
             inset: 0;
-            background: rgba(2,4,6,.60);
+            background: rgba(0,0,0,.55);
             display: none;
             align-items: center;
             justify-content: center;
+            z-index: 9999;
             padding: 18px;
-            z-index: 9999
         }
 
         .modal {
-            width: min(500px,100%);
-            background: #111a22;
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 22px;
-            overflow: hidden
+            width: min(420px,100%);
+            border-radius: 18px;
+            background: #252525;
+            border: 1px solid var(--stroke2);
+            overflow: hidden;
         }
 
         .modalTop {
-            padding: 18px 18px 14px;
-            border-bottom: 1px solid rgba(255,255,255,.08)
+            padding: 16px 18px 12px;
+            border-bottom: 1px solid var(--stroke);
         }
 
             .modalTop h3 {
                 margin: 0;
-                font-size: 18px
+                font-size: 18px;
             }
 
             .modalTop p {
                 margin: 8px 0 0;
+                color: var(--muted);
                 font-size: 13px;
-                color: var(--muted)
             }
 
         .modalBody {
-            padding: 16px 18px 18px
+            padding: 16px 18px 18px;
         }
 
         .field {
             display: flex;
             flex-direction: column;
-            gap: 7px;
-            margin-bottom: 12px
+            gap: 6px;
+            margin-bottom: 12px;
         }
 
             .field label {
                 font-size: 12px;
+                color: #ddd;
                 font-weight: 700;
-                color: #d8e5dd
             }
 
-        input, select, textarea {
-            width: 100%;
-            font: inherit;
-            color: var(--text);
-            background: #16212d;
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 14px;
-            padding: 12px 13px;
-            outline: none;
-            resize: vertical
-        }
+            .field input {
+                width: 100%;
+                min-height: 40px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid var(--stroke2);
+                background: #1d1d1d;
+                color: var(--text);
+                outline: none;
+            }
 
         .modalActions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px
+            gap: 8px;
+            margin-top: 8px;
         }
 
-        @media (max-width:860px) {
-            .topBar {
-                height: auto;
-                min-height: 72px;
-                padding: 12px;
-                flex-direction: column;
-                align-items: stretch
+        .helpText {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 6px;
+            background: #1c1c1c;
+            border: 1px solid var(--stroke2);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        [contenteditable="true"]:focus {
+            background: rgba(255,255,255,.04);
+            border-radius: 8px;
+        }
+
+        @media (max-width:1180px) {
+            .app {
+                grid-template-columns: 220px 1fr 240px;
+            }
+        }
+
+        @media (max-width:940px) {
+            .app {
+                grid-template-columns: 1fr;
+                grid-template-rows: var(--topbar-h) 1fr;
+                grid-template-areas:
+                    "top"
+                    "center";
             }
 
-            .topActions {
-                justify-content: flex-start
+            .leftPanel, .rightPanel {
+                display: none;
             }
 
-            .workspace {
-                height: calc(100vh - 122px)
-            }
-
-            .hintBox {
+            .bottomDock {
                 left: 12px;
                 right: 12px;
-                bottom: 12px;
-                max-width: none
-            }
-
-            .floatingTools {
-                left: 12px;
-                right: 12px;
-                bottom: 122px
-            }
-
-            .zoomHud {
-                left: 12px;
-                top: 12px;
-                flex-wrap: wrap;
-                max-width: calc(100vw - 24px)
+                transform: none;
+                max-width: none;
+                justify-content: flex-start;
             }
         }
     </style>
 </head>
 <body>
-
-    <div class="topBar">
-        <div class="brandWrap">
-            <div class="brandIcon">PB</div>
-            <div class="brandText">
-                <h1>Pickaboom Hosting Guide</h1>
-                <p id="userLine">Loading account...</p>
-            </div>
-        </div>
-
-        <div class="topActions">
-            <div class="pill" id="rolePill" style="display:none;">Role: <b id="roleText">STAFF</b></div>
-            <button class="btn" onclick="location.href='index.html'">Back to Calendar</button>
-            <button class="btn" id="connectModeBtn" style="display:none;">Connect: OFF</button>
-            <button class="btn primary" id="addNodeBtn" style="display:none;">+ Node</button>
-            <button class="btn" id="addFrameBtn" style="display:none;">+ Frame</button>
-            <button class="btn" id="addSectionBtn" style="display:none;">+ Section</button>
-            <button class="btn" id="loginBtn" style="display:none;">Login</button>
-            <button class="btn danger" id="logoutBtn" style="display:none;">Logout</button>
-        </div>
-    </div>
-
-    <div class="workspace">
-        <div class="canvasWrap" id="canvasWrap">
-            <div class="zoomLayer" id="zoomLayer">
-                <div class="canvas" id="canvas">
-                    <svg id="lines"></svg>
-                    <div class="emptyMessage" id="emptyMessage" style="display:none;">
-                        <h3>No guide items yet</h3>
-                        <div>Admins can add nodes, frames and sections here.</div>
+    <div class="app">
+        <div class="topBar">
+            <div class="topLeft">
+                <div class="brand">
+                    <div class="brandIcon">PB</div>
+                    <div class="brandText">
+                        <strong>Pickaboom Hosting Guide</strong>
+                        <span id="userLine">Loading account...</span>
                     </div>
                 </div>
             </div>
+
+            <div class="topCenter">
+                <div class="chip" id="rolePill" style="display:none;">Role: <b id="roleText">STAFF</b></div>
+                <div class="chip" id="boardStatus">Board</div>
+            </div>
+
+            <div class="topRight">
+                <button class="btn" type="button" onclick="location.href='index.html'">Back</button>
+                <button class="btn" id="loginBtn" style="display:none;">Login</button>
+                <button class="btn danger" id="logoutBtn" style="display:none;">Logout</button>
+            </div>
         </div>
 
-        <div class="zoomHud">
-            <button class="btn" id="zoomOutBtn" type="button">−</button>
-            <div class="zoomBadge" id="zoomLabel">100%</div>
-            <button class="btn" id="zoomInBtn" type="button">+</button>
-            <button class="btn" id="resetViewBtn" type="button">Reset</button>
-            <button class="btn" id="fitViewBtn" type="button">Fit</button>
-        </div>
+        <aside class="sidePanel leftPanel">
+            <div class="panelHead">
+                <strong>Layers</strong>
+                <span style="font-size:11px;color:var(--muted)" id="layerCount">0 items</span>
+            </div>
+            <div class="panelBody">
+                <div class="layerList" id="layerList"></div>
+            </div>
+        </aside>
 
-        <div class="hintBox">
-            <b>Controls:</b><br>
-            Middle mouse = pan<br>
-            Space + drag = pan<br>
-            Ctrl/Cmd + wheel = zoom<br>
-            + / - = zoom, 0 = reset, F = fit<br>
-            Admins can drag, resize, edit, and connect items.
-        </div>
+        <main class="workspace">
+            <div class="canvasWrap" id="canvasWrap">
+                <div class="zoomLayer" id="zoomLayer">
+                    <div class="canvas" id="canvas">
+                        <svg id="lines"></svg>
+                        <div class="emptyMessage" id="emptyMessage" style="display:none;">
+                            <h3>No guide items yet</h3>
+                            <div>Admins can add frames, sections, nodes and shapes here.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="floatingTools">
-            <button class="btn warn" id="clearSelectionBtn" style="display:none;">Clear selected link</button>
-        </div>
+            <div class="zoomHud">
+                <button class="btn" id="zoomOutBtn" type="button">−</button>
+                <div class="zoomBadge" id="zoomLabel">100%</div>
+                <button class="btn" id="zoomInBtn" type="button">+</button>
+                <button class="btn" id="resetViewBtn" type="button">Reset</button>
+                <button class="btn" id="fitViewBtn" type="button">Fit</button>
+            </div>
+
+            <div class="bottomDock" id="bottomDock">
+                <select id="quickNodeType" class="miniSelect" title="Node type">
+                    <option value="event">Event</option>
+                    <option value="location">Location</option>
+                    <option value="resources">Resources</option>
+                    <option value="hosting">How to host</option>
+                    <option value="warning">Warning</option>
+                </select>
+
+                <select id="quickShapeType" class="miniSelect" title="Shape type">
+                    <option value="square">Square</option>
+                    <option value="rectangle">Rectangle</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="circle">Circle</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="parallelogram">Parallelogram</option>
+                    <option value="hexagon">Hexagon</option>
+                </select>
+
+                <input id="quickShapeColor" class="miniSelect" type="color" value="#f5c04f" title="Shape colour" style="min-width:54px;padding:4px">
+
+                <div class="dockDivider"></div>
+
+                <button class="btn primary" id="addNodeBtn" style="display:none;">+ Node</button>
+                <button class="btn" id="addFrameBtn" style="display:none;">+ Frame</button>
+                <button class="btn" id="addSectionBtn" style="display:none;">+ Section</button>
+                <button class="btn" id="addShapeBtn" style="display:none;">+ Shape</button>
+
+                <div class="dockDivider"></div>
+
+                <button class="btn" id="snapBtn" style="display:none;">Snap ON</button>
+                <button class="btn" id="connectModeBtn" style="display:none;">Connect OFF</button>
+                <button class="btn warn" id="clearSelectionBtn" style="display:none;">Clear Link Pick</button>
+            </div>
+        </main>
+
+        <aside class="sidePanel rightPanel">
+            <div class="panelHead">
+                <strong>Properties</strong>
+                <span style="font-size:11px;color:var(--muted)" id="selectionCount">0 selected</span>
+            </div>
+            <div class="panelBody" id="propPanel">
+                <div class="propGroup">
+                    <div class="propTitle">Quick Help</div>
+                    <div class="propBody">
+                        <div class="helpText">
+                            <div><span class="kbd">MMB</span> pan</div>
+                            <div><span class="kbd">Space</span> + drag = pan</div>
+                            <div><span class="kbd">Ctrl</span> + wheel = zoom</div>
+                            <div><span class="kbd">Del</span> delete</div>
+                            <div><span class="kbd">Ctrl</span> + <span class="kbd">C</span>/<span class="kbd">V</span> copy/paste</div>
+                            <div>Click text to rename after placing it.</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dynamicProps"></div>
+            </div>
+        </aside>
     </div>
 
     <div class="modalBackdrop" id="authBackdrop">
@@ -645,39 +1006,6 @@
                 <div class="modalActions">
                     <button class="btn" id="authClose" type="button">Close</button>
                     <button class="btn primary" id="authGo" type="button">Login</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modalBackdrop" id="createBackdrop">
-        <div class="modal">
-            <div class="modalTop">
-                <h3 id="createTitle">Create item</h3>
-                <p id="createText">Add something new.</p>
-            </div>
-            <div class="modalBody">
-                <div class="field">
-                    <label>Title</label>
-                    <input id="createName" type="text" placeholder="Enter a title">
-                </div>
-                <div class="field" id="createTypeWrap">
-                    <label>Node type</label>
-                    <select id="createType">
-                        <option value="event">Event</option>
-                        <option value="Location">Location</option>
-                        <option value="Resources">Resources</option>
-                        <option value="How to host">How to host</option>
-                        <option value="What not to do">What not to do</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Description</label>
-                    <textarea id="createDesc" rows="4" placeholder="Write a short description"></textarea>
-                </div>
-                <div class="modalActions">
-                    <button class="btn" id="createClose" type="button">Cancel</button>
-                    <button class="btn primary" id="createGo" type="button">Create</button>
                 </div>
             </div>
         </div>
@@ -709,37 +1037,41 @@
 
         const CANVAS_W = 10000;
         const CANVAS_H = 8000;
-        const NODE_W = 260;
-        const NODE_H = 120;
-        const FRAME_W = 620;
-        const FRAME_H = 380;
-        const SECTION_W = 480;
-        const SECTION_H = 280;
+        const GRID_SIZE = 28;
+        const NODE_W = 280;
+        const NODE_H = 122;
+        const FRAME_W = 640;
+        const FRAME_H = 390;
+        const SECTION_W = 500;
+        const SECTION_H = 290;
+        const SHAPE_W = 140;
+        const SHAPE_H = 140;
 
         const userLine = document.getElementById("userLine");
         const rolePill = document.getElementById("rolePill");
         const roleText = document.getElementById("roleText");
+        const boardStatus = document.getElementById("boardStatus");
         const loginBtn = document.getElementById("loginBtn");
         const logoutBtn = document.getElementById("logoutBtn");
+
         const addNodeBtn = document.getElementById("addNodeBtn");
         const addFrameBtn = document.getElementById("addFrameBtn");
         const addSectionBtn = document.getElementById("addSectionBtn");
+        const addShapeBtn = document.getElementById("addShapeBtn");
         const connectModeBtn = document.getElementById("connectModeBtn");
         const clearSelectionBtn = document.getElementById("clearSelectionBtn");
+        const snapBtn = document.getElementById("snapBtn");
+
+        const quickNodeType = document.getElementById("quickNodeType");
+        const quickShapeType = document.getElementById("quickShapeType");
+        const quickShapeColor = document.getElementById("quickShapeColor");
+
         const authBackdrop = document.getElementById("authBackdrop");
         const authEmail = document.getElementById("authEmail");
         const authPassword = document.getElementById("authPassword");
         const authGo = document.getElementById("authGo");
         const authClose = document.getElementById("authClose");
-        const createBackdrop = document.getElementById("createBackdrop");
-        const createTitle = document.getElementById("createTitle");
-        const createText = document.getElementById("createText");
-        const createName = document.getElementById("createName");
-        const createDesc = document.getElementById("createDesc");
-        const createType = document.getElementById("createType");
-        const createTypeWrap = document.getElementById("createTypeWrap");
-        const createGo = document.getElementById("createGo");
-        const createClose = document.getElementById("createClose");
+
         const canvasWrap = document.getElementById("canvasWrap");
         const zoomLayer = document.getElementById("zoomLayer");
         const canvas = document.getElementById("canvas");
@@ -751,24 +1083,35 @@
         const resetViewBtn = document.getElementById("resetViewBtn");
         const fitViewBtn = document.getElementById("fitViewBtn");
 
+        const layerList = document.getElementById("layerList");
+        const layerCount = document.getElementById("layerCount");
+        const selectionCount = document.getElementById("selectionCount");
+        const dynamicProps = document.getElementById("dynamicProps");
+
         let session = null;
         let items = [];
         let links = [];
         let connectMode = false;
         let selectedSourceNodeId = null;
         let selectedItemId = null;
-        let createMode = "node";
+        let selectedItemIds = [];
+        let clipboardItems = [];
         let unsubItems = null;
         let unsubLinks = null;
         let activeEditingId = null;
         let pendingRender = false;
         let isSpacePressed = false;
         let isPanning = false;
+        let isSelecting = false;
         let panStartX = 0;
         let panStartY = 0;
+        let selectStartX = 0;
+        let selectStartY = 0;
+        let selectionBox = null;
         let lineFrame = null;
+        let snapToGrid = true;
 
-        const view = { scale: 1, min: 0.5, max: 1.8 };
+        const view = { scale: 1, min: 0.3, max: 3 };
 
         function toast(msg) {
             const t = document.getElementById("toast");
@@ -777,28 +1120,94 @@
             clearTimeout(toast._tm);
             toast._tm = setTimeout(() => t.style.display = "none", 2200);
         }
-        function uid() { return Math.random().toString(16).slice(2) + Date.now().toString(16); }
-        function isAdmin() { return !!session && session.role === "admin"; }
-        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-        function esc(s) {
-            return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+        function uid() {
+            return Math.random().toString(16).slice(2) + Date.now().toString(16);
         }
+
+        function isAdmin() {
+            return !!session && session.role === "admin";
+        }
+
+        function clamp(v, min, max) {
+            return Math.max(min, Math.min(max, v));
+        }
+
+        function snapValue(v) {
+            return snapToGrid ? Math.round(v / GRID_SIZE) * GRID_SIZE : v;
+        }
+
+        function esc(s) {
+            return String(s ?? "").replace(/[&<>"']/g, c => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[c]));
+        }
+
         function nodeTypeLabel(type) {
-            if (type === "rule") return "Rule";
-            if (type === "setup") return "Setup";
-            if (type === "tip") return "Tip";
+            if (type === "location") return "Location";
+            if (type === "resources") return "Resources";
+            if (type === "hosting") return "How to Host";
+            if (type === "warning") return "Warning";
             return "Event";
         }
-        function getItem(id) { return items.find(i => i.id === id) || null; }
+
+        function getItem(id) {
+            return items.find(i => i.id === id) || null;
+        }
+
         function getNodes() { return items.filter(i => i.kind === "node"); }
         function getFrames() { return items.filter(i => i.kind === "frame"); }
         function getSections() { return items.filter(i => i.kind === "section"); }
-        function updateZoomUi() { zoomLabel.textContent = Math.round(view.scale * 100) + "%"; }
+        function getShapes() { return items.filter(i => i.kind === "shape"); }
+
+        function defaultSizeForItem(item) {
+            if (item.kind === "frame") return { w: item.w || FRAME_W, h: item.h || FRAME_H };
+            if (item.kind === "section") return { w: item.w || SECTION_W, h: item.h || SECTION_H };
+            if (item.kind === "shape") return { w: item.w || SHAPE_W, h: item.h || SHAPE_H };
+            return { w: item.w || NODE_W, h: item.h || NODE_H };
+        }
+
+        function isSelected(id) {
+            return selectedItemIds.includes(id);
+        }
+
+        function clearSelection() {
+            selectedItemId = null;
+            selectedItemIds = [];
+        }
+
+        function setSingleSelection(id) {
+            selectedItemId = id;
+            selectedItemIds = id ? [id] : [];
+        }
+
+        function toggleSelection(id) {
+            if (selectedItemIds.includes(id)) {
+                selectedItemIds = selectedItemIds.filter(v => v !== id);
+            } else {
+                selectedItemIds.push(id);
+            }
+            selectedItemId = selectedItemIds[selectedItemIds.length - 1] || null;
+        }
+
+        function getSelectedItems() {
+            return items.filter(i => selectedItemIds.includes(i.id));
+        }
+
+        function updateZoomUi() {
+            zoomLabel.textContent = Math.round(view.scale * 100) + "%";
+        }
+
         function applyZoom() {
-            zoomLayer.style.transform = `translateZ(0) scale(${view.scale})`;
+            zoomLayer.style.zoom = view.scale;
             updateZoomUi();
             scheduleDrawLines();
         }
+
         function scheduleDrawLines() {
             if (lineFrame) return;
             lineFrame = requestAnimationFrame(() => {
@@ -806,6 +1215,7 @@
                 drawLines();
             });
         }
+
         function screenToCanvas(clientX, clientY) {
             const r = canvasWrap.getBoundingClientRect();
             return {
@@ -813,12 +1223,14 @@
                 y: (canvasWrap.scrollTop + (clientY - r.top)) / view.scale
             };
         }
+
         function getViewCenter() {
             return {
                 x: (canvasWrap.scrollLeft + canvasWrap.clientWidth / 2) / view.scale,
                 y: (canvasWrap.scrollTop + canvasWrap.clientHeight / 2) / view.scale
             };
         }
+
         function zoomAt(clientX, clientY, nextScale) {
             const oldScale = view.scale;
             nextScale = clamp(nextScale, view.min, view.max);
@@ -837,11 +1249,13 @@
             canvasWrap.scrollTop = contentY * nextScale - offsetY;
             scheduleDrawLines();
         }
+
         function zoomBy(dir) {
-            const f = dir > 0 ? 1.1 : 1 / 1.1;
+            const factor = dir > 0 ? 1.1 : 1 / 1.1;
             const r = canvasWrap.getBoundingClientRect();
-            zoomAt(r.left + r.width / 2, r.top + r.height / 2, view.scale * f);
+            zoomAt(r.left + r.width / 2, r.top + r.height / 2, view.scale * factor);
         }
+
         function resetView(center = true) {
             view.scale = 1;
             applyZoom();
@@ -851,6 +1265,7 @@
             }
             scheduleDrawLines();
         }
+
         function fitView() {
             if (!items.length) {
                 view.scale = 0.7;
@@ -860,49 +1275,53 @@
                 scheduleDrawLines();
                 return;
             }
+
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
             items.forEach(i => {
+                const size = defaultSizeForItem(i);
                 minX = Math.min(minX, i.x || 0);
                 minY = Math.min(minY, i.y || 0);
-                maxX = Math.max(maxX, (i.x || 0) + (i.w || NODE_W));
-                maxY = Math.max(maxY, (i.y || 0) + (i.h || NODE_H));
+                maxX = Math.max(maxX, (i.x || 0) + size.w);
+                maxY = Math.max(maxY, (i.y || 0) + size.h);
             });
+
             const boxW = maxX - minX;
             const boxH = maxY - minY;
             const pad = 140;
-            view.scale = clamp(Math.min(canvasWrap.clientWidth / (boxW + pad), canvasWrap.clientHeight / (boxH + pad)), view.min, 1.1);
+
+            view.scale = clamp(
+                Math.min(
+                    canvasWrap.clientWidth / (boxW + pad),
+                    canvasWrap.clientHeight / (boxH + pad)
+                ),
+                view.min,
+                1.1
+            );
+
             applyZoom();
             canvasWrap.scrollLeft = (minX + boxW / 2) * view.scale - canvasWrap.clientWidth / 2;
             canvasWrap.scrollTop = (minY + boxH / 2) * view.scale - canvasWrap.clientHeight / 2;
             scheduleDrawLines();
         }
-        function openAuth() { authBackdrop.style.display = "flex"; }
-        function closeAuth() { authBackdrop.style.display = "none"; }
-        function openCreate(mode) {
-            createMode = mode;
-            createName.value = "";
-            createDesc.value = "";
-            createTypeWrap.style.display = mode === "node" ? "" : "none";
-            if (mode === "node") {
-                createTitle.textContent = "Create node";
-                createText.textContent = "Add a new guide node.";
-                createType.value = "event";
-            } else if (mode === "frame") {
-                createTitle.textContent = "Create frame";
-                createText.textContent = "Frames are big group boxes like Figma.";
-            } else {
-                createTitle.textContent = "Create section";
-                createText.textContent = "Sections help organise a smaller area.";
-            }
-            createBackdrop.style.display = "flex";
-            setTimeout(() => createName.focus(), 30);
+
+        function openAuth() {
+            authBackdrop.style.display = "flex";
         }
-        function closeCreate() { createBackdrop.style.display = "none"; }
+
+        function closeAuth() {
+            authBackdrop.style.display = "none";
+        }
 
         async function loadSession(user) {
-            if (!user) { session = null; return; }
+            if (!user) {
+                session = null;
+                return;
+            }
+
             const snap = await getDoc(doc(db, "users", user.uid));
             const data = snap.exists() ? snap.data() : {};
+
             session = {
                 uid: user.uid,
                 email: user.email || "",
@@ -910,52 +1329,86 @@
                 role: data.role || "staff"
             };
         }
+
         function renderTop() {
             if (!session) {
                 userLine.textContent = "Not logged in";
+                boardStatus.textContent = "View only";
                 rolePill.style.display = "none";
-                loginBtn.style.display = "inline-block";
+                loginBtn.style.display = "inline-flex";
                 logoutBtn.style.display = "none";
+
                 addNodeBtn.style.display = "none";
                 addFrameBtn.style.display = "none";
                 addSectionBtn.style.display = "none";
+                addShapeBtn.style.display = "none";
+                snapBtn.style.display = "none";
                 connectModeBtn.style.display = "none";
                 clearSelectionBtn.style.display = "none";
+                quickNodeType.disabled = true;
+                quickShapeType.disabled = true;
+                quickShapeColor.disabled = true;
                 return;
             }
+
             userLine.textContent = `Logged in as ${session.name}`;
             rolePill.style.display = "inline-flex";
             roleText.textContent = session.role.toUpperCase();
             loginBtn.style.display = "none";
-            logoutBtn.style.display = "inline-block";
+            logoutBtn.style.display = "inline-flex";
 
             if (isAdmin()) {
-                addNodeBtn.style.display = "inline-block";
-                addFrameBtn.style.display = "inline-block";
-                addSectionBtn.style.display = "inline-block";
-                connectModeBtn.style.display = "inline-block";
-                connectModeBtn.textContent = `Connect: ${connectMode ? "ON" : "OFF"}`;
-                clearSelectionBtn.style.display = selectedSourceNodeId ? "inline-block" : "none";
+                boardStatus.textContent = "Edit mode";
+                addNodeBtn.style.display = "inline-flex";
+                addFrameBtn.style.display = "inline-flex";
+                addSectionBtn.style.display = "inline-flex";
+                addShapeBtn.style.display = "inline-flex";
+                snapBtn.style.display = "inline-flex";
+                connectModeBtn.style.display = "inline-flex";
+                clearSelectionBtn.style.display = selectedSourceNodeId ? "inline-flex" : "none";
+                snapBtn.textContent = `Snap ${snapToGrid ? "ON" : "OFF"}`;
+                connectModeBtn.textContent = `Connect ${connectMode ? "ON" : "OFF"}`;
+                snapBtn.classList.toggle("active", snapToGrid);
+                connectModeBtn.classList.toggle("active", connectMode);
+                quickNodeType.disabled = false;
+                quickShapeType.disabled = false;
+                quickShapeColor.disabled = false;
             } else {
+                boardStatus.textContent = "View only";
                 addNodeBtn.style.display = "none";
                 addFrameBtn.style.display = "none";
                 addSectionBtn.style.display = "none";
+                addShapeBtn.style.display = "none";
+                snapBtn.style.display = "none";
                 connectModeBtn.style.display = "none";
                 clearSelectionBtn.style.display = "none";
+                quickNodeType.disabled = true;
+                quickShapeType.disabled = true;
+                quickShapeColor.disabled = true;
             }
         }
 
-        async function saveItem(item) { await setDoc(doc(db, "guide_items", item.id), item, { merge: true }); }
+        async function saveItem(item) {
+            await setDoc(doc(db, "guide_items", item.id), item, { merge: true });
+        }
+
         async function deleteItem(id) {
             await deleteDoc(doc(db, "guide_items", id));
             const related = links.filter(l => l.from === id || l.to === id);
             await Promise.all(related.map(l => deleteDoc(doc(db, "guide_links", l.id))));
         }
-        async function saveLink(link) { await setDoc(doc(db, "guide_links", link.id), link, { merge: true }); }
-        async function deleteLink(id) { await deleteDoc(doc(db, "guide_links", id)); }
+
+        async function saveLink(link) {
+            await setDoc(doc(db, "guide_links", link.id), link, { merge: true });
+        }
+
+        async function deleteLink(id) {
+            await deleteDoc(doc(db, "guide_links", id));
+        }
 
         function drawLines() {
             svg.innerHTML = "";
+
             links.forEach(link => {
                 const aEl = document.querySelector(`[data-id="${link.from}"]`);
                 const bEl = document.querySelector(`[data-id="${link.to}"]`);
@@ -1011,7 +1464,10 @@
                 svg.appendChild(hit);
             });
         }
-        function emptyState() { emptyMessage.style.display = items.length ? "none" : "block"; }
+
+        function emptyState() {
+            emptyMessage.style.display = items.length ? "none" : "block";
+        }
 
         function plainPaste(el) {
             el.addEventListener("paste", e => {
@@ -1022,36 +1478,57 @@
         }
 
         function bindEdit(el, item, mode) {
-            const titleEl = el.querySelector(".nodeTitle,.frameTitle,.sectionTitle");
+            const titleEl = el.querySelector(".nodeTitle,.frameTitle,.sectionTitle,.shapeLabel");
             const descEl = el.querySelector(".nodeDesc,.frameDesc,.sectionDesc");
 
             if (isAdmin()) {
                 const begin = () => activeEditingId = item.id;
+
                 const finish = async () => {
                     activeEditingId = null;
-                    const nextTitle = (titleEl?.innerText || "").trim() || (mode === "node" ? "Untitled" : mode === "frame" ? "New Frame" : "New Section");
+
+                    const fallback =
+                        mode === "node" ? "Untitled" :
+                            mode === "frame" ? "New Frame" :
+                                mode === "section" ? "New Section" :
+                                    "Shape";
+
+                    const nextTitle = (titleEl?.innerText || "").trim() || fallback;
                     const nextDesc = (descEl?.innerText || "").trim();
 
                     if (nextTitle === (item.title || "") && nextDesc === (item.desc || "")) {
-                        if (pendingRender) { pendingRender = false; render(); }
+                        if (pendingRender) {
+                            pendingRender = false;
+                            render();
+                        }
+                        renderRightPanel();
+                        renderLayerList();
                         return;
                     }
 
                     item.title = nextTitle;
                     item.desc = nextDesc;
+
                     try {
                         await saveItem({ ...item, title: nextTitle, desc: nextDesc });
                     } catch (err) {
                         console.error(err);
                         toast("Could not save text");
                     }
-                    if (pendingRender) { pendingRender = false; render(); }
+
+                    if (pendingRender) {
+                        pendingRender = false;
+                        render();
+                    }
+                    renderRightPanel();
+                    renderLayerList();
                 };
 
                 if (titleEl) {
                     titleEl.addEventListener("focus", begin);
                     titleEl.addEventListener("blur", finish);
                     plainPaste(titleEl);
+
                     titleEl.addEventListener("keydown", e => {
                         if (e.key === "Enter") {
                             e.preventDefault();
@@ -1059,6 +1536,7 @@
                         }
                     });
                 }
+
                 if (descEl) {
                     descEl.addEventListener("focus", begin);
                     descEl.addEventListener("blur", finish);
@@ -1078,10 +1556,13 @@
                     e.stopPropagation();
                     if (!isAdmin()) return;
                     if (!confirm(`Delete this ${mode}?`)) return;
+
                     try {
                         await deleteItem(item.id);
-                        if (selectedItemId === item.id) selectedItemId = null;
+                        selectedItemIds = selectedItemIds.filter(v => v !== item.id);
+                        if (selectedItemId === item.id) selectedItemId = selectedItemIds[selectedItemIds.length - 1] || null;
                         if (selectedSourceNodeId === item.id) selectedSourceNodeId = null;
+                        renderTop();
                         toast(`${mode} deleted`);
                     } catch (err) {
                         console.error(err);
@@ -1089,12 +1570,6 @@
                     }
                 });
             }
-
-            el.addEventListener("click", e => {
-                e.stopPropagation();
-                selectedItemId = item.id;
-                render();
-            });
         }
 
         function enableMoveResize(el, item, options) {
@@ -1102,13 +1577,18 @@
             let resizing = false;
             let offsetX = 0, offsetY = 0;
             let startX = 0, startY = 0, startW = 0, startH = 0;
+            let dragGroup = [];
 
             el.addEventListener("mousedown", e => {
-                if (!isAdmin() || isPanning || isSpacePressed || e.button !== 0) return;
+                if (!isAdmin() || isPanning || isSpacePressed || isSelecting || e.button !== 0) return;
                 if (e.target.closest('[contenteditable="true"]')) return;
                 if (e.target.closest('[data-action="delete"]')) return;
+                if (e.target.closest('[data-action="connect"]')) return;
+                if (e.target.closest('[data-action="rotate-left"]')) return;
+                if (e.target.closest('[data-action="rotate-right"]')) return;
 
                 const resizeHandle = e.target.closest('[data-action="resize"]');
+
                 if (resizeHandle && options.resize) {
                     resizing = true;
                     startX = e.clientX;
@@ -1122,6 +1602,22 @@
 
                 dragging = true;
                 const p = screenToCanvas(e.clientX, e.clientY);
+
+                if (!selectedItemIds.includes(item.id)) {
+                    if (e.ctrlKey || e.metaKey) {
+                        toggleSelection(item.id);
+                    } else {
+                        setSingleSelection(item.id);
+                    }
+                    render();
+                }
+
+                dragGroup = getSelectedItems().map(it => ({
+                    item: it,
+                    startX: it.x || 0,
+                    startY: it.y || 0
+                }));
+
                 offsetX = p.x - (item.x || 0);
                 offsetY = p.y - (item.y || 0);
                 el.classList.add("dragging");
@@ -1133,16 +1629,42 @@
 
                 if (dragging) {
                     const p = screenToCanvas(e.clientX, e.clientY);
-                    const w = item.w || options.w;
-                    const h = item.h || options.h;
-                    const x = clamp(p.x - offsetX, 0, CANVAS_W - w - 20);
-                    const y = clamp(p.y - offsetY, 0, CANVAS_H - h - 20);
+                    const mainW = item.w || options.w;
+                    const mainH = item.h || options.h;
+                    let mainX = clamp(p.x - offsetX, 0, CANVAS_W - mainW - 20);
+                    let mainY = clamp(p.y - offsetY, 0, CANVAS_H - mainH - 20);
 
-                    el.style.left = x + "px";
-                    el.style.top = y + "px";
-                    item._draftX = x;
-                    item._draftY = y;
+                    if (snapToGrid) {
+                        mainX = snapValue(mainX);
+                        mainY = snapValue(mainY);
+                    }
+
+                    const dx = mainX - (item.x || 0);
+                    const dy = mainY - (item.y || 0);
+
+                    dragGroup.forEach(entry => {
+                        const it = entry.item;
+                        const size = defaultSizeForItem(it);
+                        let x = clamp(entry.startX + dx, 0, CANVAS_W - size.w - 20);
+                        let y = clamp(entry.startY + dy, 0, CANVAS_H - size.h - 20);
+
+                        if (snapToGrid) {
+                            x = snapValue(x);
+                            y = snapValue(y);
+                        }
+
+                        const targetEl = document.querySelector(`[data-id="${it.id}"]`);
+                        if (targetEl) {
+                            targetEl.style.left = x + "px";
+                            targetEl.style.top = y + "px";
+                        }
+
+                        it._draftX = x;
+                        it._draftY = y;
+                    });
+
                     scheduleDrawLines();
+                    renderRightPanelDraft();
                 }
 
                 if (resizing) {
@@ -1151,98 +1673,141 @@
                     w = clamp(w, options.minW, CANVAS_W - (item.x || 0));
                     h = clamp(h, options.minH, CANVAS_H - (item.y || 0));
 
+                    if (snapToGrid) {
+                        w = snapValue(w);
+                        h = snapValue(h);
+                    }
+
                     el.style.width = w + "px";
                     el.style.height = h + "px";
                     item._draftW = w;
                     item._draftH = h;
                     scheduleDrawLines();
+                    renderRightPanelDraft();
                 }
             });
 
             window.addEventListener("mouseup", async () => {
                 if (!dragging && !resizing) return;
+
                 dragging = false;
+                const wasResizing = resizing;
                 resizing = false;
                 el.classList.remove("dragging");
 
-                const update = { ...item };
-                let changed = false;
-
-                if (typeof item._draftX === "number") { item.x = item._draftX; update.x = item._draftX; delete item._draftX; changed = true; }
-                if (typeof item._draftY === "number") { item.y = item._draftY; update.y = item._draftY; delete item._draftY; changed = true; }
-                if (typeof item._draftW === "number") { item.w = item._draftW; update.w = item._draftW; delete item._draftW; changed = true; }
-                if (typeof item._draftH === "number") { item.h = item._draftH; update.h = item._draftH; delete item._draftH; changed = true; }
-
-                if (!changed) return;
                 try {
-                    await saveItem(update);
+                    if (wasResizing) {
+                        const update = { ...item };
+                        let changed = false;
+
+                        if (typeof item._draftW === "number") { item.w = item._draftW; update.w = item._draftW; delete item._draftW; changed = true; }
+                        if (typeof item._draftH === "number") { item.h = item._draftH; update.h = item._draftH; delete item._draftH; changed = true; }
+
+                        if (changed) await saveItem(update);
+                    } else {
+                        const changedItems = getSelectedItems().filter(it =>
+                            typeof it._draftX === "number" || typeof it._draftY === "number"
+                        );
+
+                        for (const it of changedItems) {
+                            const update = { ...it };
+                            if (typeof it._draftX === "number") { it.x = it._draftX; update.x = it._draftX; delete it._draftX; }
+                            if (typeof it._draftY === "number") { it.y = it._draftY; update.y = it._draftY; delete it._draftY; }
+                            await saveItem(update);
+                        }
+                    }
                 } catch (err) {
                     console.error(err);
                     toast("Could not save position/size");
                 }
+
+                renderRightPanel();
+                renderLayerList();
             });
         }
 
         function makeFrame(item) {
             const el = document.createElement("div");
-            el.className = "frame" + (selectedItemId === item.id ? " selected" : "");
+            el.className = "frame" + (isSelected(item.id) ? " selected" : "");
             el.dataset.id = item.id;
             el.style.left = (item.x || 120) + "px";
             el.style.top = (item.y || 120) + "px";
             el.style.width = (item.w || FRAME_W) + "px";
             el.style.height = (item.h || FRAME_H) + "px";
+
             el.innerHTML = `
-            <div class="frameTop">
-                <div class="frameTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Frame")}</div>
-                <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
-            </div>
-            <div class="frameDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
-            ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
-        `;
+                    <div class="frameTop">
+                        <div class="frameTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Frame")}</div>
+                        <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
+                    </div>
+                    <div class="frameDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+                    ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
+                `;
+
             bindEdit(el, item, "frame");
+
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                if (e.ctrlKey || e.metaKey) toggleSelection(item.id);
+                else setSingleSelection(item.id);
+                render();
+            });
+
             if (isAdmin()) enableMoveResize(el, item, { resize: true, w: FRAME_W, h: FRAME_H, minW: 260, minH: 180 });
             return el;
         }
 
         function makeSection(item) {
             const el = document.createElement("div");
-            el.className = "sectionBox" + (selectedItemId === item.id ? " selected" : "");
+            el.className = "sectionBox" + (isSelected(item.id) ? " selected" : "");
             el.dataset.id = item.id;
             el.style.left = (item.x || 140) + "px";
             el.style.top = (item.y || 140) + "px";
             el.style.width = (item.w || SECTION_W) + "px";
             el.style.height = (item.h || SECTION_H) + "px";
+
             el.innerHTML = `
-            <div class="sectionTop">
-                <div class="sectionTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Section")}</div>
-                <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
-            </div>
-            <div class="sectionDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
-            ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
-        `;
+                    <div class="sectionTop">
+                        <div class="sectionTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "New Section")}</div>
+                        <div class="nodeTools">${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}</div>
+                    </div>
+                    <div class="sectionDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+                    ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
+                `;
+
             bindEdit(el, item, "section");
+
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                if (e.ctrlKey || e.metaKey) toggleSelection(item.id);
+                else setSingleSelection(item.id);
+                render();
+            });
+
             if (isAdmin()) enableMoveResize(el, item, { resize: true, w: SECTION_W, h: SECTION_H, minW: 260, minH: 180 });
             return el;
         }
 
         function makeNode(item) {
+            const selected = isSelected(item.id) || selectedSourceNodeId === item.id;
             const el = document.createElement("div");
-            const selected = selectedItemId === item.id || selectedSourceNodeId === item.id;
             el.className = "node" + (selected ? " selected" : "");
             el.dataset.id = item.id;
             el.style.left = (item.x || 180) + "px";
             el.style.top = (item.y || 160) + "px";
+
             el.innerHTML = `
-            <div class="nodeTop">
-                <div class="nodeType ${esc(item.type || "event")}">${nodeTypeLabel(item.type)}</div>
-                <div class="nodeTools">
-                    ${isAdmin() ? `<button class="iconBtn" data-action="connect">↔</button>` : ``}
-                    ${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}
-                </div>
-            </div>
-            <div class="nodeTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "Untitled")}</div>
-            <div class="nodeDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
-        `;
+                    <div class="nodeTop">
+                        <div class="nodeType ${esc(item.type || "event")}">${nodeTypeLabel(item.type)}</div>
+                        <div class="nodeTools">
+                            ${isAdmin() ? `<button class="iconBtn" data-action="connect">↔</button>` : ``}
+                            ${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}
+                        </div>
+                    </div>
+                    <div class="nodeTitle" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "Untitled")}</div>
+                    <div class="nodeDesc" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.desc || "")}</div>
+                `;
+
             bindEdit(el, item, "node");
 
             const connectBtn = el.querySelector('[data-action="connect"]');
@@ -1250,23 +1815,117 @@
                 connectBtn.addEventListener("click", e => {
                     e.stopPropagation();
                     if (!isAdmin()) return;
-                    if (!connectMode) { toast("Turn Connect ON first"); return; }
+                    if (!connectMode) {
+                        toast("Turn Connect ON first");
+                        return;
+                    }
                     handleConnect(item.id);
                 });
             }
 
             el.addEventListener("click", e => {
                 e.stopPropagation();
-                selectedItemId = item.id;
-                if (!isAdmin()) { render(); return; }
+
+                if (e.ctrlKey || e.metaKey) {
+                    toggleSelection(item.id);
+                } else {
+                    setSingleSelection(item.id);
+                }
+
+                if (!isAdmin()) {
+                    render();
+                    return;
+                }
+
                 if (connectMode && !e.target.closest("[data-action]") && !e.target.isContentEditable) {
                     handleConnect(item.id);
                     return;
                 }
+
                 render();
             });
 
             if (isAdmin()) enableMoveResize(el, item, { resize: false, w: NODE_W, h: NODE_H, minW: NODE_W, minH: NODE_H });
+            return el;
+        }
+
+        function shapeCssClass(type) {
+            return `shape-${type || "square"}`;
+        }
+
+        function applyShapeLook(el, item) {
+            el.style.width = (item.w || SHAPE_W) + "px";
+            el.style.height = (item.h || SHAPE_H) + "px";
+            el.style.transform = `rotate(${Number(item.rotation || 0)}deg)`;
+            const inner = el.querySelector(".shapeInner");
+            if (inner) {
+                inner.style.background = item.color || "#f5c04f";
+                inner.style.borderColor = "rgba(255,255,255,.18)";
+            }
+        }
+
+        function makeShape(item) {
+            const el = document.createElement("div");
+            el.className = `shapeItem ${shapeCssClass(item.shapeType)}${isSelected(item.id) ? " selected" : ""}`;
+            el.dataset.id = item.id;
+            el.style.left = (item.x || 180) + "px";
+            el.style.top = (item.y || 180) + "px";
+
+            el.innerHTML = `
+                    <div class="shapeInner"></div>
+                    <div class="shapeTools">
+                        ${isAdmin() ? `<button class="iconBtn" data-action="rotate-left">⟲</button>` : ``}
+                        ${isAdmin() ? `<button class="iconBtn" data-action="rotate-right">⟳</button>` : ``}
+                        ${isAdmin() ? `<button class="iconBtn" data-action="delete">✕</button>` : ``}
+                    </div>
+                    <div class="shapeLabel" ${isAdmin() ? `contenteditable="true" spellcheck="false"` : ``}>${esc(item.title || "Shape")}</div>
+                    ${isAdmin() ? `<div class="resizeHandle" data-action="resize"></div>` : ``}
+                `;
+
+            applyShapeLook(el, item);
+            bindEdit(el, item, "shape");
+
+            const leftBtn = el.querySelector('[data-action="rotate-left"]');
+            const rightBtn = el.querySelector('[data-action="rotate-right"]');
+
+            if (leftBtn) {
+                leftBtn.addEventListener("click", async e => {
+                    e.stopPropagation();
+                    item.rotation = Number(item.rotation || 0) - 15;
+                    applyShapeLook(el, item);
+                    try {
+                        await saveItem({ ...item, rotation: item.rotation });
+                        renderRightPanel();
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not rotate shape");
+                    }
+                });
+            }
+
+            if (rightBtn) {
+                rightBtn.addEventListener("click", async e => {
+                    e.stopPropagation();
+                    item.rotation = Number(item.rotation || 0) + 15;
+                    applyShapeLook(el, item);
+                    try {
+                        await saveItem({ ...item, rotation: item.rotation });
+                        renderRightPanel();
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not rotate shape");
+                    }
+                });
+            }
+
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                if (e.ctrlKey || e.metaKey) toggleSelection(item.id);
+                else setSingleSelection(item.id);
+                render();
+            });
+
+            if (isAdmin()) enableMoveResize(el, item, { resize: true, w: SHAPE_W, h: SHAPE_H, minW: 70, minH: 70 });
             return el;
         }
 
@@ -1278,6 +1937,7 @@
                 toast("First node selected");
                 return;
             }
+
             if (selectedSourceNodeId === nodeId) {
                 selectedSourceNodeId = null;
                 renderTop();
@@ -1285,14 +1945,28 @@
                 toast("Selection cleared");
                 return;
             }
+
+            const sourceItem = getItem(selectedSourceNodeId);
+            const targetItem = getItem(nodeId);
+
+            if (!sourceItem || !targetItem || sourceItem.kind !== "node" || targetItem.kind !== "node") {
+                toast("Only nodes can be connected");
+                selectedSourceNodeId = null;
+                renderTop();
+                render();
+                return;
+            }
+
             const exists = links.some(l =>
                 (l.from === selectedSourceNodeId && l.to === nodeId) ||
                 (l.from === nodeId && l.to === selectedSourceNodeId)
             );
+
             if (exists) {
                 toast("Those nodes are already connected");
                 return;
             }
+
             try {
                 await saveLink({ id: uid(), from: selectedSourceNodeId, to: nodeId });
                 selectedSourceNodeId = null;
@@ -1305,6 +1979,225 @@
             }
         }
 
+        function rectsIntersect(a, b) {
+            return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
+        }
+
+        function layerColor(item) {
+            if (item.kind === "frame") return "#63a8ff";
+            if (item.kind === "section") return "#ae7cff";
+            if (item.kind === "shape") return item.color || "#f5c04f";
+            if (item.type === "location") return "#63a8ff";
+            if (item.type === "resources") return "#ae7cff";
+            if (item.type === "hosting") return "#32d583";
+            if (item.type === "warning") return "#ef6262";
+            return "#f5c04f";
+        }
+
+        function layerLabel(item) {
+            if (item.kind === "frame") return "Frame";
+            if (item.kind === "section") return "Section";
+            if (item.kind === "shape") return "Shape";
+            return nodeTypeLabel(item.type);
+        }
+
+        function renderLayerList() {
+            layerCount.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+            layerList.innerHTML = "";
+
+            const ordered = [...items].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            ordered.forEach(item => {
+                const row = document.createElement("div");
+                row.className = "layerItem" + (isSelected(item.id) ? " active" : "");
+                row.innerHTML = `
+                        <div class="layerDot" style="background:${layerColor(item)}"></div>
+                        <div class="layerMeta">
+                            <strong>${esc(item.title || "Untitled")}</strong>
+                            <span>${esc(layerLabel(item))}</span>
+                        </div>
+                    `;
+                row.addEventListener("click", () => {
+                    setSingleSelection(item.id);
+                    focusItem(item);
+                    render();
+                });
+                layerList.appendChild(row);
+            });
+        }
+
+        function renderRightPanelDraft() {
+            renderRightPanel(true);
+        }
+
+        function renderRightPanel(isDraft = false) {
+            selectionCount.textContent = `${selectedItemIds.length} selected`;
+            const selected = getSelectedItems();
+
+            if (!selected.length) {
+                dynamicProps.innerHTML = `
+                        <div class="propGroup">
+                            <div class="propTitle">Nothing selected</div>
+                            <div class="propBody">
+                                <div class="helpText">Click an item to see its position, size and quick actions here.</div>
+                            </div>
+                        </div>
+                    `;
+                return;
+            }
+
+            if (selected.length > 1) {
+                dynamicProps.innerHTML = `
+                        <div class="propGroup">
+                            <div class="propTitle">Multiple selection</div>
+                            <div class="propBody">
+                                <div class="helpText">${selected.length} items selected.</div>
+                                <button class="btn danger" id="bulkDeleteBtn" ${!isAdmin() ? "disabled" : ""}>Delete Selected</button>
+                            </div>
+                        </div>
+                    `;
+                const bulkDeleteBtn = document.getElementById("bulkDeleteBtn");
+                if (bulkDeleteBtn) {
+                    bulkDeleteBtn.addEventListener("click", deleteSelectedItems);
+                }
+                return;
+            }
+
+            const item = selected[0];
+            const x = typeof item._draftX === "number" ? item._draftX : (item.x || 0);
+            const y = typeof item._draftY === "number" ? item._draftY : (item.y || 0);
+            const w = typeof item._draftW === "number" ? item._draftW : (item.w || defaultSizeForItem(item).w);
+            const h = typeof item._draftH === "number" ? item._draftH : (item.h || defaultSizeForItem(item).h);
+
+           
+            if (item.kind === "shape") {
+                extra += `
+                        <div class="propGrid2">
+                            <div class="propRow">
+                                <label>Shape</label>
+                                <select class="propInput" id="propShapeType" ${!isAdmin() ? "disabled" : ""}>
+                                    <option value="square" ${item.shapeType === "square" ? "selected" : ""}>Square</option>
+                                    <option value="rectangle" ${item.shapeType === "rectangle" ? "selected" : ""}>Rectangle</option>
+                                    <option value="triangle" ${item.shapeType === "triangle" ? "selected" : ""}>Triangle</option>
+                                    <option value="circle" ${item.shapeType === "circle" ? "selected" : ""}>Circle</option>
+                                    <option value="diamond" ${item.shapeType === "diamond" ? "selected" : ""}>Diamond</option>
+                                    <option value="parallelogram" ${item.shapeType === "parallelogram" ? "selected" : ""}>Parallelogram</option>
+                                    <option value="hexagon" ${item.shapeType === "hexagon" ? "selected" : ""}>Hexagon</option>
+                                </select>
+                            </div>
+                            <div class="propRow">
+                                <label>Rotation</label>
+                                <input class="propInput" id="propRotation" type="number" value="${Number(item.rotation || 0)}" ${!isAdmin() ? "disabled" : ""}>
+                            </div>
+                        </div>
+                        <div class="propRow">
+                            <label>Color</label>
+                            <input class="propInput" id="propShapeColor" type="color" value="${esc(item.color || "#f5c04f")}" style="padding:4px" ${!isAdmin() ? "disabled" : ""}>
+                        </div>
+                    `;
+            }
+
+            dynamicProps.innerHTML = `
+                    <div class="propGroup">
+                        <div class="propTitle">${esc(item.title || "Untitled")}${isDraft ? " • updating…" : ""}</div>
+                        <div class="propBody">
+                            <div class="propGrid2">
+                                <div class="propRow">
+                                    <label>X</label>
+                                    <input class="propInput" id="propX" type="number" value="${Math.round(x)}" ${!isAdmin() ? "disabled" : ""}>
+                                </div>
+                                <div class="propRow">
+                                    <label>Y</label>
+                                    <input class="propInput" id="propY" type="number" value="${Math.round(y)}" ${!isAdmin() ? "disabled" : ""}>
+                                </div>
+                            </div>
+
+                            <div class="propGrid2">
+                                <div class="propRow">
+                                    <label>Width</label>
+                                    <input class="propInput" id="propW" type="number" value="${Math.round(w)}" ${(!isAdmin() || item.kind === "node") ? "disabled" : ""}>
+                                </div>
+                                <div class="propRow">
+                                    <label>Height</label>
+                                    <input class="propInput" id="propH" type="number" value="${Math.round(h)}" ${(!isAdmin() || item.kind === "node") ? "disabled" : ""}>
+                                </div>
+                            </div>
+
+                            ${extra}
+
+                            <button class="btn danger" id="propDeleteBtn" ${!isAdmin() ? "disabled" : ""}>Delete</button>
+                        </div>
+                    </div>
+                `;
+
+            const propDeleteBtn = document.getElementById("propDeleteBtn");
+            if (propDeleteBtn) {
+                propDeleteBtn.addEventListener("click", async () => {
+                    if (!isAdmin()) return;
+                    if (!confirm("Delete selected item?")) return;
+                    await deleteSelectedItems();
+                });
+            }
+
+            if (!isAdmin()) return;
+
+            const bindNumberSave = (id, field, min = null) => {
+                const input = document.getElementById(id);
+                if (!input) return;
+                input.addEventListener("change", async () => {
+                    let v = Number(input.value || 0);
+                    if (Number.isNaN(v)) return;
+                    if (min !== null) v = Math.max(min, v);
+
+                    if (field === "x" || field === "y") {
+                        if (snapToGrid) v = snapValue(v);
+                    }
+
+                    item[field] = v;
+                    await saveItem({ ...item, [field]: v });
+                });
+            };
+
+            bindNumberSave("propX", "x", 0);
+            bindNumberSave("propY", "y", 0);
+            if (item.kind !== "node") {
+                bindNumberSave("propW", "w", 60);
+                bindNumberSave("propH", "h", 60);
+            }
+
+            const propNodeType = document.getElementById("propNodeType");
+            if (propNodeType) {
+                propNodeType.addEventListener("change", async () => {
+                    item.type = propNodeType.value;
+                    await saveItem({ ...item, type: item.type });
+                });
+            }
+
+            const propShapeType = document.getElementById("propShapeType");
+            if (propShapeType) {
+                propShapeType.addEventListener("change", async () => {
+                    item.shapeType = propShapeType.value;
+                    await saveItem({ ...item, shapeType: item.shapeType });
+                });
+            }
+
+            const propRotation = document.getElementById("propRotation");
+            if (propRotation) {
+                propRotation.addEventListener("change", async () => {
+                    item.rotation = Number(propRotation.value || 0);
+                    await saveItem({ ...item, rotation: item.rotation });
+                });
+            }
+
+            const propShapeColor = document.getElementById("propShapeColor");
+            if (propShapeColor) {
+                propShapeColor.addEventListener("input", async () => {
+                    item.color = propShapeColor.value;
+                    await saveItem({ ...item, color: item.color });
+                });
+            }
+        }
+
         function render() {
             if (activeEditingId) {
                 pendingRender = true;
@@ -1312,13 +2205,16 @@
                 return;
             }
 
-            [...canvas.querySelectorAll(".frame,.sectionBox,.node")].forEach(el => el.remove());
+            [...canvas.querySelectorAll(".frame,.sectionBox,.node,.shapeItem")].forEach(el => el.remove());
 
             getFrames().forEach(item => canvas.appendChild(makeFrame(item)));
             getSections().forEach(item => canvas.appendChild(makeSection(item)));
+            getShapes().forEach(item => canvas.appendChild(makeShape(item)));
             getNodes().forEach(item => canvas.appendChild(makeNode(item)));
 
             emptyState();
+            renderLayerList();
+            renderRightPanel();
             scheduleDrawLines();
         }
 
@@ -1328,7 +2224,7 @@
 
             unsubItems = onSnapshot(collection(db, "guide_items"), snap => {
                 items = snap.docs.map(d => d.data()).sort((a, b) => {
-                    const order = { frame: 1, section: 2, node: 3 };
+                    const order = { frame: 1, section: 2, shape: 3, node: 4 };
                     return (order[a.kind] || 9) - (order[b.kind] || 9) || (a.createdAt || 0) - (b.createdAt || 0);
                 });
 
@@ -1337,6 +2233,7 @@
                     scheduleDrawLines();
                     return;
                 }
+
                 render();
             });
 
@@ -1348,45 +2245,258 @@
 
         function spawnPoint() {
             const c = getViewCenter();
-            return {
-                x: clamp(c.x - 180, 40, CANVAS_W - 700),
-                y: clamp(c.y - 120, 40, CANVAS_H - 500)
-            };
-        }
-        async function createItem() {
-            if (!isAdmin()) return;
-            const title = (createName.value || "").trim() || (
-                createMode === "node" ? "New Node" :
-                    createMode === "frame" ? "New Frame" : "New Section"
-            );
-            const desc = (createDesc.value || "").trim();
-            const p = spawnPoint();
+            let x = clamp(c.x - 180, 40, CANVAS_W - 700);
+            let y = clamp(c.y - 120, 40, CANVAS_H - 500);
 
-            let item;
-            if (createMode === "node") {
-                item = {
-                    id: uid(), kind: "node", type: createType.value || "event",
-                    title, desc, x: p.x, y: p.y, w: NODE_W, h: NODE_H, createdAt: Date.now()
-                };
-            } else if (createMode === "frame") {
-                item = {
-                    id: uid(), kind: "frame",
-                    title, desc, x: p.x, y: p.y, w: FRAME_W, h: FRAME_H, createdAt: Date.now()
-                };
-            } else {
-                item = {
-                    id: uid(), kind: "section",
-                    title, desc, x: p.x, y: p.y, w: SECTION_W, h: SECTION_H, createdAt: Date.now()
-                };
+            if (snapToGrid) {
+                x = snapValue(x);
+                y = snapValue(y);
             }
+
+            return { x, y };
+        }
+
+        async function createNodeQuick() {
+            if (!isAdmin()) return;
+
+            const p = spawnPoint();
+            const item = {
+                id: uid(),
+                kind: "node",
+                type: quickNodeType.value || "event",
+                title: "Untitled",
+                desc: "",
+                x: p.x,
+                y: p.y,
+                w: NODE_W,
+                h: NODE_H,
+                createdAt: Date.now()
+            };
 
             try {
                 await saveItem(item);
-                closeCreate();
-                toast(`${createMode} added`);
+                setSingleSelection(item.id);
+                toast("Node placed");
             } catch (err) {
                 console.error(err);
-                toast(`Could not add ${createMode}`);
+                toast("Could not add node");
+            }
+        }
+
+        async function createFrameQuick() {
+            if (!isAdmin()) return;
+
+            const p = spawnPoint();
+            const item = {
+                id: uid(),
+                kind: "frame",
+                title: "New Frame",
+                desc: "",
+                x: p.x,
+                y: p.y,
+                w: FRAME_W,
+                h: FRAME_H,
+                createdAt: Date.now()
+            };
+
+            try {
+                await saveItem(item);
+                setSingleSelection(item.id);
+                toast("Frame placed");
+            } catch (err) {
+                console.error(err);
+                toast("Could not add frame");
+            }
+        }
+
+        async function createSectionQuick() {
+            if (!isAdmin()) return;
+
+            const p = spawnPoint();
+            const item = {
+                id: uid(),
+                kind: "section",
+                title: "New Section",
+                desc: "",
+                x: p.x,
+                y: p.y,
+                w: SECTION_W,
+                h: SECTION_H,
+                createdAt: Date.now()
+            };
+
+            try {
+                await saveItem(item);
+                setSingleSelection(item.id);
+                toast("Section placed");
+            } catch (err) {
+                console.error(err);
+                toast("Could not add section");
+            }
+        }
+
+        async function createShapeQuick() {
+            if (!isAdmin()) return;
+
+            const p = spawnPoint();
+            const shapeKind = quickShapeType.value || "square";
+            const baseW = ["rectangle", "parallelogram", "hexagon"].includes(shapeKind) ? 180 : SHAPE_W;
+            const baseH = ["rectangle", "parallelogram", "hexagon"].includes(shapeKind) ? 120 : SHAPE_H;
+
+            const item = {
+                id: uid(),
+                kind: "shape",
+                title: "Shape",
+                desc: "",
+                shapeType: shapeKind,
+                color: quickShapeColor.value || "#f5c04f",
+                rotation: 0,
+                x: p.x,
+                y: p.y,
+                w: baseW,
+                h: baseH,
+                createdAt: Date.now()
+            };
+
+            try {
+                await saveItem(item);
+                setSingleSelection(item.id);
+                toast("Shape placed");
+            } catch (err) {
+                console.error(err);
+                toast("Could not add shape");
+            }
+        }
+
+        function cloneForCopy(item, offsetStep = 40) {
+            const copy = JSON.parse(JSON.stringify(item));
+            copy.id = uid();
+            copy.x = (item.x || 100) + offsetStep;
+            copy.y = (item.y || 100) + offsetStep;
+            copy.createdAt = Date.now();
+            return copy;
+        }
+
+        async function copySelectedItems() {
+            if (!selectedItemIds.length) {
+                toast("Select something first");
+                return;
+            }
+            clipboardItems = JSON.parse(JSON.stringify(getSelectedItems()));
+            toast(clipboardItems.length === 1 ? "Copied" : `Copied ${clipboardItems.length} items`);
+        }
+
+        async function pasteClipboardItems() {
+            if (!isAdmin()) {
+                toast("Only admins can paste");
+                return;
+            }
+
+            if (!clipboardItems.length) {
+                toast("Nothing copied");
+                return;
+            }
+
+            try {
+                const newIds = [];
+                let offset = 40;
+
+                for (const item of clipboardItems) {
+                    const copy = cloneForCopy(item, offset);
+                    if (snapToGrid) {
+                        copy.x = snapValue(copy.x);
+                        copy.y = snapValue(copy.y);
+                    }
+                    await saveItem(copy);
+                    newIds.push(copy.id);
+                    offset += 10;
+                }
+
+                selectedItemIds = newIds;
+                selectedItemId = newIds[newIds.length - 1] || null;
+                toast(newIds.length === 1 ? "Pasted" : `Pasted ${newIds.length} items`);
+            } catch (err) {
+                console.error(err);
+                toast("Could not paste");
+            }
+        }
+
+        async function duplicateSelectedItems() {
+            if (!isAdmin()) return;
+            if (!selectedItemIds.length) {
+                toast("Select something first");
+                return;
+            }
+
+            try {
+                const newIds = [];
+                let offset = 40;
+
+                for (const item of getSelectedItems()) {
+                    const copy = cloneForCopy(item, offset);
+                    if (snapToGrid) {
+                        copy.x = snapValue(copy.x);
+                        copy.y = snapValue(copy.y);
+                    }
+                    await saveItem(copy);
+                    newIds.push(copy.id);
+                    offset += 10;
+                }
+
+                selectedItemIds = newIds;
+                selectedItemId = newIds[newIds.length - 1] || null;
+                toast(newIds.length === 1 ? "Duplicated" : `Duplicated ${newIds.length} items`);
+            } catch (err) {
+                console.error(err);
+                toast("Could not duplicate");
+            }
+        }
+
+        async function deleteSelectedItems() {
+            if (!isAdmin()) return;
+            if (!selectedItemIds.length) return;
+
+            try {
+                const ids = [...selectedItemIds];
+                for (const id of ids) {
+                    await deleteItem(id);
+                }
+                clearSelection();
+                renderTop();
+                render();
+                toast(ids.length === 1 ? "Deleted" : `${ids.length} deleted`);
+            } catch (err) {
+                console.error(err);
+                toast("Could not delete selected");
+            }
+        }
+
+        async function moveSelectedItems(dx, dy) {
+            if (!isAdmin()) return;
+            const chosen = getSelectedItems();
+            if (!chosen.length) return;
+
+            try {
+                for (const item of chosen) {
+                    const size = defaultSizeForItem(item);
+                    let x = clamp((item.x || 0) + dx, 0, CANVAS_W - size.w - 20);
+                    let y = clamp((item.y || 0) + dy, 0, CANVAS_H - size.h - 20);
+
+                    if (snapToGrid) {
+                        x = snapValue(x);
+                        y = snapValue(y);
+                    }
+
+                    item.x = x;
+                    item.y = y;
+                    await saveItem({ ...item, x, y });
+                }
+                scheduleDrawLines();
+                renderRightPanel();
+                renderLayerList();
+            } catch (err) {
+                console.error(err);
+                toast("Could not move selected");
             }
         }
 
@@ -1396,15 +2506,48 @@
             panStartY = clientY;
             canvasWrap.classList.add("panning");
         }
+
         function stopPan() {
             isPanning = false;
             canvasWrap.classList.remove("panning");
         }
+
+        function beginSelection(clientX, clientY) {
+            const p = screenToCanvas(clientX, clientY);
+            isSelecting = true;
+            selectStartX = p.x;
+            selectStartY = p.y;
+
+            if (selectionBox) selectionBox.remove();
+            selectionBox = document.createElement("div");
+            selectionBox.className = "selectionBox";
+            selectionBox.style.left = p.x + "px";
+            selectionBox.style.top = p.y + "px";
+            selectionBox.style.width = "0px";
+            selectionBox.style.height = "0px";
+            canvas.appendChild(selectionBox);
+        }
+
+        function stopSelection() {
+            isSelecting = false;
+            if (selectionBox) {
+                selectionBox.remove();
+                selectionBox = null;
+            }
+        }
+
+        function focusItem(item) {
+            const size = defaultSizeForItem(item);
+            canvasWrap.scrollLeft = (item.x + size.w / 2) * view.scale - canvasWrap.clientWidth / 2;
+            canvasWrap.scrollTop = (item.y + size.h / 2) * view.scale - canvasWrap.clientHeight / 2;
+            scheduleDrawLines();
+        }
+
         function initPanZoom() {
             canvasWrap.addEventListener("mousedown", e => {
                 const editable = e.target.closest('[contenteditable="true"]');
                 const tool = e.target.closest("[data-action]");
-                const item = e.target.closest(".node,.frame,.sectionBox");
+                const item = e.target.closest(".node,.frame,.sectionBox,.shapeItem");
 
                 if (e.button === 1) {
                     e.preventDefault();
@@ -1418,26 +2561,64 @@
                     return;
                 }
 
-                if (!item && e.button === 0) {
-                    selectedItemId = null;
+                if (!item && e.button === 0 && !editable && !tool) {
+                    clearSelection();
                     if (connectMode && isAdmin()) selectedSourceNodeId = null;
                     renderTop();
                     render();
+                    beginSelection(e.clientX, e.clientY);
                 }
             });
 
             window.addEventListener("mousemove", e => {
-                if (!isPanning) return;
-                const dx = e.clientX - panStartX;
-                const dy = e.clientY - panStartY;
-                canvasWrap.scrollLeft -= dx;
-                canvasWrap.scrollTop -= dy;
-                panStartX = e.clientX;
-                panStartY = e.clientY;
-                scheduleDrawLines();
+                if (isPanning) {
+                    const dx = e.clientX - panStartX;
+                    const dy = e.clientY - panStartY;
+                    canvasWrap.scrollLeft -= dx;
+                    canvasWrap.scrollTop -= dy;
+                    panStartX = e.clientX;
+                    panStartY = e.clientY;
+                    scheduleDrawLines();
+                }
+
+                if (isSelecting && selectionBox) {
+                    const p = screenToCanvas(e.clientX, e.clientY);
+                    const x = Math.min(selectStartX, p.x);
+                    const y = Math.min(selectStartY, p.y);
+                    const w = Math.abs(p.x - selectStartX);
+                    const h = Math.abs(p.y - selectStartY);
+
+                    selectionBox.style.left = x + "px";
+                    selectionBox.style.top = y + "px";
+                    selectionBox.style.width = w + "px";
+                    selectionBox.style.height = h + "px";
+
+                    const box = { x, y, w, h };
+
+                    selectedItemIds = items
+                        .filter(item => {
+                            const size = defaultSizeForItem(item);
+                            return rectsIntersect(box, {
+                                x: item.x || 0,
+                                y: item.y || 0,
+                                w: size.w,
+                                h: size.h
+                            });
+                        })
+                        .map(i => i.id);
+
+                    selectedItemId = selectedItemIds[selectedItemIds.length - 1] || null;
+                    render();
+                }
             });
 
-            window.addEventListener("mouseup", stopPan);
+            window.addEventListener("mouseup", () => {
+                stopPan();
+                if (isSelecting) {
+                    stopSelection();
+                    render();
+                }
+            });
 
             canvasWrap.addEventListener("wheel", e => {
                 if (e.ctrlKey || e.metaKey) {
@@ -1445,6 +2626,7 @@
                     zoomAt(e.clientX, e.clientY, view.scale * Math.exp(-e.deltaY * 0.0014));
                     return;
                 }
+
                 if (e.shiftKey) {
                     e.preventDefault();
                     canvasWrap.scrollLeft += e.deltaY;
@@ -1455,12 +2637,19 @@
 
         loginBtn.addEventListener("click", openAuth);
         authClose.addEventListener("click", closeAuth);
-        authBackdrop.addEventListener("click", e => { if (e.target === authBackdrop) closeAuth(); });
+        authBackdrop.addEventListener("click", e => {
+            if (e.target === authBackdrop) closeAuth();
+        });
 
         authGo.addEventListener("click", async () => {
             const email = (authEmail.value || "").trim();
             const password = authPassword.value || "";
-            if (!email || !password) { toast("Enter email and password"); return; }
+
+            if (!email || !password) {
+                toast("Enter email and password");
+                return;
+            }
+
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 closeAuth();
@@ -1481,13 +2670,10 @@
             }
         });
 
-        addNodeBtn.addEventListener("click", () => openCreate("node"));
-        addFrameBtn.addEventListener("click", () => openCreate("frame"));
-        addSectionBtn.addEventListener("click", () => openCreate("section"));
-
-        createClose.addEventListener("click", closeCreate);
-        createBackdrop.addEventListener("click", e => { if (e.target === createBackdrop) closeCreate(); });
-        createGo.addEventListener("click", createItem);
+        addNodeBtn.addEventListener("click", createNodeQuick);
+        addFrameBtn.addEventListener("click", createFrameQuick);
+        addSectionBtn.addEventListener("click", createSectionQuick);
+        addShapeBtn.addEventListener("click", createShapeQuick);
 
         connectModeBtn.addEventListener("click", () => {
             if (!isAdmin()) return;
@@ -1498,11 +2684,18 @@
             toast(`Connect mode ${connectMode ? "ON" : "OFF"}`);
         });
 
+        snapBtn.addEventListener("click", () => {
+            if (!isAdmin()) return;
+            snapToGrid = !snapToGrid;
+            renderTop();
+            toast(`Snap ${snapToGrid ? "ON" : "OFF"}`);
+        });
+
         clearSelectionBtn.addEventListener("click", () => {
             selectedSourceNodeId = null;
             renderTop();
             render();
-            toast("Selected link cleared");
+            toast("Node link selection cleared");
         });
 
         zoomInBtn.addEventListener("click", () => zoomBy(1));
@@ -1513,7 +2706,7 @@
         canvasWrap.addEventListener("scroll", scheduleDrawLines);
         window.addEventListener("resize", scheduleDrawLines);
 
-        document.addEventListener("keydown", e => {
+        document.addEventListener("keydown", async e => {
             const tag = (document.activeElement?.tagName || "").toLowerCase();
             const typing = ["input", "textarea", "select"].includes(tag) || document.activeElement?.isContentEditable;
 
@@ -1522,28 +2715,97 @@
                 document.body.style.userSelect = "none";
             }
 
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c" && !typing) {
+                e.preventDefault();
+                await copySelectedItems();
+                return;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v" && !typing) {
+                e.preventDefault();
+                await pasteClipboardItems();
+                return;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d" && !typing) {
+                e.preventDefault();
+                await duplicateSelectedItems();
+                return;
+            }
+
             if (typing) {
                 if (e.key === "Escape") document.activeElement.blur();
-                if (e.key === "Enter" && createBackdrop.style.display === "flex" && document.activeElement === createName) {
-                    e.preventDefault();
-                    createItem();
-                }
                 return;
             }
 
             if (e.key === "Escape") {
                 selectedSourceNodeId = null;
-                selectedItemId = null;
+                clearSelection();
                 connectMode = false;
                 stopPan();
+                stopSelection();
                 renderTop();
                 render();
+                return;
             }
-            if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomBy(1); }
-            if (e.key === "-") { e.preventDefault(); zoomBy(-1); }
-            if (e.key === "0") { e.preventDefault(); resetView(true); }
-            if (e.key.toLowerCase() === "f") { e.preventDefault(); fitView(); }
+
+            if (e.key === "+" || e.key === "=") {
+                e.preventDefault();
+                zoomBy(1);
+                return;
+            }
+
+            if (e.key === "-") {
+                e.preventDefault();
+                zoomBy(-1);
+                return;
+            }
+
+            if (e.key === "0") {
+                e.preventDefault();
+                resetView(true);
+                return;
+            }
+
+            if (e.key.toLowerCase() === "f") {
+                e.preventDefault();
+                fitView();
+                return;
+            }
+
+            if ((e.key === "Delete" || e.key === "Backspace") && !typing) {
+                e.preventDefault();
+                await deleteSelectedItems();
+                return;
+            }
+
+            const step = e.shiftKey ? GRID_SIZE * 2 : (snapToGrid ? GRID_SIZE : 8);
+
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                await moveSelectedItems(-step, 0);
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                await moveSelectedItems(step, 0);
+                return;
+            }
+
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                await moveSelectedItems(0, -step);
+                return;
+            }
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                await moveSelectedItems(0, step);
+                return;
+            }
         });
+
         document.addEventListener("keyup", e => {
             if (e.code === "Space") {
                 isSpacePressed = false;
@@ -1567,7 +2829,10 @@
         renderTop();
         render();
         resetView(true);
-        setTimeout(() => { if (!items.length) fitView(); }, 200);
+
+        setTimeout(() => {
+            if (!items.length) fitView();
+        }, 200);
     </script>
 </body>
 </html>
