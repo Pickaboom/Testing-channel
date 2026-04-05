@@ -1,3207 +1,1092 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Event Staff Calendar Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg: #0b0f0c;
-            --bg-2: #111712;
-            --panel: #171f19;
-            --panel-2: #1d2821;
-            --panel-3: #243128;
-            --stroke: rgba(255,255,255,.08);
-            --stroke-2: rgba(255,255,255,.14);
-            --text: #eef6ef;
-            --muted: #a7b5aa;
-            --brand: #f5c04f;
-            --brand-2: #d9a631;
-            --green: #32d583;
-            --yellow: #f5c04f;
-            --red: #ef6262;
-            --blue: #62a5ef;
-            --dayPast: #4a1e1e;
-            --dayPast2: #6d2929;
-            --shadow: 0 18px 50px rgba(0,0,0,.28);
-            --radius: 18px;
-            --radius-sm: 14px;
-            --brand-banner: url("https://media.discordapp.net/attachments/1470700666895863900/1482343917595656315/221.png?ex=69b69bda&is=69b54a5a&hm=9df6c53a490b67404c757237d7fc601c2e18347127f1facdcb79df63ec9863ce&=&format=webp&quality=lossless&width=1768&height=710");
-            --brand-logo: url("https://media.discordapp.net/attachments/1470700666895863900/1482343894568927393/asda.png?ex=69b69bd5&is=69b54a55&hm=a85fca9d3a97cbf001db42ada026f5c41ec5936934c5cbf7b5f45d8e99253281&=&format=webp&quality=lossless&width=331&height=350");
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            min-height: 100%;
-            font-family: Inter, system-ui, Arial, sans-serif;
-            background: radial-gradient(1000px 520px at 10% -10%, rgba(245,192,79,.13), transparent 58%), radial-gradient(900px 500px at 100% 0%, rgba(50,213,131,.10), transparent 55%), linear-gradient(180deg, #0b0f0c 0%, #101611 100%);
-            color: var(--text);
-        }
-
-        body {
-            padding: 18px 18px 140px;
-        }
-
-        .wrap {
-            width: min(1720px, 100%);
-            margin: 0 auto;
-        }
-
-        .hero {
-            position: relative;
-            border: 1px solid var(--stroke);
-            border-radius: 28px;
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(245,192,79,.18), rgba(50,213,131,.10)), var(--bg-2);
-            min-height: 180px;
-            box-shadow: var(--shadow);
-            margin-bottom: 22px;
-        }
-
-            .hero::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background-image: linear-gradient(rgba(8,12,10,.52), rgba(8,12,10,.52)), var(--brand-banner);
-                background-size: cover;
-                background-position: center;
-                opacity: .42;
-                pointer-events: none;
-            }
-
-        .heroInner {
-            position: relative;
-            z-index: 1;
-            padding: 28px 28px 24px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-        .brand {
-            display: flex;
-            gap: 18px;
-            align-items: flex-start;
-            min-width: 0;
-        }
-
-        .brandLogo {
-            width: 76px;
-            height: 76px;
-            border-radius: 20px;
-            flex: 0 0 auto;
-            border: 1px solid rgba(255,255,255,.12);
-            background: linear-gradient(135deg, rgba(245,192,79,.18), rgba(50,213,131,.18)), #18211b;
-            background-image: var(--brand-logo);
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,.22);
-        }
-
-        .brandText h1 {
-            margin: 0;
-            font-size: clamp(28px, 5vw, 54px);
-            font-weight: 800;
-            line-height: 1.02;
-            letter-spacing: -.03em;
-        }
-
-        .brandText p {
-            margin: 10px 0 0;
-            font-size: 14px;
-            color: #d7e2d7;
-            max-width: 760px;
-            line-height: 1.5;
-        }
-
-        .heroRight {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-            min-width: 0;
-        }
-
-        .topUser {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .topAvatar {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,.12);
-            display: none;
-            background: #223028;
-        }
-
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            min-height: 38px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,.10);
-            background: rgba(255,255,255,.05);
-            font-size: 12px;
-            color: var(--text);
-        }
-
-            .pill b {
-                font-weight: 800;
-            }
-
-        .btn {
-            appearance: none;
-            border: 1px solid rgba(255,255,255,.10);
-            background: #1b241d;
-            color: var(--text);
-            font: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 11px 14px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: .15s ease;
-        }
-
-            .btn:hover {
-                transform: translateY(-1px);
-                border-color: rgba(255,255,255,.18);
-                background: #222d25;
-            }
-
-            .btn:active {
-                transform: translateY(0);
-            }
-
-            .btn.small {
-                padding: 9px 12px;
-                border-radius: 12px;
-                font-size: 12px;
-            }
-
-            .btn.primary {
-                background: linear-gradient(135deg, #f5c04f, #d9a631);
-                border-color: rgba(245,192,79,.26);
-                color: #16120a;
-            }
-
-            .btn.ok {
-                background: #1b5b40;
-                border-color: rgba(50,213,131,.26);
-            }
-
-            .btn.warn {
-                background: #6b5319;
-                border-color: rgba(245,192,79,.24);
-            }
-
-            .btn.danger {
-                background: #612936;
-                border-color: rgba(239,98,98,.24);
-            }
-
-            .btn.blue {
-                background: #263f67;
-                border-color: rgba(98,165,239,.24);
-            }
-
-            .btn.ghost {
-                background: rgba(255,255,255,.04);
-            }
-
-        .actionsRow {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .mainGrid {
-            display: grid;
-            grid-template-columns: minmax(0, 2.2fr) minmax(380px, 1fr);
-            gap: 22px;
-            align-items: start;
-        }
-
-        .panel {
-            border: 1px solid var(--stroke);
-            border-radius: 24px;
-            overflow: hidden;
-            background: linear-gradient(180deg, #161f19, #121913);
-            box-shadow: var(--shadow);
-        }
-
-        .calendarTop {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 20px;
-            background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-            border-bottom: 1px solid rgba(255,255,255,.06);
-            flex-wrap: wrap;
-        }
-
-        .calendarTopLeft {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .monthTitle {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -.02em;
-            margin-left: 6px;
-        }
-
-        .searchBar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
-            padding: 18px 20px 10px;
-        }
-
-            .weekdays div {
-                text-align: center;
-                font-size: 15px;
-                font-weight: 700;
-                color: #d7e3d7;
-                padding: 6px 4px 0;
-                letter-spacing: -.01em;
-            }
-
-        .calGrid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
-            padding: 8px 20px 20px;
-        }
-
-        .day {
-            min-height: 165px;
-            border-radius: 18px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,.10);
-            background: linear-gradient(180deg, #243127, #1c261e);
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: .15s ease;
-            position: relative;
-        }
-
-            .day:hover {
-                transform: translateY(-2px);
-                border-color: rgba(245,192,79,.22);
-            }
-
-            .day.muted {
-                opacity: .42;
-            }
-
-            .day.selected {
-                outline: 2px solid rgba(245,192,79,.85);
-                outline-offset: -2px;
-            }
-
-            .day.past {
-                background: linear-gradient(180deg, var(--dayPast2), var(--dayPast));
-            }
-
-            .day.today {
-                box-shadow: inset 0 0 0 2px rgba(245,192,79,.35);
-            }
-
-            .day.dropTarget {
-                outline: 2px dashed rgba(98,165,239,.95);
-                outline-offset: -4px;
-            }
-
-        .dayTopBar {
-            min-height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 10px 12px;
-            background: rgba(6,9,7,.34);
-            border-bottom: 1px solid rgba(255,255,255,.08);
-        }
-
-        .dayDate {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: .02em;
-            text-transform: uppercase;
-        }
-
-        .dayIcon {
-            font-size: 12px;
-            color: #f8f2de;
-            opacity: .9;
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .dayBody {
-            flex: 1;
-            padding: 10px 12px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            justify-content: flex-start;
-        }
-
-        .miniTime {
-            font-size: 12px;
-            font-weight: 800;
-            color: #f5c04f;
-            text-transform: uppercase;
-            letter-spacing: .02em;
-        }
-
-        .miniItem {
-            font-size: 13px;
-            line-height: 1.24;
-            color: #f4f8f4;
-            font-weight: 700;
-        }
-
-        .miniMeta {
-            font-size: 12px;
-            color: #d1ddd2;
-            margin-top: auto;
-            padding-top: 6px;
-        }
-
-        .hostPreviewRow {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 2px;
-        }
-
-        .pinBar {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            background: var(--yellow);
-            border-radius: 999px;
-            box-shadow: 0 0 14px rgba(245,192,79,.8);
-        }
-
-        .sideHead {
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(255,255,255,.06);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-            .sideHead h2 {
-                margin: 0;
-                font-size: 18px;
-                font-weight: 800;
-                letter-spacing: -.01em;
-            }
-
-            .sideHead p {
-                margin: 8px 0 0;
-                font-size: 13px;
-                color: var(--muted);
-                line-height: 1.45;
-            }
-
-        .sideBody {
-            padding: 18px 20px 20px;
-        }
-
-        .infoBlock,
-        .detailCard,
-        .eventBlock,
-        .pickEntry,
-        .availabilityBlock,
-        .pfpBtn,
-        .infoBox,
-        .statGrid > div,
-        .userRow,
-        .templateBtn {
-            background: #18211b;
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 18px;
-        }
-
-        .infoBlock {
-            padding: 16px;
-        }
-
-        .infoLabel {
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-
-        .infoValue {
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1.25;
-        }
-
-        .divider {
-            height: 1px;
-            background: rgba(255,255,255,.06);
-            margin: 18px 0;
-        }
-
-        .sectionTitle {
-            font-size: 13px;
-            font-weight: 800;
-            color: #dce7dc;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-        }
-
-        .detailList {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .detailCard {
-            padding: 14px;
-        }
-
-        .detailCardTop {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-            .detailCardTop h4 {
-                margin: 0;
-                font-size: 15px;
-                font-weight: 800;
-            }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            min-height: 28px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            border: 1px solid rgba(255,255,255,.10);
-            background: rgba(255,255,255,.04);
-        }
-
-            .badge.brand {
-                background: rgba(245,192,79,.10);
-                border-color: rgba(245,192,79,.22);
-                color: #f8ddb0;
-            }
-
-            .badge.ok {
-                background: rgba(50,213,131,.10);
-                border-color: rgba(50,213,131,.22);
-            }
-
-            .badge.warn {
-                background: rgba(245,192,79,.08);
-                border-color: rgba(245,192,79,.18);
-            }
-
-            .badge.blue {
-                background: rgba(98,165,239,.10);
-                border-color: rgba(98,165,239,.18);
-            }
-
-            .badge.red {
-                background: rgba(239,98,98,.10);
-                border-color: rgba(239,98,98,.18);
-            }
-
-        .emptyState {
-            padding: 14px;
-            border-radius: 16px;
-            border: 1px dashed rgba(255,255,255,.10);
-            color: var(--muted);
-            font-size: 13px;
-            background: rgba(255,255,255,.02);
-        }
-
-        .eventBlock, .pickEntry, .availabilityBlock {
-            padding: 12px;
-            margin-top: 10px;
-        }
-
-        .eventTitle {
-            font-size: 14px;
-            font-weight: 800;
-            margin: 0 0 6px;
-        }
-
-        .metaText {
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.45;
-        }
-
-        .pickEntry {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .pickEntryLeft {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-        }
-
-        .pickEntryName {
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .pickEntryMeta {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 4px;
-            word-break: break-word;
-        }
-
-        .pfpPickerBox {
-            margin-top: 16px;
-            display: none;
-        }
-
-        .pfpGrid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .pfpBtn {
-            padding: 12px;
-            cursor: pointer;
-            min-height: 52px;
-            transition: .15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-            .pfpBtn:hover {
-                background: #202b23;
-                border-color: rgba(255,255,255,.16);
-            }
-
-            .pfpBtn.active {
-                border-color: rgba(50,213,131,.36);
-                background: #1b3528;
-            }
-
-            .pfpBtn[aria-disabled="true"] {
-                opacity: .45;
-                cursor: not-allowed;
-            }
-
-        .pfpName {
-            min-width: 0;
-            font-size: 13px;
-            font-weight: 800;
-            white-space: normal;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        .hostBar {
-            position: fixed;
-            left: 50%;
-            bottom: 16px;
-            transform: translateX(-50%);
-            width: min(1180px, calc(100vw - 22px));
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 20px;
-            background: #131b15;
-            box-shadow: 0 14px 40px rgba(0,0,0,.35);
-            padding: 12px 14px;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            z-index: 1500;
-        }
-
-        .hostBarLeft {
-            min-width: 170px;
-        }
-
-        .hostBarTitle {
-            font-size: 11px;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: .06em;
-        }
-
-        .hostBarDate {
-            margin-top: 4px;
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .hostChips {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-            overflow-x: auto;
-            padding-bottom: 2px;
-        }
-
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            background: #1d2821;
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 999px;
-            white-space: nowrap;
-        }
-
-            .chip b {
-                font-size: 12px;
-            }
-
-        .modalBackdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(5,10,7,.62);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            z-index: 9999;
-        }
-
-        .modal {
-            width: min(760px, 100%);
-            background: #141c16;
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 22px;
-            overflow: hidden;
-            box-shadow: 0 22px 65px rgba(0,0,0,.38);
-            max-height: calc(100vh - 36px);
-            overflow-y: auto;
-        }
-
-            .modal.slim {
-                width: min(560px, 100%);
-            }
-
-        .modalTop {
-            padding: 18px 18px 14px;
-            border-bottom: 1px solid rgba(255,255,255,.06);
-        }
-
-            .modalTop h3 {
-                margin: 0;
-                font-size: 18px;
-                font-weight: 800;
-            }
-
-            .modalTop p {
-                margin: 8px 0 0;
-                font-size: 13px;
-                color: var(--muted);
-                line-height: 1.45;
-            }
-
-        .modalBody {
-            padding: 16px 18px 18px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            margin-bottom: 12px;
-        }
-
-            .field label {
-                font-size: 12px;
-                font-weight: 700;
-                color: #dce8dd;
-            }
-
-        input, textarea, select {
-            width: 100%;
-            font: inherit;
-            color: var(--text);
-            background: #1a241d;
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 14px;
-            padding: 12px 13px;
-            outline: none;
-        }
-
-        textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-            input:focus, textarea:focus, select:focus {
-                border-color: rgba(245,192,79,.45);
-            }
-
-        .modalActions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-
-        .authTabs, .settingsTabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .authTab, .settingsTab {
-            flex: 1;
-            text-align: center;
-            padding: 11px 12px;
-            border-radius: 14px;
-            background: #1a241d;
-            border: 1px solid rgba(255,255,255,.08);
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-            .authTab.active, .settingsTab.active {
-                background: #2a342c;
-                border-color: rgba(245,192,79,.24);
-            }
-
-        .settingsPanel {
-            display: none;
-        }
-
-            .settingsPanel.active {
-                display: block;
-            }
-
-        .infoBox {
-            padding: 12px;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.45;
-            margin-bottom: 12px;
-        }
-
-        .avatarPreviewWrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .avatarPreview {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,.10);
-            background: #223028;
-        }
-
-        .tiny {
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.45;
-        }
-
-        .toast {
-            position: fixed;
-            left: 50%;
-            bottom: 24px;
-            transform: translateX(-50%);
-            max-width: min(700px, calc(100vw - 26px));
-            background: #131b15;
-            border: 1px solid rgba(255,255,255,.10);
-            color: var(--text);
-            border-radius: 999px;
-            padding: 12px 16px;
-            font-size: 12px;
-            display: none;
-            z-index: 20000;
-            box-shadow: 0 14px 35px rgba(0,0,0,.30);
-        }
-
-        .editorMiniGrid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .editorTriGrid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-        }
-
-        .statsWrap {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .statGrid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-            .statGrid > div {
-                padding: 12px;
-            }
-
-        .statBig {
-            font-size: 22px;
-            font-weight: 800;
-            margin-top: 6px;
-        }
-
-        .templateGrid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .templateBtn {
-            padding: 12px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        .userList {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .userRow {
-            padding: 12px;
-            display: grid;
-            grid-template-columns: minmax(0,1fr) auto auto;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .fab {
-            position: fixed;
-            right: 18px;
-            bottom: 96px;
-            width: 58px;
-            height: 58px;
-            border-radius: 999px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 800;
-            z-index: 1600;
-            border: 1px solid rgba(255,255,255,.12);
-            background: linear-gradient(135deg, #f5c04f, #d9a631);
-            color: #16120a;
-            box-shadow: 0 14px 40px rgba(0,0,0,.35);
-            cursor: pointer;
-        }
-
-        @media (max-width: 1220px) {
-            .mainGrid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 860px) {
-            body {
-                padding: 12px 12px 150px;
-            }
-
-            .heroInner {
-                padding: 20px;
-            }
-
-            .brandLogo {
-                width: 60px;
-                height: 60px;
-                border-radius: 16px;
-            }
-
-            .brandText p {
-                font-size: 13px;
-            }
-
-            .weekdays div {
-                font-size: 13px;
-            }
-
-            .calGrid {
-                gap: 8px;
-                padding: 6px 12px 14px;
-            }
-
-            .weekdays {
-                gap: 8px;
-                padding: 14px 12px 8px;
-            }
-
-            .day {
-                min-height: 118px;
-            }
-
-            .dayTopBar {
-                min-height: 40px;
-                padding: 8px 9px;
-            }
-
-            .dayDate {
-                font-size: 12px;
-            }
-
-            .miniTime {
-                font-size: 10px;
-            }
-
-            .miniItem {
-                font-size: 11px;
-            }
-
-            .miniMeta {
-                font-size: 10px;
-            }
-
-            .pfpGrid {
-                grid-template-columns: repeat(2, minmax(0,1fr));
-            }
-
-            .hostBar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .editorMiniGrid, .editorTriGrid, .statGrid, .templateGrid {
-                grid-template-columns: 1fr;
-            }
-
-            .fab {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .heroRight {
-                align-items: stretch;
-                width: 100%;
-            }
-
-            .topUser, .actionsRow {
-                justify-content: flex-start;
-            }
-
-            .weekdays div {
-                font-size: 11px;
-                padding-top: 6px;
-            }
-
-            .day {
-                min-height: 92px;
-            }
-
-            .dayBody {
-                padding: 8px;
-                gap: 5px;
-            }
-
-            .miniItem {
-                font-size: 10px;
-            }
-
-            .miniMeta {
-                font-size: 9px;
-            }
-
-            .authTabs, .settingsTabs {
-                flex-direction: column;
-            }
-
-            .userRow {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Event Staff Calendar Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f0d;--bg2:#111713;--panel:#151d18;--panel2:#1b241e;--panel3:#202b24;
+      --text:#eef5ef;--muted:#9ca9a0;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
+      --brand:#f2c24e;--brand2:#ddb13e;--green:#2fd080;--green2:#1b7d50;--red:#d95858;--red2:#4a1f1f;
+      --shadow:0 18px 48px rgba(0,0,0,.32);--radius:22px;--radius2:16px;
+    }
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%}
+    body{font-family:Inter,system-ui,Arial,sans-serif;color:var(--text);background:
+      radial-gradient(900px 420px at 0 -10%,rgba(242,194,78,.14),transparent 56%),
+      radial-gradient(900px 420px at 100% 0,rgba(47,208,128,.10),transparent 56%),
+      linear-gradient(180deg,#0b0f0d,#101611);padding:16px 16px 120px}
+    .wrap{max-width:1600px;margin:0 auto}
+    .hero,.panel,.modal,.fab{box-shadow:var(--shadow)}
+    .hero{border:1px solid var(--line);border-radius:30px;padding:24px;background:linear-gradient(135deg,rgba(242,194,78,.12),rgba(47,208,128,.08)),linear-gradient(180deg,#151d18,#121813);margin-bottom:20px;position:relative;overflow:hidden}
+    .hero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);background-size:16px 16px;opacity:.2;pointer-events:none}
+    .heroRow{position:relative;display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
+    .brand{display:flex;gap:16px;align-items:flex-start;min-width:0}
+    .logo{width:74px;height:74px;border-radius:20px;background:linear-gradient(135deg,var(--brand),var(--green));display:grid;place-items:center;font-weight:900;color:#15120a;font-size:26px;flex:0 0 auto}
+    .title h1{margin:0;font-size:clamp(28px,5vw,54px);line-height:1.02;letter-spacing:-.03em}
+    .title p{margin:10px 0 0;color:#d5e1d6;font-size:14px;max-width:760px;line-height:1.5}
+    .topRight{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .avatar{width:46px;height:46px;border-radius:14px;object-fit:cover;background:#243127;border:1px solid var(--line)}
+    .pill,.badge,.chip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+    .pill{min-height:38px;padding:8px 14px;font-size:12px}
+    .pill b{font-weight:800}
+    .btn,.select,.input,.textarea{font:inherit}
+    .btn{appearance:none;border:1px solid var(--line);background:#1c251f;color:var(--text);padding:11px 14px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s ease}
+    .btn:hover{transform:translateY(-1px);border-color:var(--line2);background:#232d26}
+    .btn:active{transform:none}
+    .btn.small{padding:9px 12px;border-radius:12px;font-size:12px}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#18130a;border-color:rgba(242,194,78,.3)}
+    .btn.ok{background:#1b6042;border-color:rgba(47,208,128,.25)}
+    .btn.warn{background:#6f581e;border-color:rgba(242,194,78,.24)}
+    .btn.danger{background:#612c2c;border-color:rgba(217,88,88,.24)}
+    .btn.ghost{background:rgba(255,255,255,.04)}
+    .layout{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(360px,1fr);gap:20px}
+    .panel{border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,#151d18,#121813);overflow:hidden}
+    .bar{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+    .monthTitle{font-size:22px;font-weight:800;letter-spacing:-.02em}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .input,.select,.textarea{width:100%;background:#1a231d;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px 13px;outline:none}
+    .input:focus,.select:focus,.textarea:focus{border-color:rgba(242,194,78,.48)}
+    .toolbar{padding:14px 18px 0;display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px}
+    .weekdays,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+    .weekdays{padding:14px 18px 8px}
+    .weekdays div{text-align:center;font-size:13px;font-weight:800;color:#d2ddd4;padding-top:4px}
+    .grid{padding:8px 18px 18px}
+    .day{min-height:154px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#243127,#1d261f);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:.15s ease;position:relative}
+    .day:hover{transform:translateY(-2px);border-color:rgba(242,194,78,.28)}
+    .day.selected{outline:2px solid rgba(242,194,78,.85);outline-offset:-2px}
+    .day.today{box-shadow:inset 0 0 0 2px rgba(242,194,78,.28)}
+    .day.past{background:linear-gradient(180deg,#673232,#461d1d)}
+    .day.muted{opacity:.42}
+    .dayTop{display:flex;justify-content:space-between;gap:6px;align-items:center;padding:10px 12px;background:rgba(6,8,7,.34);border-bottom:1px solid rgba(255,255,255,.07);min-height:44px}
+    .dayNum{font-size:13px;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
+    .dayBody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+    .miniTime{font-size:11px;font-weight:800;color:#f5ce72;letter-spacing:.03em;text-transform:uppercase}
+    .miniTitle{font-size:13px;font-weight:800;line-height:1.25}
+    .miniMeta{font-size:12px;color:#d2ddd4;line-height:1.35}
+    .pin{position:absolute;right:10px;bottom:10px;font-size:12px}
+    .sideHead h2{margin:0;font-size:18px;font-weight:800}
+    .sideHead p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+    .sideBody{padding:18px}
+    .dateCard,.detailCard,.pickBtn,.infoBox,.statCard,.userRow{border:1px solid var(--line);border-radius:18px;background:#18211b}
+    .dateCard,.detailCard,.infoBox,.userRow{padding:14px}
+    .label{font-size:12px;color:var(--muted);margin-bottom:8px}.value{font-size:18px;font-weight:800}
+    .divider{height:1px;background:var(--line);margin:16px 0}.section{font-size:12px;color:#d7e3d9;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+    .list{display:flex;flex-direction:column;gap:12px}.empty{padding:14px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);background:rgba(255,255,255,.02);font-size:13px}
+    .detailTop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .detailTop h4{margin:0;font-size:15px;font-weight:800}
+    .badge{padding:5px 10px;font-size:11px;font-weight:800}
+    .badge.brand{background:rgba(242,194,78,.1);border-color:rgba(242,194,78,.25);color:#f4deb0}
+    .badge.ok{background:rgba(47,208,128,.1);border-color:rgba(47,208,128,.25)}
+    .badge.warn{background:rgba(242,194,78,.08);border-color:rgba(242,194,78,.18)}
+    .itemTitle{font-weight:800;font-size:14px;margin:0 0 6px}
+    .meta{font-size:12px;color:var(--muted);line-height:1.45}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .statsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .statCard{padding:12px}.statCard .n{font-size:22px;font-weight:800}.statCard .t{font-size:12px;color:var(--muted);margin-top:6px}
+    .picker{display:none;margin-top:14px}.pickGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+    .pickBtn{padding:12px;cursor:pointer;min-height:56px;display:flex;align-items:center;justify-content:center;text-align:center;transition:.15s ease}
+    .pickBtn:hover{background:#202a23;border-color:var(--line2)} .pickBtn.active{background:#1a3427;border-color:rgba(47,208,128,.35)} .pickBtn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+    .hostBar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(1200px,calc(100vw - 20px));display:none;align-items:center;justify-content:space-between;gap:12px;background:#121913;border:1px solid var(--line);border-radius:20px;padding:12px 14px;z-index:1100;box-shadow:0 12px 34px rgba(0,0,0,.35)}
+    .hostChips{display:flex;gap:10px;flex:1;min-width:0;overflow-x:auto;padding-bottom:2px}.chip{padding:8px 10px;background:#1c251f}.chip b{font-size:12px}
+    .modalBackdrop{position:fixed;inset:0;background:rgba(5,10,7,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:2000}
+    .modal{width:min(760px,100%);max-height:calc(100vh - 32px);overflow:auto;border:1px solid var(--line);border-radius:24px;background:#141c16}
+    .modal.slim{width:min(540px,100%)} .modalTop{padding:18px;border-bottom:1px solid var(--line)} .modalTop h3{margin:0;font-size:18px;font-weight:800} .modalTop p{margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.45}
+    .modalBody{padding:16px 18px 18px}.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}.field label{font-size:12px;font-weight:700;color:#dce8dd}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;text-align:center;padding:11px 12px;border-radius:14px;background:#1a241d;border:1px solid var(--line);font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:#2a342d;border-color:rgba(242,194,78,.24)}
+    .tabPanel{display:none}.tabPanel.active{display:block}.modalActions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);max-width:min(760px,calc(100vw - 26px));padding:12px 16px;border-radius:999px;background:#121913;border:1px solid var(--line);font-size:12px;display:none;z-index:3000}
+    .fab{display:none;position:fixed;right:14px;bottom:84px;width:56px;height:56px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#17120a;font-size:30px;font-weight:800;cursor:pointer;z-index:1150}
+    .usersList{display:flex;flex-direction:column;gap:10px}.userRow{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.tiny{font-size:12px;color:var(--muted);line-height:1.45}
+    @media (max-width:1200px){.layout{grid-template-columns:1fr}}
+    @media (max-width:860px){body{padding:12px 12px 138px}.toolbar{grid-template-columns:1fr}.grid,.weekdays{gap:8px;padding-left:12px;padding-right:12px}.day{min-height:118px}.pickGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.hostBar{flex-direction:column;align-items:stretch}.fab{display:block}}
+    @media (max-width:560px){.topRight{align-items:stretch;width:100%}.row{justify-content:flex-start}.two,.statsGrid{grid-template-columns:1fr}.day{min-height:98px}.dayBody{padding:8px}.miniTitle{font-size:11px}.miniMeta,.miniTime,.weekdays div{font-size:10px}.tabs{flex-direction:column}}
+  </style>
 </head>
 <body>
-    <div class="wrap">
-        <div class="hero">
-            <div class="heroInner">
-                <div class="brand">
-                    <div class="brandLogo"></div>
-                    <div class="brandText">
-                        <h1>Event Staff Calendar Pro</h1>
-                        <p id="whoLine">Loading...</p>
-                    </div>
-                </div>
-
-                <div class="heroRight">
-                    <div class="topUser">
-                        <img id="topAvatar" class="topAvatar" alt="Profile">
-                        <div class="pill" id="rolePill" style="display:none;">Role: <b>STAFF</b></div>
-                    </div>
-
-                    <div class="actionsRow">
-                        <button class="btn ghost" id="btnStats" style="display:none;">Stats</button>
-                        <button class="btn ghost" id="btnSettings" style="display:none;">Settings</button>
-                        <button class="btn ghost" id="btnLogin" style="display:none;">Login</button>
-                        <button class="btn" id="btnLogout" style="display:none;">Logout</button>
-                    </div>
-                </div>
-            </div>
+  <div class="wrap">
+    <section class="hero">
+      <div class="heroRow">
+        <div class="brand">
+          <div class="logo">PB</div>
+          <div class="title">
+            <h1>Event Staff Calendar Pro</h1>
+            <p id="whoLine">Loading calendar…</p>
+          </div>
         </div>
-
-        <div class="mainGrid">
-            <div class="panel">
-                <div class="calendarTop">
-                    <div class="calendarTopLeft">
-                        <button class="btn small" id="prevMonth">◀</button>
-                        <button class="btn small" id="todayBtn">Today</button>
-                        <button class="btn small" id="nextMonth">▶</button>
-                        <div class="monthTitle" id="monthTitle">March 2026</div>
-                    </div>
-                    <div class="actionsRow">
-                        <span class="pill" id="viewHint">Click a day</span>
-                    </div>
-
-                    <div class="searchBar">
-                        <input id="searchInput" placeholder="Search events or hosts">
-                        <select id="filterSelect" style="max-width:220px;">
-                            <option value="all">All days</option>
-                            <option value="mine">Only my hosted days</option>
-                            <option value="nohost">No host picked</option>
-                            <option value="pinned">Pinned only</option>
-                            <option value="week">This week</option>
-                        </select>
-                        <button class="btn small blue" id="clearSearchBtn">Clear</button>
-                    </div>
-                </div>
-
-                <div class="weekdays">
-                    <div>Monday</div>
-                    <div>Tuesday</div>
-                    <div>Thursday</div>
-                    <div>Wednesday</div>
-                    <div>Friday</div>
-                    <div>Saturday</div>
-                    <div>Sunday</div>
-                </div>
-
-                <div class="calGrid" id="calGrid"></div>
-            </div>
-
-            <div class="panel">
-                <div class="sideHead">
-                    <div>
-                        <h2>Details</h2>
-                        <p id="sideSub">Staff: view only • Admin: manage calendar</p>
-                    </div>
-
-                    <div class="actionsRow">
-                        <button class="btn small" id="viewModeBtn" style="display:none;">View: OFF</button>
-                        <button class="btn small blue" id="manageUsersBtn" style="display:none;">Users</button>
-                        <button class="btn small danger" id="clearAllBtn" style="display:none;">Clear ALL</button>
-                        <button class="btn small ok" id="addEventBtn" style="display:none;">+ Add event</button>
-                        <button class="btn small primary" id="addAvailBtn" style="display:none;">+ Add availability</button>
-                    </div>
-                </div>
-
-                <div class="sideBody">
-                    <div class="infoBlock">
-                        <div class="infoLabel">Selected date</div>
-                        <div class="infoValue" id="selectedDateText">None</div>
-                        <div class="tiny" id="selectedHint" style="margin-top:10px;">
-                            Staff can pick themselves. Admins can edit and remove anything.
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="statsWrap">
-                        <div class="sectionTitle">Quick stats</div>
-                        <div class="statGrid" id="statGrid">
-                            <div>
-                                <div class="tiny">Events</div>
-                                <div class="statBig" id="statEvents">0</div>
-                            </div>
-                            <div>
-                                <div class="tiny">Hosts</div>
-                                <div class="statBig" id="statHosts">0</div>
-                            </div>
-                            <div>
-                                <div class="tiny">Empty</div>
-                                <div class="statBig" id="statEmpty">0</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pfpPickerBox" id="pfpPickerBox">
-                        <div class="sectionTitle">Quick host picker</div>
-                        <div class="tiny">Uses names instead of profile images.</div>
-                        <div class="pfpGrid" id="pfpGrid"></div>
-                    </div>
-
-                    <div class="divider"></div>
-                    <div class="detailList" id="detailList"></div>
-
-                    <div class="divider"></div>
-                    <div class="actionsRow" style="justify-content:space-between;">
-                        <div class="tiny" id="storageNote">Syncing with Firebase...</div>
-                        <button class="btn small danger" id="resetBtn" style="display:none;">Reset local cache</button>
-                    </div>
-                </div>
-            </div>
+        <div class="topRight">
+          <div class="row">
+            <img id="topAvatar" class="avatar" alt="Profile image" style="display:none">
+            <div id="rolePill" class="pill" style="display:none">Role: <b>STAFF</b></div>
+          </div>
+          <div class="row">
+            <button id="btnStats" class="btn ghost">Stats</button>
+            <button id="btnSettings" class="btn ghost">Settings</button>
+            <button id="manageUsersBtn" class="btn ghost" style="display:none">Users</button>
+            <button id="btnLogin" class="btn primary">Login</button>
+            <button id="btnLogout" class="btn" style="display:none">Logout</button>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="bar">
+          <div class="controls">
+            <button id="prevMonth" class="btn small">◀</button>
+            <button id="todayBtn" class="btn small">Today</button>
+            <button id="nextMonth" class="btn small">▶</button>
+            <div id="monthTitle" class="monthTitle"></div>
+          </div>
+          <div class="controls">
+            <button id="viewModeBtn" class="btn small">View: OFF</button>
+            <button id="clearAllBtn" class="btn small danger" style="display:none">Clear All</button>
+            <button id="resetBtn" class="btn small ghost">Reset Cache</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <input id="searchInput" class="input" placeholder="Search events, hosts, notes, locations…">
+          <select id="filterSelect" class="select">
+            <option value="all">All</option>
+            <option value="mine">Mine</option>
+            <option value="no-host">No host</option>
+            <option value="pinned">Pinned</option>
+            <option value="this-week">This week</option>
+          </select>
+        </div>
+        <div class="weekdays">
+          <div>Monday</div><div>Tuesday</div><div>Wednesday</div><div>Thursday</div><div>Friday</div><div>Saturday</div><div>Sunday</div>
+        </div>
+        <div id="calGrid" class="grid"></div>
+      </section>
+
+      <aside class="panel">
+        <div class="bar sideHead">
+          <div>
+            <h2>Details</h2>
+            <p id="sideSub">Pick a date to view event info, picks, and availability.</p>
+          </div>
+          <div class="controls">
+            <button id="addEventBtn" class="btn small ok" style="display:none">+ Event</button>
+            <button id="addAvailBtn" class="btn small primary" style="display:none">+ Availability</button>
+          </div>
+        </div>
+        <div class="sideBody">
+          <div class="dateCard">
+            <div class="label">Selected date</div>
+            <div id="selectedDateText" class="value">—</div>
+            <div id="selectedHint" class="tiny" style="margin-top:10px">Staff can pick themselves. Admins can manage everything.</div>
+          </div>
+
+          <div class="statsGrid" id="quickStats"></div>
+
+          <div id="pfpPickerBox" class="picker">
+            <div class="section">Quick host picker</div>
+            <div class="tiny">Staff can only pick themselves. Admins can pick anyone. Host limit applies.</div>
+            <div id="pfpGrid" class="pickGrid"></div>
+          </div>
+
+          <div class="divider"></div>
+          <div id="detailList" class="list"></div>
+
+          <div class="divider"></div>
+          <div class="row" style="justify-content:space-between">
+            <div id="storageNote" class="tiny">Using local cache until Firestore finishes loading.</div>
+            <button id="fabBtn" class="btn small ghost" style="display:none">Quick add</button>
+          </div>
+        </div>
+      </aside>
     </div>
+  </div>
 
-    <button class="fab" id="fabBtn" title="Quick add">+</button>
-
-    <div class="hostBar" id="hostBar">
-        <div class="hostBarLeft">
-            <div class="hostBarTitle">Hosting on</div>
-            <div class="hostBarDate" id="hostBarDate"></div>
-        </div>
-        <div class="hostChips" id="hostChips"></div>
-        <div class="actionsRow">
-            <button class="btn small" id="clearMyPickBtn" style="display:none;">Remove my pick</button>
-        </div>
+  <div id="hostBar" class="hostBar">
+    <div>
+      <div class="tiny">Hosting on</div>
+      <div id="hostBarDate" style="font-size:14px;font-weight:800;margin-top:4px"></div>
     </div>
-
-    <div class="modalBackdrop" id="authBackdrop">
-        <div class="modal slim" role="dialog" aria-modal="true">
-            <div class="modalTop">
-                <h3>Account</h3>
-                <p>Create an account or log in.</p>
-            </div>
-            <div class="modalBody">
-                <div class="authTabs">
-                    <div class="authTab active" id="tabLogin">Login</div>
-                    <div class="authTab" id="tabRegister">Register</div>
-                </div>
-
-                <div class="field">
-                    <label>Email</label>
-                    <input id="authEmail" type="email" placeholder="name@email.com" autocomplete="email">
-                </div>
-
-                <div class="field">
-                    <label>Password</label>
-                    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
-                </div>
-
-                <div class="actionsRow" id="forgotPasswordWrap" style="justify-content:flex-start; margin-top:-2px; margin-bottom:10px;">
-                    <button class="btn small ghost" id="forgotPasswordBtn" type="button">Forgot password?</button>
-                </div>
-
-                <div class="field" id="confirmField" style="display:none;">
-                    <label>Confirm password</label>
-                    <input id="authPassword2" type="password" placeholder="Confirm password" autocomplete="new-password">
-                </div>
-
-                <div class="tiny">Admins still need their role set in Firestore.</div>
-
-                <div class="modalActions">
-                    <button class="btn" id="authClose" type="button">Close</button>
-                    <button class="btn primary" id="authGo" type="button">Login</button>
-                </div>
-            </div>
-        </div>
+    <div id="hostChips" class="hostChips"></div>
+    <div class="row">
+      <button id="clearMyPickBtn" class="btn small danger" style="display:none">Remove my pick</button>
     </div>
+  </div>
 
-    <div class="modalBackdrop" id="settingsBackdrop">
-        <div class="modal" role="dialog" aria-modal="true">
-            <div class="modalTop">
-                <h3>Settings</h3>
-                <p>Update your profile, account, and admin settings.</p>
-            </div>
-            <div class="modalBody">
-                <div class="settingsTabs">
-                    <div class="settingsTab active" id="settingsProfileTab">Profile</div>
-                    <div class="settingsTab" id="settingsAccountTab">Account</div>
-                    <div class="settingsTab" id="settingsAdminTab" style="display:none;">Admin</div>
-                </div>
+  <button id="fabBtnMobile" class="fab">+</button>
 
-                <div class="settingsPanel active" id="settingsProfilePanel">
-                    <div class="field">
-                        <label>Display name</label>
-                        <input id="profileName" maxlength="24" placeholder="e.g. Nugg">
-                    </div>
-
-                    <div class="field">
-                        <label>Profile picture</label>
-                        <div class="avatarPreviewWrap">
-                            <img id="profilePreview" class="avatarPreview" alt="Preview">
-                            <div class="actionsRow">
-                                <input id="profileFile" type="file" accept="image/*" style="max-width:240px;">
-                                <button class="btn small" id="removeProfilePic" type="button">Use default</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modalActions">
-                        <button class="btn primary" id="saveProfileBtn" type="button">Save profile</button>
-                    </div>
-                </div>
-
-                <div class="settingsPanel" id="settingsAccountPanel">
-                    <div class="infoBox">To change your email or password, enter your current password first.</div>
-
-                    <div class="field">
-                        <label>Current email</label>
-                        <input id="accountCurrentEmail" type="email" disabled>
-                    </div>
-                    <div class="field">
-                        <label>New email</label>
-                        <input id="accountNewEmail" type="email" placeholder="Leave blank to keep current email">
-                    </div>
-                    <div class="field">
-                        <label>Current password</label>
-                        <input id="accountCurrentPassword" type="password" placeholder="Required for email/password changes">
-                    </div>
-                    <div class="field">
-                        <label>New password</label>
-                        <input id="accountNewPassword" type="password" placeholder="Leave blank to keep current password">
-                    </div>
-                    <div class="field">
-                        <label>Confirm new password</label>
-                        <input id="accountNewPassword2" type="password" placeholder="Confirm new password">
-                    </div>
-
-                    <div class="modalActions">
-                        <button class="btn warn" id="saveAccountBtn" type="button">Save account changes</button>
-                    </div>
-                </div>
-
-                <div class="settingsPanel" id="settingsAdminPanel">
-                    <div class="infoBox">
-                        These settings affect the whole calendar. Keep webhook private because this is still a client-side page.
-                    </div>
-
-                    <div class="field">
-                        <label>Discord webhook URL</label>
-                        <input id="adminWebhook" placeholder="Paste webhook URL">
-                    </div>
-
-                    <div class="editorMiniGrid">
-                        <div class="field">
-                            <label>Max hosts per day</label>
-                            <input id="adminHostLimit" type="number" min="1" max="20" value="3">
-                        </div>
-                        <div class="field">
-                            <label>Default timezone</label>
-                            <input id="adminTimezone" value="Australia/Brisbane">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label>Saved templates (one per line: Title | Time | Location | Note)</label>
-                        <textarea id="adminTemplates"></textarea>
-                    </div>
-
-                    <div class="modalActions">
-                        <button class="btn primary" id="saveAdminSettingsBtn" type="button">Save admin settings</button>
-                    </div>
-                </div>
-
-                <div class="modalActions">
-                    <button class="btn" id="settingsClose" type="button">Close</button>
-                </div>
-            </div>
-        </div>
+  <div id="authBackdrop" class="modalBackdrop">
+    <div class="modal slim">
+      <div class="modalTop"><h3>Account</h3><p>Login, register, or reset your password.</p></div>
+      <div class="modalBody">
+        <div class="tabs"><div id="tabLogin" class="tab active">Login</div><div id="tabRegister" class="tab">Register</div></div>
+        <div class="field"><label>Email</label><input id="authEmail" class="input" type="email" autocomplete="email"></div>
+        <div class="field"><label>Password</label><input id="authPassword" class="input" type="password" autocomplete="current-password"></div>
+        <div id="confirmField" class="field" style="display:none"><label>Confirm password</label><input id="authPassword2" class="input" type="password" autocomplete="new-password"></div>
+        <div class="row" style="justify-content:flex-start"><button id="forgotPasswordBtn" class="btn small ghost">Forgot password?</button></div>
+        <div class="modalActions"><button id="authClose" class="btn">Close</button><button id="authGo" class="btn primary">Login</button></div>
+      </div>
     </div>
+  </div>
 
-    <div class="modalBackdrop" id="dayBackdrop">
-        <div class="modal" role="dialog" aria-modal="true">
-            <div class="modalTop">
-                <h3 id="dayModalTitle"></h3>
-                <p id="dayModalSub"></p>
-            </div>
-            <div class="modalBody" id="dayModalBody"></div>
+  <div id="settingsBackdrop" class="modalBackdrop">
+    <div class="modal">
+      <div class="modalTop"><h3>Settings</h3><p>Profile, account, and admin controls.</p></div>
+      <div class="modalBody">
+        <div class="tabs">
+          <div id="settingsProfileTab" class="tab active">Profile</div>
+          <div id="settingsAccountTab" class="tab">Account</div>
+          <div id="settingsAdminTab" class="tab" style="display:none">Admin</div>
         </div>
-    </div>
 
-    <div class="modalBackdrop" id="usersBackdrop">
-        <div class="modal" role="dialog" aria-modal="true">
-            <div class="modalTop">
-                <h3>User manager</h3>
-                <p>Change roles and manage staff accounts.</p>
-            </div>
-            <div class="modalBody">
-                <div class="userList" id="userList"></div>
-                <div class="modalActions">
-                    <button class="btn" id="usersCloseBtn" type="button">Close</button>
-                </div>
-            </div>
+        <div id="settingsProfilePanel" class="tabPanel active">
+          <div class="field"><label>Display name</label><input id="profileName" class="input" maxlength="30"></div>
+          <div class="field">
+            <label>Profile picture</label>
+            <div class="row"><img id="profilePreview" class="avatar" style="width:72px;height:72px;border-radius:18px"><input id="profileFile" type="file" accept="image/*"><button id="removeProfilePicBtn" class="btn small">Use default</button></div>
+          </div>
+          <div class="modalActions"><button id="saveProfileBtn" class="btn primary">Save profile</button></div>
         </div>
-    </div>
 
-    <div class="modalBackdrop" id="statsBackdrop">
-        <div class="modal" role="dialog" aria-modal="true">
-            <div class="modalTop">
-                <h3>Monthly stats</h3>
-                <p>Quick overview of event activity.</p>
-            </div>
-            <div class="modalBody" id="statsModalBody"></div>
+        <div id="settingsAccountPanel" class="tabPanel">
+          <div class="infoBox tiny">Use your current password before changing email or password.</div>
+          <div class="field"><label>Current email</label><input id="accountCurrentEmail" class="input" disabled></div>
+          <div class="field"><label>New email</label><input id="accountNewEmail" class="input" type="email"></div>
+          <div class="field"><label>Current password</label><input id="accountCurrentPassword" class="input" type="password"></div>
+          <div class="field"><label>New password</label><input id="accountNewPassword" class="input" type="password"></div>
+          <div class="field"><label>Confirm new password</label><input id="accountNewPassword2" class="input" type="password"></div>
+          <div class="modalActions"><button id="saveAccountBtn" class="btn warn">Save account changes</button></div>
         </div>
+
+        <div id="settingsAdminPanel" class="tabPanel">
+          <div class="field"><label>Discord webhook</label><input id="adminWebhook" class="input"></div>
+          <div class="field"><label>Hidden role mention</label><input id="adminRoleMention" class="input" placeholder="<@&1420427717190353036>"></div>
+          <div class="two">
+            <div class="field"><label>Default USA Unix time</label><input id="adminUsaTimeUnix" class="input" placeholder="1773702000"></div>
+            <div class="field"><label>Default Discord image URL</label><input id="adminDefaultImage" class="input" placeholder="https://..."></div>
+          </div>
+          <div class="field"><label><input id="adminAutoDiscordPostsEnabled" type="checkbox"> Enable automatic Discord posting while this page is open</label></div>
+          <div class="two">
+            <div class="field"><label>Host limit</label><input id="adminHostLimit" class="input" type="number" min="1" max="20"></div>
+            <div class="field"><label>Timezone</label><input id="adminTimezone" class="input"></div>
+          </div>
+          <div class="field"><label>Templates (one per line: Title | Time | Location | Note)</label><textarea id="adminTemplates" class="textarea"></textarea></div>
+          <div class="modalActions"><button id="saveAdminBtn" class="btn ok">Save admin settings</button></div>
+        </div>
+
+        <div class="modalActions"><button id="settingsClose" class="btn">Close</button></div>
+      </div>
     </div>
+  </div>
 
-    <div class="toast" id="toast"></div>
+  <div id="dayBackdrop" class="modalBackdrop">
+    <div class="modal slim">
+      <div class="modalTop"><h3 id="dayModalTitle">Manage date</h3><p id="dayModalSub"></p></div>
+      <div id="dayModalBody" class="modalBody"></div>
+    </div>
+  </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            signInWithEmailAndPassword,
-            createUserWithEmailAndPassword,
-            signOut,
-            updateEmail,
-            updatePassword,
-            sendPasswordResetEmail,
-            EmailAuthProvider,
-            reauthenticateWithCredential
-        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+  <div id="usersBackdrop" class="modalBackdrop">
+    <div class="modal">
+      <div class="modalTop"><h3>User Manager</h3><p>Admins can update roles for all users.</p></div>
+      <div class="modalBody">
+        <div id="usersList" class="usersList"></div>
+        <div class="modalActions"><button id="usersCloseBtn" class="btn">Close</button></div>
+      </div>
+    </div>
+  </div>
 
-        import {
-            getFirestore,
-            collection,
-            doc,
-            setDoc,
-            getDoc,
-            getDocs,
-            deleteDoc,
-            onSnapshot,
-            updateDoc
-        } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  <div id="statsBackdrop" class="modalBackdrop">
+    <div class="modal slim">
+      <div class="modalTop"><h3>Month Stats</h3><p>Quick summary for the visible month.</p></div>
+      <div id="statsBody" class="modalBody"></div>
+    </div>
+  </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3PvEamzNh4_fYIRAG9YxfVDZyucBC2b4",
-            authDomain: "staff-calendar-b25d4.firebaseapp.com",
-            projectId: "staff-calendar-b25d4",
-            storageBucket: "staff-calendar-b25d4.firebasestorage.app",
-            messagingSenderId: "771150169498",
-            appId: "1:771150169498:web:707d19b860fff00572a623"
+  <div id="toast" class="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut,
+      updateEmail, updatePassword, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import {
+      getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc,
+      onSnapshot, query, orderBy
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3PvEamzNh4_fYIRAG9YxfVDZyucBC2b4",
+      authDomain: "staff-calendar-b25d4.firebaseapp.com",
+      projectId: "staff-calendar-b25d4",
+      storageBucket: "staff-calendar-b25d4.firebasestorage.app",
+      messagingSenderId: "771150169498",
+      appId: "1:771150169498:web:707d19b860fff00572a623"
+    };
+
+    const DEFAULT_CONFIG = {
+      discordWebhook: "",
+      hostLimit: 3,
+      timezone: "Australia/Brisbane",
+      templates: [
+        "Minigames Monday | 6:00PM AEST | Public Lobby | Weekly community event",
+        "Hide and Seek | 7:00PM AEST | Forest | Last player found wins",
+        "Creator Event | 5:30PM AEST | Private Lobby | Invite creators only",
+        "Staff Meeting | 8:00PM AEST | Discord VC | Weekly check-in"
+      ]
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const KEYS = {
+      events: "escp.events.v1",
+      availability: "escp.availability.v1",
+      picks: "escp.hostPicks.v1",
+      viewMode: "escp.viewMode.v1"
+    };
+
+    const $ = id => document.getElementById(id);
+    const whoLine = $("whoLine");
+    const topAvatar = $("topAvatar");
+    const rolePill = $("rolePill");
+    const btnStats = $("btnStats");
+    const btnSettings = $("btnSettings");
+    const btnLogin = $("btnLogin");
+    const btnLogout = $("btnLogout");
+    const sideSub = $("sideSub");
+    const addEventBtn = $("addEventBtn");
+    const addAvailBtn = $("addAvailBtn");
+    const resetBtn = $("resetBtn");
+    const viewModeBtn = $("viewModeBtn");
+    const clearAllBtn = $("clearAllBtn");
+    const manageUsersBtn = $("manageUsersBtn");
+    const fabBtn = $("fabBtn");
+    const pfpPickerBox = $("pfpPickerBox");
+    const pfpGrid = $("pfpGrid");
+    const hostBar = $("hostBar");
+    const hostBarDate = $("hostBarDate");
+    const hostChips = $("hostChips");
+    const clearMyPickBtn = $("clearMyPickBtn");
+    const monthTitle = $("monthTitle");
+    const calGrid = $("calGrid");
+    const detailList = $("detailList");
+    const selectedDateText = $("selectedDateText");
+    const selectedHint = $("selectedHint");
+    const authBackdrop = $("authBackdrop");
+    const settingsBackdrop = $("settingsBackdrop");
+    const dayBackdrop = $("dayBackdrop");
+    const usersBackdrop = $("usersBackdrop");
+    const statsBackdrop = $("statsBackdrop");
+    const authEmail = $("authEmail");
+    const authPassword = $("authPassword");
+    const authPassword2 = $("authPassword2");
+    const authGo = $("authGo");
+    const forgotPasswordBtn = $("forgotPasswordBtn");
+    const confirmField = $("confirmField");
+    const tabLogin = $("tabLogin");
+    const tabRegister = $("tabRegister");
+    const profileName = $("profileName");
+    const profileFile = $("profileFile");
+    const profilePreview = $("profilePreview");
+    const accountNewEmail = $("accountNewEmail");
+    const accountCurrentPassword = $("accountCurrentPassword");
+    const accountNewPassword = $("accountNewPassword");
+    const accountNewPassword2 = $("accountNewPassword2");
+    const usersCloseBtn = $("usersCloseBtn");
+    const storageNote = $("storageNote");
+    const quickStats = $("quickStats");
+    const searchInput = $("searchInput");
+    const filterSelect = $("filterSelect");
+    const accountCurrentEmail = $("accountCurrentEmail");
+    const settingsProfileTab = $("settingsProfileTab");
+    const settingsAccountTab = $("settingsAccountTab");
+    const settingsAdminTab = $("settingsAdminTab");
+    const settingsProfilePanel = $("settingsProfilePanel");
+    const settingsAccountPanel = $("settingsAccountPanel");
+    const settingsAdminPanel = $("settingsAdminPanel");
+    const adminWebhook = $("adminWebhook");
+    const adminRoleMention = $("adminRoleMention");
+    const adminUsaTimeUnix = $("adminUsaTimeUnix");
+    const adminDefaultImage = $("adminDefaultImage");
+    const adminAutoDiscordPostsEnabled = $("adminAutoDiscordPostsEnabled");
+    const adminHostLimit = $("adminHostLimit");
+    const adminTimezone = $("adminTimezone");
+    const adminTemplates = $("adminTemplates");
+    const usersList = $("usersList");
+    const statsBody = $("statsBody");
+    const dayModalTitle = $("dayModalTitle");
+    const dayModalSub = $("dayModalSub");
+    const dayModalBody = $("dayModalBody");
+    const fabBtnMobile = $("fabBtnMobile");
+
+    const saveJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const loadJSON = (k, fallback) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch { return fallback; } };
+
+    let session = null;
+    let appConfig = { ...DEFAULT_CONFIG };
+    let users = [];
+    let usersMap = new Map();
+    let events = loadJSON(KEYS.events, []);
+    let availability = loadJSON(KEYS.availability, []);
+    let hostPicks = loadJSON(KEYS.picks, []);
+    let viewMode = !!loadJSON(KEYS.viewMode, false);
+    let selectedDate = toISODate(new Date());
+    let viewDate = new Date();
+    let authMode = "login";
+    let pendingDateToOpen = null;
+    let unsubscribers = [];
+    let profileImageData = "";
+
+    function toast(msg){ const el=$("toast"); el.textContent=msg; el.style.display="block"; clearTimeout(toast.t); toast.t=setTimeout(()=>el.style.display="none",2600); }
+    function toISODate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+    function fromISODate(s){ const [y,m,d]=String(s).split("-").map(Number); return new Date(y,(m||1)-1,d||1); }
+    function monthLabel(d){ return d.toLocaleDateString(undefined,{month:"long",year:"numeric"}); }
+    function prettyDate(iso){ return fromISODate(iso).toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"}); }
+    function startOfMonth(d){ return new Date(d.getFullYear(),d.getMonth(),1); }
+    function startOfToday(){ const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); }
+    function isPastDay(iso){ return fromISODate(iso) < startOfToday(); }
+    function isToday(iso){ return iso === toISODate(new Date()); }
+    function escapeHTML(s){ return String(s ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+    function parseTimeString(t){ const m=String(t||"").trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i); if(!m) return null; let h=+m[1], min=+(m[2]||0), ampm=(m[3]||"").toUpperCase(); if(ampm){ if(ampm==="PM" && h<12) h+=12; if(ampm==="AM" && h===12) h=0; } return { h, m:min, value:h*60+min }; }
+    function viewerTimeText(t){ return t || "Time not set"; }
+    function generateIdea(){ const ideas=["Minigames Monday","Tag Tournament","Hide and Seek","Creator Challenge","Public Lobby Night","Discord Staff Meeting","Winners Circle","Community Warmup"]; return ideas[Math.floor(Math.random()*ideas.length)]; }
+    function initials(name){ return String(name||"U").trim().split(/\s+/).slice(0,2).map(x=>x[0]?.toUpperCase()||"").join("") || "U"; }
+    function defaultAvatarDataURL(name){ const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='#f2c24e'/><stop offset='1' stop-color='#2fd080'/></linearGradient></defs><rect width='160' height='160' rx='34' fill='url(#g)'/><text x='80' y='96' text-anchor='middle' font-family='Arial' font-size='54' font-weight='700' fill='#17120a'>${initials(name)}</text></svg>`; return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }
+    async function fileToAvatarDataURL(file){ const data = await new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file);}); const img = await new Promise((resolve,reject)=>{ const i=new Image(); i.onload=()=>resolve(i); i.onerror=reject; i.src=data; }); const c=document.createElement("canvas"), ctx=c.getContext("2d"); c.width=180; c.height=180; const side=Math.min(img.width,img.height), sx=(img.width-side)/2, sy=(img.height-side)/2; ctx.drawImage(img,sx,sy,side,side,0,0,180,180); return c.toDataURL("image/jpeg",.84); }
+    function mondayIndex(jsDay){ return (jsDay + 6) % 7; }
+    function dayInSameMonth(cell, base){ return cell.getMonth()===base.getMonth() && cell.getFullYear()===base.getFullYear(); }
+    function profilePhoto(user){ return user?.photoURL || defaultAvatarDataURL(user?.name || user?.email || "User"); }
+    function hostLabel(user){ return user?.name || (user?.email ? user.email.split("@")[0] : "User"); }
+    function statsForMonth(baseDate=viewDate){ const start = new Date(baseDate.getFullYear(),baseDate.getMonth(),1); const end = new Date(baseDate.getFullYear(),baseDate.getMonth()+1,0); const startIso=toISODate(start), endIso=toISODate(end); const monthEvents = events.filter(e=>e.date>=startIso && e.date<=endIso); const uniqueHosts = new Set(monthEvents.flatMap(e=>[e.host].filter(Boolean)).concat(hostPicks.filter(p=>p.date>=startIso&&p.date<=endIso).map(p=>p.hostName||p.email||p.hostUid))); const eventDays = new Set(monthEvents.map(e=>e.date)); const emptyDays = end.getDate() - eventDays.size; const counts={}; monthEvents.forEach(e=>{ if(e.host) counts[e.host]=(counts[e.host]||0)+1; }); hostPicks.filter(p=>p.date>=startIso&&p.date<=endIso).forEach(p=>{ const n=p.hostName||p.email||p.hostUid; counts[n]=(counts[n]||0)+1; }); let topHost="—", topHostCount=0; Object.entries(counts).forEach(([k,v])=>{ if(v>topHostCount){ topHost=k; topHostCount=v; } }); return { totalEvents:monthEvents.length, uniqueHosts:uniqueHosts.size, emptyDays:Math.max(0, emptyDays), topHost, topHostCount }; }
+    function getConflictWarnings(ev, allEvents=events){ const out=[]; const sameDay = allEvents.filter(x=>x.date===ev.date && x.id!==ev.id); if (ev.time && sameDay.some(x=>String(x.time||"").trim().toLowerCase()===String(ev.time||"").trim().toLowerCase())) out.push("Exact time collision on this day.");
+      if (ev.location && sameDay.some(x=>String(x.location||"").trim().toLowerCase()===String(ev.location||"").trim().toLowerCase())) out.push("Same location already used on this day.");
+      const picksToday = hostPicks.filter(p=>p.date===ev.date).length; if (picksToday >= Number(appConfig.hostLimit || 3)) out.push("Host limit already reached for this date."); return out; }
+    const canEditAvailability = a => !!session && (session.role==="admin" || a.uid===session.uid);
+    const canPickUser = u => !!session && (session.role==="admin" || session.uid===u.uid);
+
+    async function ensureConfigDoc(){
+      const ref = doc(db,"app_config","main");
+      try{ const snap = await getDoc(ref); if(!snap.exists()) await setDoc(ref, DEFAULT_CONFIG, { merge:true }); }
+      catch(err){ console.error(err); toast("Could not verify app config. Using defaults."); appConfig={...DEFAULT_CONFIG}; }
+    }
+    async function ensureUserDoc(firebaseUser){
+      const ref = doc(db,"users",firebaseUser.uid);
+      const snap = await getDoc(ref);
+      if(!snap.exists()){
+        const name=(firebaseUser.email||"user").split("@")[0];
+        await setDoc(ref,{ name, email:firebaseUser.email||"", role:"staff", photoURL:"", createdAt:Date.now() },{ merge:true });
+      }
+    }
+    async function loadSession(firebaseUser){
+      await ensureUserDoc(firebaseUser);
+      const snap = await getDoc(doc(db,"users",firebaseUser.uid));
+      const data = snap.exists() ? snap.data() : {};
+      session = { uid:firebaseUser.uid, email:firebaseUser.email||"", name:data.name || (firebaseUser.email||"user").split("@")[0], role:data.role||"staff", photoURL:data.photoURL||"" };
+    }
+
+    function stopListeners(){ while(unsubscribers.length){ try{ unsubscribers.pop()(); }catch{} } }
+
+    function safeSnapshot(target, onData, onFail){
+      try{ const unsub = onData(); unsubscribers.push(unsub); } catch(err){ console.error(err); onFail?.(err); }
+    }
+
+    function startListeners(){
+      stopListeners();
+      if(!session) return;
+      safeSnapshot("users", ()=> onSnapshot(query(collection(db,"users"), orderBy("name")), snap=>{
+        users = snap.docs.map(d=>({ uid:d.id, ...d.data() })).map(u=>({ uid:u.uid, name:u.name||"User", email:u.email||"", role:u.role||"staff", photoURL:u.photoURL||"" }));
+        usersMap = new Map(users.map(u=>[u.uid,u]));
+        if(session && usersMap.has(session.uid)) session = { ...session, ...usersMap.get(session.uid) };
+        renderAll();
+      }, err=>{ console.error(err); toast("Users failed to load"); }), ()=>toast("Users failed to load"));
+
+      safeSnapshot("events", ()=> onSnapshot(collection(db,"events"), snap=>{
+        events = snap.docs.map(d=>({ id:d.id, ...d.data() })); saveJSON(KEYS.events, events); storageNote.textContent=""; renderAll();
+      }, err=>{ console.error(err); toast("Events failed to load"); renderAll(); }), ()=>toast("Events failed to load"));
+
+      safeSnapshot("availability", ()=> onSnapshot(collection(db,"availability"), snap=>{
+        availability = snap.docs.map(d=>({ id:d.id, ...d.data() })); saveJSON(KEYS.availability, availability); renderAll();
+      }, err=>{ console.error(err); toast("Availability failed to load"); renderAll(); }), ()=>toast("Availability failed to load"));
+
+      safeSnapshot("host_picks", ()=> onSnapshot(collection(db,"host_picks"), snap=>{
+        hostPicks = snap.docs.map(d=>({ id:d.id, ...d.data() })); saveJSON(KEYS.picks, hostPicks); renderAll();
+      }, err=>{ console.error(err); toast("Host picks failed to load"); renderAll(); }), ()=>toast("Host picks failed to load"));
+
+      safeSnapshot("app_config", ()=> onSnapshot(doc(db,"app_config","main"), snap=>{
+        appConfig = snap.exists() ? { ...DEFAULT_CONFIG, ...snap.data() } : { ...DEFAULT_CONFIG };
+        renderAll();
+      }, err=>{ console.error(err); appConfig={...DEFAULT_CONFIG}; toast("Config failed to load. Using defaults."); renderAll(); }), ()=>toast("Config failed to load. Using defaults."));
+    }
+
+    async function saveProfile(){
+      if(!session) return;
+      const name = profileName.value.trim() || session.name || "User";
+      await setDoc(doc(db,"users",session.uid), { name, email:session.email||"", photoURL:profileImageData || "" }, { merge:true });
+      toast("Profile saved");
+      closeModal(settingsBackdrop);
+    }
+
+    async function saveAccount(){
+      const user = auth.currentUser; if(!user || !session) return;
+      const newEmail = accountNewEmail.value.trim();
+      const currentPassword = accountCurrentPassword.value;
+      const newPass = accountNewPassword.value;
+      const newPass2 = accountNewPassword2.value;
+      if(!currentPassword && (newEmail || newPass)) return toast("Enter your current password first");
+      if(newPass && newPass !== newPass2) return toast("New passwords do not match");
+      try{
+        if(newEmail || newPass){
+          const cred = EmailAuthProvider.credential(user.email, currentPassword);
+          await reauthenticateWithCredential(user, cred);
+        }
+        if(newEmail && newEmail !== user.email) await updateEmail(user, newEmail);
+        if(newPass) await updatePassword(user, newPass);
+        await setDoc(doc(db,"users",session.uid), { email: auth.currentUser.email || newEmail || session.email }, { merge:true });
+        toast("Account updated");
+        closeModal(settingsBackdrop);
+      }catch(err){ console.error(err); toast(err.code || err.message || "Could not update account"); }
+    }
+
+    async function saveAdminConfig(){
+      if(session?.role !== "admin") return;
+      const payload = {
+        discordWebhook: adminWebhook.value.trim(),
+        hostLimit: Math.max(1, Number(adminHostLimit.value || 3)),
+        timezone: adminTimezone.value.trim() || DEFAULT_CONFIG.timezone,
+        templates: adminTemplates.value.split(/\n+/).map(x=>x.trim()).filter(Boolean)
+      };
+      await setDoc(doc(db,"app_config","main"), payload, { merge:true });
+      toast("Admin settings saved");
+    }
+
+    function eventMatchesFilters(ev){
+      const q = searchInput.value.trim().toLowerCase();
+      const filter = filterSelect.value;
+      const text = [ev.title, ev.time, ev.location, ev.host, ev.note, ev.templateName].join(" ").toLowerCase();
+      if(q && !text.includes(q)) return false;
+      if(filter === "mine") return !!session && (ev.createdBy === session.uid || String(ev.host||"").toLowerCase().includes(String(session.name||"").toLowerCase()));
+      if(filter === "no-host") return !String(ev.host||"").trim();
+      if(filter === "pinned") return !!ev.pinned;
+      if(filter === "this-week"){
+        const d = fromISODate(ev.date), now = fromISODate(selectedDate || toISODate(new Date()));
+        const monday = new Date(now); monday.setDate(now.getDate()-mondayIndex(now.getDay()));
+        const sunday = new Date(monday); sunday.setDate(monday.getDate()+6);
+        return d >= monday && d <= sunday;
+      }
+      return true;
+    }
+
+    function renderTop(){
+      if(!session){
+        whoLine.textContent = "Login to manage event staff, host picks, availability, and settings.";
+        topAvatar.style.display = "none";
+        rolePill.style.display = "none";
+        btnLogin.style.display = "inline-flex";
+        btnLogout.style.display = "none";
+        btnSettings.style.display = "none";
+        manageUsersBtn.style.display = "none";
+        addEventBtn.style.display = "none";
+        addAvailBtn.style.display = "none";
+        fabBtn.style.display = "none";
+        fabBtnMobile.style.display = "none";
+        clearAllBtn.style.display = "none";
+        sideSub.textContent = "Log in to add availability or manage events.";
+        return;
+      }
+      whoLine.textContent = `${session.name} • ${session.email}`;
+      topAvatar.src = profilePhoto(session);
+      topAvatar.style.display = "block";
+      rolePill.style.display = "inline-flex";
+      rolePill.innerHTML = `Role: <b>${escapeHTML(session.role.toUpperCase())}</b>`;
+      btnLogin.style.display = "none";
+      btnLogout.style.display = "inline-flex";
+      btnSettings.style.display = "inline-flex";
+      manageUsersBtn.style.display = session.role === "admin" ? "inline-flex" : "none";
+      addEventBtn.style.display = session.role === "admin" && !viewMode ? "inline-flex" : "none";
+      addAvailBtn.style.display = !viewMode ? "inline-flex" : "none";
+      fabBtn.style.display = !viewMode ? "inline-flex" : "none";
+      fabBtnMobile.style.display = !viewMode ? "block" : "none";
+      clearAllBtn.style.display = session.role === "admin" ? "inline-flex" : "none";
+      viewModeBtn.textContent = `View: ${viewMode ? "ON" : "OFF"}`;
+      sideSub.textContent = viewMode ? "View mode is on. Editing is disabled." : (session.role === "admin" ? "Admin: manage calendar, users, and config." : "Staff: add your availability and pick yourself as host.");
+    }
+
+    function renderQuickStats(){
+      const dayEvents = events.filter(e=>e.date===selectedDate && eventMatchesFilters(e));
+      const dayHosts = new Set(hostPicks.filter(p=>p.date===selectedDate).map(p=>p.hostUid));
+      const month = statsForMonth(viewDate);
+      const cards = [
+        { n: dayEvents.length, t: "Events" },
+        { n: dayHosts.size, t: "Hosts" },
+        { n: month.emptyDays, t: "Empty days" }
+      ];
+      quickStats.innerHTML = cards.map(c=>`<div class="statCard"><div class="n">${c.n}</div><div class="t">${c.t}</div></div>`).join("");
+    }
+
+    function renderCalendar(){
+      monthTitle.textContent = monthLabel(viewDate);
+      calGrid.innerHTML = "";
+      const first = startOfMonth(viewDate);
+      const start = new Date(first); start.setDate(first.getDate() - mondayIndex(first.getDay()));
+      for(let i=0;i<42;i++){
+        const cell = new Date(start); cell.setDate(start.getDate()+i);
+        const iso = toISODate(cell);
+        const dayEvents = events.filter(e=>e.date===iso && eventMatchesFilters(e));
+        const dayAvail = availability.filter(a=>a.date===iso);
+        const dayPicks = hostPicks.filter(p=>p.date===iso);
+        const primary = dayEvents[0];
+        const div = document.createElement("div");
+        div.className = "day" + (selectedDate===iso?" selected":"") + (isToday(iso)?" today":"") + (isPastDay(iso)?" past":"") + (!dayInSameMonth(cell,viewDate)?" muted":"");
+        div.innerHTML = `<div class="dayTop"><div class="dayNum">${cell.toLocaleString(undefined,{month:"short"}).toUpperCase()} ${cell.getDate()}</div><div>${primary?.pinned ? "📌" : dayPicks.length ? "👥" : dayAvail.length ? "•" : ""}</div></div>`;
+        const body = document.createElement("div"); body.className = "dayBody";
+        if(primary){
+          body.innerHTML += `<div class="miniTime">${escapeHTML(primary.time || "Time not set")}</div><div class="miniTitle">${escapeHTML(primary.title || "Untitled event")}</div><div class="miniMeta">${escapeHTML(primary.note || primary.host || primary.location || "")}</div>`;
+        }else if(dayAvail.length){
+          body.innerHTML += `<div class="miniTitle">${dayAvail.length} availability ${dayAvail.length===1?"entry":"entries"}</div>`;
+        }else if(dayPicks.length){
+          body.innerHTML += `<div class="miniTitle">${dayPicks.length} host pick${dayPicks.length===1?"":"s"}</div>`;
+        }else if(isPastDay(iso)){
+          body.innerHTML += `<div class="miniMeta">Past day</div>`;
+        }
+        if(dayEvents.length>1) body.innerHTML += `<div class="miniMeta">+${dayEvents.length-1} more event${dayEvents.length-1===1?"":"s"}</div>`;
+        body.innerHTML += `<div class="miniMeta">${dayPicks.length} hosts • ${dayAvail.length} availability</div>`;
+        if(primary?.pinned) body.innerHTML += `<div class="pin">📌</div>`;
+        div.appendChild(body);
+        div.onclick = ()=>{
+          selectedDate = iso;
+          renderAll();
+          if(viewMode) return;
+          if(!session){ pendingDateToOpen = iso; openModal(authBackdrop); return; }
+          if(session.role === "admin") openDayModal(iso);
         };
+        calGrid.appendChild(div);
+      }
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const KEY_EVENTS = "staffCal.events.v6";
-        const KEY_AVAIL = "staffCal.availability.v6";
-        const KEY_PICKS = "staffCal.hostPicks.v6";
-        const KEY_VIEWMODE = "staffCal.viewMode.v6";
-
-        const DEFAULT_TEMPLATES = [
-            "Minigames Monday | 6:00PM AEST | Public Lobby | Weekly community event",
-            "Hide and Seek | 7:00PM AEST | Forest | Last player found wins",
-            "Creator Event | 5:30PM AEST | Private Lobby | Invite creators only",
-            "Staff Meeting | 8:00PM AEST | Discord VC | Weekly check-in"
-        ];
-
-        const saveJSON = (key, value) => localStorage.setItem(key, JSON.stringify(value));
-        const loadJSON = (key, fallback) => {
-            try {
-                const raw = localStorage.getItem(key);
-                return raw ? JSON.parse(raw) : fallback;
-            } catch {
-                return fallback;
-            }
+    function renderHostPicker(){
+      const show = !!session && !!selectedDate && users.length>0 && !viewMode;
+      pfpPickerBox.style.display = show ? "block" : "none";
+      if(!show) return;
+      pfpGrid.innerHTML = "";
+      users.filter(u=>u.role === "admin" || u.role === "staff").sort((a,b)=>hostLabel(a).localeCompare(hostLabel(b))).forEach(user=>{
+        const picked = hostPicks.some(p=>p.date===selectedDate && p.hostUid===user.uid);
+        const allowed = canPickUser(user);
+        const btn = document.createElement("button");
+        btn.type = "button"; btn.className = "pickBtn" + (picked ? " active" : ""); btn.setAttribute("aria-disabled", allowed ? "false" : "true");
+        btn.innerHTML = `<div><div style="font-weight:800;font-size:13px">${escapeHTML(hostLabel(user))}</div><div class="tiny">${escapeHTML(user.role)}</div></div>`;
+        btn.onclick = async ()=>{
+          if(!allowed) return toast("Staff can only pick themselves");
+          const picksToday = hostPicks.filter(p=>p.date===selectedDate);
+          if(!picked && picksToday.length >= Number(appConfig.hostLimit || 3)) return toast("Host limit reached");
+          try{
+            const id = `${selectedDate}_${user.uid}`;
+            if(picked) await deleteDoc(doc(db,"host_picks",id));
+            else await setDoc(doc(db,"host_picks",id), { id, date:selectedDate, hostUid:user.uid, hostName:hostLabel(user), hostImg:user.photoURL||"", email:user.email||"" }, { merge:true });
+          }catch(err){ console.error(err); toast("Could not update host pick"); }
         };
+        pfpGrid.appendChild(btn);
+      });
+    }
 
-        let session = null;
-        let usersMap = new Map();
-        let hosts = [];
-        let events = loadJSON(KEY_EVENTS, []);
-        let avail = loadJSON(KEY_AVAIL, []);
-        let hostPicks = loadJSON(KEY_PICKS, []);
-        let viewMode = loadJSON(KEY_VIEWMODE, false);
+    function renderHostBar(){
+      if(!selectedDate){ hostBar.style.display = "none"; return; }
+      hostBar.style.display = "flex";
+      hostBarDate.textContent = prettyDate(selectedDate);
+      const picks = hostPicks.filter(p=>p.date===selectedDate);
+      hostChips.innerHTML = picks.length ? picks.map(p=>`<div class="chip"><b>${escapeHTML(p.hostName || p.email || "Host")}</b></div>`).join("") : `<div class="chip"><b>No hosts picked yet</b></div>`;
+      clearMyPickBtn.style.display = session && picks.some(p=>p.hostUid===session.uid) ? "inline-flex" : "none";
+    }
 
-        let appConfig = {
-            discordWebhook: "",
-            hostLimit: 3,
-            timezone: "Australia/Brisbane",
-            templates: DEFAULT_TEMPLATES
+    function renderDetails(){
+      selectedDateText.textContent = selectedDate ? prettyDate(selectedDate) : "—";
+      selectedHint.textContent = session ? (session.role === "admin" ? `Host limit: ${appConfig.hostLimit}. Admins can edit events, availability, users, and config.` : `Host limit: ${appConfig.hostLimit}. Staff can add their own availability and pick themselves.`) : "Log in to interact with the calendar.";
+      detailList.innerHTML = "";
+      renderQuickStats();
+      if(!selectedDate){ detailList.innerHTML = `<div class="empty">Pick a date to view details.</div>`; return; }
+      const dayEvents = events.filter(e=>e.date===selectedDate && eventMatchesFilters(e));
+      const dayAvailability = availability.filter(a=>a.date===selectedDate);
+      const dayPicks = hostPicks.filter(p=>p.date===selectedDate);
+
+      const eCard = document.createElement("div"); eCard.className = "detailCard";
+      eCard.innerHTML = `<div class="detailTop"><h4>Events (${dayEvents.length})</h4><div class="badge brand">Day events</div></div>` + (dayEvents.length ? "" : `<div class="empty">No events on this day.</div>`);
+      dayEvents.forEach(ev=>{
+        const warnings = getConflictWarnings(ev).map(w=>`<div class="badge warn">${escapeHTML(w)}</div>`).join(" ");
+        const block = document.createElement("div"); block.className = "detailCard"; block.style.marginTop = "10px";
+        block.innerHTML = `<p class="itemTitle">${escapeHTML(ev.title || "Untitled event")}</p><div class="meta">${escapeHTML(viewerTimeText(ev.time))} • ${escapeHTML(ev.location || "No location")}<br>Host: ${escapeHTML(ev.host || "No host")}<br>${escapeHTML(ev.note || "No note")}</div>${warnings ? `<div class="actions">${warnings}</div>` : ""}`;
+        const actions = document.createElement("div"); actions.className = "actions";
+        if(session?.role === "admin" && !viewMode){
+          [["Edit","ghost",()=>openDayModal(selectedDate, ev.id)], [ev.pinned?"Unpin":"Pin","warn",()=>togglePin(ev)], ["Send to Discord","ok",()=>sendToDiscord(ev)], ["Delete","danger",()=>deleteEventById(ev.id)]].forEach(([text,klass,fn])=>{ const b=document.createElement("button"); b.className=`btn small ${klass}`; b.textContent=text; b.onclick=fn; actions.appendChild(b); });
+        }
+        block.appendChild(actions); eCard.appendChild(block);
+      });
+      detailList.appendChild(eCard);
+
+      const aCard = document.createElement("div"); aCard.className = "detailCard";
+      aCard.innerHTML = `<div class="detailTop"><h4>Availability (${dayAvailability.length})</h4><div class="badge ok">Staff availability</div></div>` + (dayAvailability.length ? "" : `<div class="empty">No availability entries.</div>`);
+      dayAvailability.forEach(a=>{
+        const block = document.createElement("div"); block.className = "detailCard"; block.style.marginTop = "10px";
+        block.innerHTML = `<p class="itemTitle">${escapeHTML(a.name || "User")}</p><div class="meta">Status: ${escapeHTML(a.status || "active")}<br>${escapeHTML(a.note || "No note")}</div>`;
+        if(canEditAvailability(a) && !viewMode){
+          const actions = document.createElement("div"); actions.className = "actions";
+          const edit = document.createElement("button"); edit.className = "btn small ghost"; edit.textContent = "Edit"; edit.onclick=()=>openAvailabilityEditor(a);
+          const del = document.createElement("button"); del.className = "btn small danger"; del.textContent = "Delete"; del.onclick=()=>deleteAvailabilityById(a.id);
+          actions.append(edit,del); block.appendChild(actions);
+        }
+        aCard.appendChild(block);
+      });
+      detailList.appendChild(aCard);
+
+      const pCard = document.createElement("div"); pCard.className = "detailCard";
+      pCard.innerHTML = `<div class="detailTop"><h4>Host picks (${dayPicks.length})</h4><div class="badge ok">Quick picks</div></div>` + (dayPicks.length ? "" : `<div class="empty">No host picks yet.</div>`);
+      dayPicks.forEach(p=>{
+        const row = document.createElement("div"); row.className = "userRow"; row.style.marginTop="10px";
+        row.innerHTML = `<div><div style="font-weight:800;font-size:13px">${escapeHTML(p.hostName || p.email || "Host")}</div><div class="tiny">${escapeHTML(p.email || "")}</div></div>`;
+        if(!viewMode && session && (session.role === "admin" || p.hostUid === session.uid)){
+          const b = document.createElement("button"); b.className = "btn small danger"; b.textContent = "Remove"; b.onclick = ()=>deleteHostPick(p.id); row.appendChild(b);
+        }
+        pCard.appendChild(row);
+      });
+      detailList.appendChild(pCard);
+    }
+
+    function renderStatsModal(){
+      const s = statsForMonth(viewDate);
+      statsBody.innerHTML = `
+        <div class="statsGrid">
+          <div class="statCard"><div class="n">${s.totalEvents}</div><div class="t">Total events</div></div>
+          <div class="statCard"><div class="n">${s.uniqueHosts}</div><div class="t">Unique hosts</div></div>
+          <div class="statCard"><div class="n">${s.emptyDays}</div><div class="t">Empty days</div></div>
+          <div class="statCard"><div class="n">${escapeHTML(s.topHost)}</div><div class="t">Top host</div></div>
+          <div class="statCard"><div class="n">${s.topHostCount}</div><div class="t">Top host count</div></div>
+          <div class="statCard"><div class="n">${appConfig.hostLimit}</div><div class="t">Host limit</div></div>
+        </div>
+        <div class="modalActions"><button class="btn" id="closeStatsBtn">Close</button></div>`;
+      $("closeStatsBtn").onclick = ()=>closeModal(statsBackdrop);
+    }
+
+    function renderUsersManager(){
+      if(session?.role !== "admin") return;
+      usersList.innerHTML = users.length ? "" : `<div class="empty">No users found.</div>`;
+      users.forEach(user=>{
+        const row = document.createElement("div"); row.className = "userRow";
+        row.innerHTML = `<div><div style="font-weight:800">${escapeHTML(user.name || "User")}</div><div class="tiny">${escapeHTML(user.email || "")}</div></div>`;
+        const box = document.createElement("div"); box.className = "row";
+        const sel = document.createElement("select"); sel.className = "select"; sel.style.width = "150px";
+        sel.innerHTML = `<option value="staff">staff</option><option value="admin">admin</option>`; sel.value = user.role || "staff";
+        sel.onchange = async ()=>{ try{ await setDoc(doc(db,"users",user.uid), { role: sel.value }, { merge:true }); toast("Role updated"); }catch(err){ console.error(err); toast("Could not update role"); } };
+        box.appendChild(sel); row.appendChild(box); usersList.appendChild(row);
+      });
+    }
+
+    function renderSettingsPanels(){
+      settingsAdminTab.style.display = session?.role === "admin" ? "block" : "none";
+      profileName.value = session?.name || "";
+      profilePreview.src = profileImageData || profilePhoto(session || { name:"User" });
+      accountCurrentEmail.value = session?.email || "";
+      adminWebhook.value = appConfig.discordWebhook || "";
+      adminHostLimit.value = String(appConfig.hostLimit || 3);
+      adminTimezone.value = appConfig.timezone || DEFAULT_CONFIG.timezone;
+      adminTemplates.value = (appConfig.templates || DEFAULT_CONFIG.templates).join("\n");
+    }
+
+    function renderAll(){
+      renderTop();
+      renderCalendar();
+      renderHostPicker();
+      renderHostBar();
+      renderDetails();
+      try{ renderSettingsPanels(); }catch(err){ console.error("settings render failed", err); }
+    }
+
+    function openModal(el){ el.style.display = "flex"; }
+    function closeModal(el){ el.style.display = "none"; }
+    function setAuthMode(mode){ authMode=mode; tabLogin.classList.toggle("active", mode==="login"); tabRegister.classList.toggle("active", mode!=="login"); confirmField.style.display = mode === "register" ? "flex" : "none"; authGo.textContent = mode === "register" ? "Register" : "Login"; }
+    function setSettingsTab(which){
+      [[settingsProfileTab,settingsProfilePanel,"profile"],[settingsAccountTab,settingsAccountPanel,"account"],[settingsAdminTab,settingsAdminPanel,"admin"]].forEach(([tab,panel,name])=>{
+        const active = which === name; tab.classList.toggle("active", active); panel.classList.toggle("active", active);
+      });
+    }
+
+    function openDayModal(dateIso, eventId=""){
+      if(session?.role !== "admin") return;
+      const current = events.find(e=>e.id===eventId) || { id:"", date:dateIso, title:"", time:"", location:"", host:"", note:"", pinned:false, templateName:"", imageUrl:"", autoDiscord:true, discordUnix:"" };
+      const templateOptions = [`<option value="">None</option>`].concat((appConfig.templates||[]).map(t=>`<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`)).join("");
+      const warnings = getConflictWarnings(current).map(w=>`<div class="badge warn">${escapeHTML(w)}</div>`).join(" ");
+      dayModalTitle.textContent = current.id ? "Edit event" : "Add event";
+      dayModalSub.textContent = prettyDate(dateIso);
+      dayModalBody.innerHTML = `
+        <div class="field"><label>Template</label><select id="eventTemplate" class="select">${templateOptions}</select></div>
+        <div class="field"><label>Title</label><input id="eventTitle" class="input" value="${escapeHTML(current.title)}"></div>
+        <div class="two">
+          <div class="field"><label>Time</label><input id="eventTime" class="input" value="${escapeHTML(current.time)}" placeholder="6:00PM AEST"></div>
+          <div class="field"><label>Location</label><input id="eventLocation" class="input" value="${escapeHTML(current.location)}"></div>
+        </div>
+        <div class="field"><label>Host</label><input id="eventHost" class="input" value="${escapeHTML(current.host)}"></div>
+        <div class="field"><label>Note</label><textarea id="eventNote" class="textarea">${escapeHTML(current.note)}</textarea></div>
+        <div class="row" style="justify-content:space-between;align-items:flex-end">
+          <label class="tiny"><input id="eventPinned" type="checkbox" ${current.pinned ? "checked" : ""}> Pinned</label>
+          <div class="row"><label class="tiny"><input id="repeatWeekly" type="checkbox"> Repeat weekly</label><input id="repeatCount" class="input" type="number" min="1" max="12" value="4" style="width:90px"></div>
+        </div>
+        ${warnings ? `<div class="actions">${warnings}</div>` : ""}
+        <div class="row" style="justify-content:space-between;margin-top:14px">
+          <button id="ideaBtn" class="btn small ghost">Idea</button>
+          <div class="row">
+            ${current.id ? `<button id="duplicateBtn" class="btn small warn">Duplicate weekly</button>` : ""}
+            ${current.id ? `<button id="deleteEventBtn" class="btn small danger">Delete</button>` : ""}
+            <button id="saveEventBtn" class="btn primary">Save event</button>
+          </div>
+        </div>`;
+      const template = $("eventTemplate"); template.value = current.templateName || "";
+      template.onchange = ()=>{
+        const parts = template.value.split("|").map(x=>x.trim());
+        if(parts.length >= 4){ $("eventTitle").value=parts[0]; $("eventTime").value=parts[1]; $("eventLocation").value=parts[2]; $("eventNote").value=parts.slice(3).join(" | "); }
+      };
+      $("ideaBtn").onclick = ()=>{ $("eventTitle").value = generateIdea(); };
+      if($("duplicateBtn")) $("duplicateBtn").onclick = ()=>duplicateWeekly(current);
+      if($("deleteEventBtn")) $("deleteEventBtn").onclick = ()=>deleteEventById(current.id, true);
+      $("saveEventBtn").onclick = async ()=>{
+        const payload = {
+          id: current.id || `event_${Date.now()}_${Math.random().toString(16).slice(2,8)}`,
+          date: dateIso,
+          title: $("eventTitle").value.trim(),
+          time: $("eventTime").value.trim(),
+          location: $("eventLocation").value.trim(),
+          host: $("eventHost").value.trim(),
+          note: $("eventNote").value.trim(),
+          imageUrl: $("eventImageUrl").value.trim(),
+          discordUnix: $("eventDiscordUnix").value.trim(),
+          autoDiscord: $("eventAutoDiscord").checked,
+          pinned: $("eventPinned").checked,
+          templateName: template.value.trim(),
+          createdBy: session.uid,
+          createdAt: current.createdAt || Date.now(),
+          lastDiscordAutoPostKey: current.lastDiscordAutoPostKey || ""
         };
+        if(!payload.title) return toast("Event title is required");
+        try{
+          await setDoc(doc(db,"events",payload.id), payload, { merge:true });
+          if($("repeatWeekly").checked) await repeatWeeklyCopies(payload, Number($("repeatCount").value || 0));
+          toast(current.id ? "Event updated" : "Event created"); closeModal(dayBackdrop);
+        }catch(err){ console.error(err); toast("Could not save event"); }
+      };
+      openModal(dayBackdrop);
+    }
 
-        let viewDate = new Date();
-        let selectedDate = null;
-        let pendingOpenDate = null;
-        let authMode = "login";
-        let profileImageData = null;
-        let unsubscribers = [];
-        let dragEventId = null;
+    async function repeatWeeklyCopies(baseEvent, count){
+      const n = Math.max(0, Math.min(12, Number(count||0)));
+      for(let i=1;i<=n;i++){
+        const d = fromISODate(baseEvent.date); d.setDate(d.getDate() + i*7);
+        const copy = { ...baseEvent, id:`event_${Date.now()}_${i}_${Math.random().toString(16).slice(2,6)}`, date:toISODate(d), createdAt:Date.now() };
+        await setDoc(doc(db,"events",copy.id), copy, { merge:true });
+      }
+    }
+    async function duplicateWeekly(ev){ try{ await repeatWeeklyCopies(ev, 4); toast("Recurring copies created"); } catch(err){ console.error(err); toast("Could not duplicate event"); } }
+    async function togglePin(ev){ try{ await setDoc(doc(db,"events",ev.id), { pinned: !ev.pinned }, { merge:true }); }catch(err){ console.error(err); toast("Could not update pin"); } }
+    async function deleteEventById(id, close=false){ if(!id) return; if(!confirm("Delete this event?")) return; try{ await deleteDoc(doc(db,"events",id)); toast("Event deleted"); if(close) closeModal(dayBackdrop); }catch(err){ console.error(err); toast("Could not delete event"); } }
 
-        const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
-        const pad2 = n => String(n).padStart(2, "0");
-        const toISODate = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-        const fromISODate = s => {
-            const [y, m, d] = s.split("-").map(Number);
-            return new Date(y, m - 1, d);
-        };
-        const startOfMonth = d => new Date(d.getFullYear(), d.getMonth(), 1);
-        const monthLabel = d => d.toLocaleString(undefined, { month: "long", year: "numeric" });
-        const mondayIndex = jsDay => (jsDay + 6) % 7;
-        const startOfToday = () => {
-            const t = new Date();
-            return new Date(t.getFullYear(), t.getMonth(), t.getDate());
-        };
+    function openAvailabilityEditor(current=null){
+      if(!session || viewMode) return;
+      const item = current || { id:"", date:selectedDate, uid:session.uid, name:session.name, status:"active", note:"" };
+      dayModalTitle.textContent = item.id ? "Edit availability" : "Add availability";
+      dayModalSub.textContent = prettyDate(item.date);
+      dayModalBody.innerHTML = `
+        <div class="field"><label>Status</label><select id="availStatus" class="select"><option value="active">active</option><option value="maybe">maybe</option><option value="busy">busy</option></select></div>
+        <div class="field"><label>Note</label><textarea id="availNote" class="textarea">${escapeHTML(item.note || "")}</textarea></div>
+        <div class="modalActions">
+          ${item.id ? `<button id="deleteAvailBtn" class="btn danger">Delete</button>` : ""}
+          <button id="saveAvailBtn" class="btn primary">Save availability</button>
+        </div>`;
+      $("availStatus").value = item.status || "active";
+      if($("deleteAvailBtn")) $("deleteAvailBtn").onclick = ()=>deleteAvailabilityById(item.id, true);
+      $("saveAvailBtn").onclick = async ()=>{
+        const payload = { id:item.id || `avail_${Date.now()}_${Math.random().toString(16).slice(2,6)}`, date:item.date, uid:item.uid || session.uid, name:session.name, status:$("availStatus").value, note:$("availNote").value.trim() };
+        try{ await setDoc(doc(db,"availability",payload.id), payload, { merge:true }); toast(item.id ? "Availability updated" : "Availability added"); closeModal(dayBackdrop); }catch(err){ console.error(err); toast("Could not save availability"); }
+      };
+      openModal(dayBackdrop);
+    }
+    async function deleteAvailabilityById(id, close=false){ if(!id) return; if(!confirm("Delete this availability entry?")) return; try{ await deleteDoc(doc(db,"availability",id)); toast("Availability deleted"); if(close) closeModal(dayBackdrop); }catch(err){ console.error(err); toast("Could not delete availability"); } }
+    async function deleteHostPick(id){ if(!confirm("Remove this host pick?")) return; try{ await deleteDoc(doc(db,"host_picks",id)); toast("Pick removed"); }catch(err){ console.error(err); toast("Could not remove pick"); } }
 
-        const prettyDate = iso => fromISODate(iso).toLocaleDateString(undefined, {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        });
+    function buildDiscordTimestampText(ev){
+      const unix = String(ev.discordUnix || "").trim();
+      const usaUnix = String(appConfig.discordUsaTimeUnix || "").trim();
+      if(unix) return `⏰ Time: Everyday at <t:${unix}:t>  
+-# (${usaUnix ? `<t:${usaUnix}:t>` : (ev.time || "Time not set")} if you are in the USA)`;
+      return `⏰ Time: ${ev.time || "Time not set"}`;
+    }
 
-        const isPastDay = iso => fromISODate(iso) < startOfToday();
-        const isToday = iso => iso === toISODate(new Date());
+    function buildDiscordMessage(ev){
+      const hiddenMention = appConfig.discordRoleMention ? `|| ${appConfig.discordRoleMention} ||` : "";
+      return [
+        "💥 👀 TODAY’S EVENT IS LIVE! 👀💥",
+        "🎮 Jump in and play with us! 👇",
+        "",
+        `💥 Event: ${ev.title || "Event"}`,
+        `📍 Where: ${ev.location || "Public Lobby"}`,
+        buildDiscordTimestampText(ev),
+        "",
+        ev.note || "Get ready for fun minigames, laughs, and chaos with the community!",
+        "",
+        "🚀 See you in game!",
+        hiddenMention
+      ].filter(Boolean).join("
+");
+    }
 
-        const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        }[c]));
+    async function postDiscordEvent(ev, mode="manual"){
+      if(session?.role !== "admin") return false;
+      if(!appConfig.discordWebhook){ if(mode === "manual") toast("No Discord webhook set in admin settings"); return false; }
+      const payload = {
+        content: buildDiscordMessage(ev),
+        allowed_mentions: { parse: ["roles"] }
+      };
+      const imageUrl = String(ev.imageUrl || appConfig.discordDefaultImage || "").trim();
+      if(imageUrl){
+        payload.embeds = [{
+          title: ev.title || "Today's Event",
+          description: `${prettyDate(ev.date)}
+${ev.location || "Public Lobby"}`,
+          image: { url: imageUrl }
+        }];
+      }
+      const res = await fetch(appConfig.discordWebhook, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+      if(!res.ok) throw new Error(`Discord webhook failed (${res.status})`);
+      return true;
+    }
 
-        function toast(msg) {
-            const t = document.getElementById("toast");
-            t.textContent = msg;
-            t.style.display = "block";
-            clearTimeout(toast._tm);
-            toast._tm = setTimeout(() => t.style.display = "none", 3000);
+    async function sendToDiscord(ev){
+      if(session?.role !== "admin") return;
+      try{ await postDiscordEvent(ev, "manual"); toast("Sent to Discord"); }
+      catch(err){ console.error(err); toast(err.message || "Could not send to Discord"); }
+    }
+
+    async function runAutoDiscordPoster(){
+      if(session?.role !== "admin" || !appConfig.autoDiscordPostsEnabled || !appConfig.discordWebhook) return;
+      const now = new Date();
+      const todayIso = toISODate(now);
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const dueEvents = events.filter(ev=>{
+        if(ev.date !== todayIso || ev.autoDiscord === false) return false;
+        const parsed = parseTimeString(ev.time);
+        if(!parsed) return false;
+        const diff = Math.abs(parsed.value - nowMinutes);
+        const key = `${todayIso}_${parsed.value}`;
+        return diff <= 1 && ev.lastDiscordAutoPostKey !== key;
+      });
+      for(const ev of dueEvents){
+        const parsed = parseTimeString(ev.time);
+        const key = `${todayIso}_${parsed.value}`;
+        try{ await postDiscordEvent(ev, "auto"); await setDoc(doc(db,"events",ev.id), { lastDiscordAutoPostKey: key }, { merge:true }); }
+        catch(err){ console.error(err); }
+      }
+    }
+
+    function openQuickAdd(){
+      if(viewMode) return;
+      if(!session){ pendingDateToOpen = selectedDate || toISODate(new Date()); return openModal(authBackdrop); }
+      if(session.role === "admin") return openDayModal(selectedDate || toISODate(new Date()));
+      return openAvailabilityEditor();
+    }
+
+    function bindClick(el, fn){ if(el) el.onclick = fn; }
+    function bindInput(el, fn){ if(el) el.oninput = fn; }
+    function bindChange(el, fn){ if(el) el.onchange = fn; }
+
+    bindClick(btnLogin, ()=>{ setAuthMode("login"); openModal(authBackdrop); });
+    bindClick(btnLogout, async ()=>{ try{ await signOut(auth); toast("Logged out"); }catch(err){ console.error(err); toast("Logout failed"); } });
+    bindClick(btnSettings, ()=>{ if(!session) return; profileImageData = session.photoURL || ""; renderSettingsPanels(); setSettingsTab("profile"); openModal(settingsBackdrop); });
+    bindClick(btnStats, ()=>{ renderStatsModal(); openModal(statsBackdrop); });
+    bindClick(manageUsersBtn, ()=>{ renderUsersManager(); openModal(usersBackdrop); });
+    bindClick(usersCloseBtn, ()=>closeModal(usersBackdrop));
+    bindClick(fabBtn, openQuickAdd); bindClick(fabBtnMobile, openQuickAdd);
+    bindClick(addEventBtn, ()=>{ if(!session) return openModal(authBackdrop); if(session.role!=="admin") return; openDayModal(selectedDate || toISODate(new Date())); });
+    bindClick(addAvailBtn, ()=>{ if(!session) return openModal(authBackdrop); openAvailabilityEditor(); });
+    bindClick(clearMyPickBtn, async ()=>{ if(!session) return; const id=`${selectedDate}_${session.uid}`; try{ await deleteDoc(doc(db,"host_picks",id)); }catch(err){ console.error(err); toast("Could not remove your pick"); } });
+    bindClick(viewModeBtn, ()=>{ viewMode = !viewMode; saveJSON(KEYS.viewMode, viewMode); renderAll(); toast(`View mode ${viewMode ? "ON" : "OFF"}`); });
+    bindClick(resetBtn, ()=>{ saveJSON(KEYS.events, []); saveJSON(KEYS.availability, []); saveJSON(KEYS.picks, []); toast("Local cache reset"); renderAll(); });
+    bindClick(clearAllBtn, async ()=>{
+      if(session?.role !== "admin") return;
+      if(!confirm("Clear all events, availability, and host picks?")) return;
+      try{
+        const [es,as,ps] = await Promise.all([getDocs(collection(db,"events")), getDocs(collection(db,"availability")), getDocs(collection(db,"host_picks"))]);
+        await Promise.all([...es.docs.map(d=>deleteDoc(d.ref)), ...as.docs.map(d=>deleteDoc(d.ref)), ...ps.docs.map(d=>deleteDoc(d.ref))]);
+        toast("Everything cleared");
+      }catch(err){ console.error(err); toast("Clear all failed"); }
+    });
+    bindClick($("prevMonth"), ()=>{ viewDate.setMonth(viewDate.getMonth()-1); viewDate=new Date(viewDate); renderAll(); });
+    bindClick($("nextMonth"), ()=>{ viewDate.setMonth(viewDate.getMonth()+1); viewDate=new Date(viewDate); renderAll(); });
+    bindClick($("todayBtn"), ()=>{ const now = new Date(); viewDate = new Date(now); selectedDate = toISODate(now); renderAll(); });
+    bindInput(searchInput, ()=>renderAll());
+    bindChange(filterSelect, ()=>renderAll());
+
+    bindClick(tabLogin, ()=>setAuthMode("login"));
+    bindClick(tabRegister, ()=>setAuthMode("register"));
+    bindClick($("authClose"), ()=>closeModal(authBackdrop));
+    bindClick(forgotPasswordBtn, async ()=>{ const email = authEmail.value.trim(); if(!email) return toast("Enter your email first"); try{ await sendPasswordResetEmail(auth, email); toast("Password reset email sent"); }catch(err){ console.error(err); toast(err.code || err.message || "Could not send reset email"); } });
+    bindClick(authGo, async ()=>{
+      const email = authEmail.value.trim(); const password = authPassword.value; const password2 = authPassword2.value;
+      if(!email || !password) return toast("Enter email and password");
+      try{
+        if(authMode === "register"){
+          if(password.length < 6) return toast("Password must be at least 6 characters");
+          if(password !== password2) return toast("Passwords do not match");
+          await createUserWithEmailAndPassword(auth, email, password);
+          toast("Account created");
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+          toast("Logged in");
         }
-
-        function initialsFromName(name) {
-            const clean = String(name || "").trim();
-            if (!clean) return "U";
-            return clean.split(/\s+/).slice(0, 2).map(p => p[0]?.toUpperCase() || "").join("") || "U";
-        }
-
-        function defaultAvatarDataURL(name) {
-            const initials = initialsFromName(name);
-            const svg = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
-                        <defs>
-                            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                                <stop stop-color="#f5c04f"/>
-                                <stop offset="1" stop-color="#32d583"/>
-                            </linearGradient>
-                        </defs>
-                        <rect width="160" height="160" rx="34" fill="url(#g)"/>
-                        <text x="80" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#15120c">${initials}</text>
-                    </svg>
-                `;
-            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-        }
-
-        async function fileToAvatarDataURL(file) {
-            const img = await new Promise((resolve, reject) => {
-                const fr = new FileReader();
-                fr.onload = () => {
-                    const image = new Image();
-                    image.onload = () => resolve(image);
-                    image.onerror = reject;
-                    image.src = fr.result;
-                };
-                fr.onerror = reject;
-                fr.readAsDataURL(file);
-            });
-
-            const size = 180;
-            const canvas = document.createElement("canvas");
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext("2d");
-
-            const side = Math.min(img.width, img.height);
-            const sx = (img.width - side) / 2;
-            const sy = (img.height - side) / 2;
-            ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-            return canvas.toDataURL("image/jpeg", 0.82);
-        }
-
-        const profilePhotoOrDefault = userLike =>
-            userLike?.photoURL || defaultAvatarDataURL(userLike?.name || userLike?.displayName || userLike?.email || "User");
-
-        const hostLabelFromUser = userLike =>
-            userLike?.name || (userLike?.email ? userLike.email.split("@")[0] : "User");
-
-        const hostLabelFromPick = pick =>
-            pick?.hostName || (pick?.email ? pick.email.split("@")[0] : "Host");
-
-        function parseTimeString(timeText) {
-            if (!timeText) return null;
-            const clean = timeText.toUpperCase().replace(/\s+/g, "");
-            const m = clean.match(/^(\d{1,2})(?::(\d{2}))?(AM|PM)/);
-            if (!m) return null;
-            let hour = Number(m[1]);
-            const min = Number(m[2] || 0);
-            const ap = m[3];
-            if (ap === "PM" && hour !== 12) hour += 12;
-            if (ap === "AM" && hour === 12) hour = 0;
-            return { hour, min };
-        }
-
-        function viewerTimeText(dateIso, timeText) {
-            const parsed = parseTimeString(timeText);
-            if (!parsed) return "";
-            const d = fromISODate(dateIso);
-            d.setHours(parsed.hour, parsed.min, 0, 0);
-            try {
-                return d.toLocaleString(undefined, {
-                    weekday: "short",
-                    hour: "numeric",
-                    minute: "2-digit"
-                });
-            } catch {
-                return "";
-            }
-        }
-
-        function statusBadge(status) {
-            if (status === "active") return '<span class="badge ok">Active</span>';
-            if (status === "maybe") return '<span class="badge warn">Maybe</span>';
-            if (status === "busy") return '<span class="badge red">Busy</span>';
-            return '<span class="badge">Unknown</span>';
-        }
-
-        function eventMatchesSearch(ev, term) {
-            if (!term) return true;
-            const blob = [
-                ev.title, ev.time, ev.location, ev.host, ev.note,
-                ev.templateName
-            ].join(" ").toLowerCase();
-            return blob.includes(term.toLowerCase());
-        }
-
-        function isoInCurrentWeek(iso) {
-            const d = fromISODate(iso);
-            const now = new Date();
-            const monday = new Date(now);
-            monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-            monday.setHours(0, 0, 0, 0);
-            const sunday = new Date(monday);
-            sunday.setDate(monday.getDate() + 6);
-            sunday.setHours(23, 59, 59, 999);
-            return d >= monday && d <= sunday;
-        }
-
-        function getDayHeaderLabel(cellDate) {
-            const mon = cellDate.toLocaleString(undefined, { month: "short" }).toUpperCase();
-            return `${mon} ${cellDate.getDate()}`;
-        }
-
-        function getDaySymbol({ dayEvents, dayAvail, dayPicks, iso }) {
-            if (isPastDay(iso)) return "⏺";
-            if (dayEvents.some(e => e.pinned)) return "📌";
-            if (dayEvents.length) return "★";
-            if (dayPicks.length) return "👥";
-            if (dayAvail.length) return "•";
-            return "";
-        }
-
-        function getConflictWarnings(ev, dateOverride = null, skipId = null) {
-            const date = dateOverride || ev.date;
-            const sameDay = events.filter(x => x.date === date && x.id !== skipId);
-            const warnings = [];
-
-            const timeCollision = sameDay.some(x => (x.time || "").trim() && (x.time || "").trim() === (ev.time || "").trim());
-            if (timeCollision && ev.time) warnings.push("Another event already uses this exact time.");
-
-            const sameLocation = sameDay.some(x => (x.location || "").trim() && (x.location || "").trim().toLowerCase() === (ev.location || "").trim().toLowerCase());
-            if (sameLocation && ev.location) warnings.push("Another event already uses this location on this day.");
-
-            const dayPicks = hostPicks.filter(p => p.date === date);
-            if (dayPicks.length >= Number(appConfig.hostLimit || 3)) warnings.push("Host limit for this day has been reached.");
-
-            return warnings;
-        }
-
-        function generateIdea(seed = "") {
-            const themes = [
-                "Lava Floor Challenge",
-                "Mystery Maze Race",
-                "Last To Fall Wins",
-                "Hide and Seek Frenzy",
-                "Tag Tournament",
-                "Obstacle Sprint",
-                "Freeze Dance Elimination",
-                "Creator Showdown"
-            ];
-            const hooks = [
-                "last player standing wins",
-                "teams race for points",
-                "winner gets promo code",
-                "fastest time wins",
-                "best 2 out of 3 rounds",
-                "sudden death final round"
-            ];
-            const a = themes[Math.floor(Math.random() * themes.length)];
-            const b = hooks[Math.floor(Math.random() * hooks.length)];
-            return seed ? `${a} — ${seed}. ${b}.` : `${a} — ${b}.`;
-        }
-
-        async function ensureUserDoc(firebaseUser) {
-            const ref = doc(db, "users", firebaseUser.uid);
-            const snap = await getDoc(ref);
-            if (!snap.exists()) {
-                const fallbackName = (firebaseUser.email || "User").split("@")[0];
-                await setDoc(ref, {
-                    name: fallbackName,
-                    email: firebaseUser.email || "",
-                    role: "staff",
-                    photoURL: "",
-                    createdAt: Date.now()
-                }, { merge: true });
-            }
-        }
-
-        async function ensureConfigDoc() {
-            const ref = doc(db, "app_config", "main");
-            const snap = await getDoc(ref);
-            if (!snap.exists()) {
-                await setDoc(ref, {
-                    discordWebhook: "",
-                    hostLimit: 3,
-                    timezone: "Australia/Brisbane",
-                    templates: DEFAULT_TEMPLATES
-                }, { merge: true });
-            }
-        }
-
-        async function loadSessionFromAuth(firebaseUser) {
-            if (!firebaseUser) {
-                session = null;
-                return;
-            }
-
-            await ensureUserDoc(firebaseUser);
-            await ensureConfigDoc();
-
-            const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-            const data = snap.exists() ? snap.data() : {};
-
-            session = {
-                uid: firebaseUser.uid,
-                email: firebaseUser.email || "",
-                name: data.name || (firebaseUser.email || "User").split("@")[0],
-                role: data.role || "staff",
-                photoURL: data.photoURL || ""
-            };
-        }
-
-        const canClickHost = host => {
-            if (!session) return false;
-            if (session.role === "admin") return true;
-            return host.uid === session.uid;
-        };
-
-        const picksForDate = dateIso => hostPicks.filter(p => p.date === dateIso);
-        const isPicked = (dateIso, hostUid) => hostPicks.some(p => p.date === dateIso && p.hostUid === hostUid);
-        const pickDocId = (dateIso, hostUid) => `${dateIso}_${hostUid}`;
-
-        const upsertEvent = ev => setDoc(doc(db, "events", ev.id), ev, { merge: true });
-        const removeEvent = id => deleteDoc(doc(db, "events", id));
-        const upsertAvail = a => setDoc(doc(db, "availability", a.id), a, { merge: true });
-        const removeAvail = id => deleteDoc(doc(db, "availability", id));
-
-        function setPick(dateIso, host) {
-            const id = pickDocId(dateIso, host.uid);
-            return setDoc(doc(db, "host_picks", id), {
-                id,
-                date: dateIso,
-                hostUid: host.uid,
-                hostName: host.name || (host.email ? host.email.split("@")[0] : "User"),
-                hostImg: "",
-                email: host.email || ""
-            }, { merge: true });
-        }
-
-        const removePick = (dateIso, hostUid) => deleteDoc(doc(db, "host_picks", pickDocId(dateIso, hostUid)));
-
-        async function clearPicksForDate(dateIso) {
-            const picks = hostPicks.filter(p => p.date === dateIso);
-            await Promise.all(picks.map(p => removePick(dateIso, p.hostUid)));
-        }
-
-        function statsForMonth(dateObj) {
-            const month = dateObj.getMonth();
-            const year = dateObj.getFullYear();
-            const monthEvents = events.filter(e => {
-                const d = fromISODate(e.date);
-                return d.getMonth() === month && d.getFullYear() === year;
-            });
-
-            const eventDays = new Set(monthEvents.map(e => e.date));
-            const allMonthDates = [];
-            const first = new Date(year, month, 1);
-            const last = new Date(year, month + 1, 0);
-            for (let d = 1; d <= last.getDate(); d++) {
-                allMonthDates.push(toISODate(new Date(year, month, d)));
-            }
-
-            const topMap = new Map();
-            monthEvents.forEach(e => {
-                const key = e.host || "Unassigned";
-                topMap.set(key, (topMap.get(key) || 0) + 1);
-            });
-
-            let topHost = "None";
-            let topCount = 0;
-            topMap.forEach((count, name) => {
-                if (count > topCount && name !== "Unassigned") {
-                    topCount = count;
-                    topHost = name;
-                }
-            });
-
-            const emptyDays = allMonthDates.filter(date => !hostPicks.some(p => p.date === date) && !events.some(e => e.date === date)).length;
-
-            return {
-                totalEvents: monthEvents.length,
-                uniqueHosts: new Set(monthEvents.map(e => e.host).filter(Boolean)).size,
-                emptyDays,
-                topHost,
-                topCount
-            };
-        }
-
-        function applyTemplateToForm(line) {
-            const parts = line.split("|").map(x => x.trim());
-            const [title, time, location, note] = parts;
-            const titleEl = document.getElementById("evTitle");
-            const timeEl = document.getElementById("evTime");
-            const locEl = document.getElementById("evLoc");
-            const noteEl = document.getElementById("evNote");
-            if (titleEl) titleEl.value = title || "";
-            if (timeEl) timeEl.value = time || "";
-            if (locEl) locEl.value = location || "";
-            if (noteEl) noteEl.value = note || "";
-        }
-
-        async function sendDiscordWebhook(ev) {
-            if (!appConfig.discordWebhook) {
-                toast("No Discord webhook saved");
-                return;
-            }
-
-            const content = [
-                `**${ev.title}**`,
-                `📅 ${prettyDate(ev.date)}`,
-                ev.time ? `⏰ ${ev.time}` : "",
-                ev.location ? `📍 ${ev.location}` : "",
-                ev.host ? `👤 Host: ${ev.host}` : "",
-                ev.note ? `📝 ${ev.note}` : ""
-            ].filter(Boolean).join("\n");
-
-            try {
-                const res = await fetch(appConfig.discordWebhook, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ content })
-                });
-                if (!res.ok) throw new Error("Webhook failed");
-                toast("Sent to Discord");
-            } catch (err) {
-                console.error(err);
-                toast("Could not send to Discord");
-            }
-        }
-
-        function renderTop() {
-            const settingsAdminTab = document.getElementById("settingsAdminTab");
-
-            if (!session) {
-                whoLine.textContent = "Login required";
-                topAvatar.style.display = "none";
-                rolePill.style.display = "none";
-                btnSettings.style.display = "none";
-                btnStats.style.display = "none";
-                btnLogin.style.display = "inline-block";
-                btnLogout.style.display = "none";
-                addEventBtn.style.display = "none";
-                addAvailBtn.style.display = "none";
-                resetBtn.style.display = "none";
-                viewModeBtn.style.display = "none";
-                clearAllBtn.style.display = "none";
-                manageUsersBtn.style.display = "none";
-                fabBtn.style.display = "none";
-                settingsAdminTab.style.display = "none";
-                sideSub.textContent = "Log in to view and manage the calendar";
-                return;
-            }
-
-            whoLine.textContent = `Logged in as ${session.name}`;
-            topAvatar.src = profilePhotoOrDefault(session);
-            topAvatar.style.display = "block";
-            rolePill.style.display = "inline-flex";
-            rolePill.innerHTML = `Role: <b>${escapeHTML(session.role.toUpperCase())}</b>`;
-            btnSettings.style.display = "inline-block";
-            btnStats.style.display = "inline-block";
-            btnLogin.style.display = "none";
-            btnLogout.style.display = "inline-block";
-            viewModeBtn.style.display = "inline-block";
-            viewModeBtn.textContent = "View: " + (viewMode ? "ON" : "OFF");
-            clearAllBtn.style.display = session.role === "admin" ? "inline-block" : "none";
-            manageUsersBtn.style.display = session.role === "admin" ? "inline-block" : "none";
-            resetBtn.style.display = session.role === "admin" ? "inline-block" : "none";
-            addEventBtn.style.display = (session.role === "admin" && !viewMode) ? "inline-block" : "none";
-            addAvailBtn.style.display = !viewMode ? "inline-block" : "none";
-            fabBtn.style.display = !viewMode ? "flex" : "none";
-            settingsAdminTab.style.display = session.role === "admin" ? "block" : "none";
-
-            sideSub.textContent = viewMode
-                ? "View mode: clicking days will not open editor"
-                : (session.role === "admin"
-                    ? "Admin: manage events, availability, users, and all picks"
-                    : "Staff: click dates and pick yourself as host");
-        }
-
-        function renderStatsCard() {
-            const stats = statsForMonth(viewDate);
-            document.getElementById("statEvents").textContent = stats.totalEvents;
-            document.getElementById("statHosts").textContent = stats.uniqueHosts;
-            document.getElementById("statEmpty").textContent = stats.emptyDays;
-        }
-
-        function renderHostPicker() {
-            const show = !!session && !!selectedDate && !viewMode && hosts.length > 0;
-            pfpPickerBox.style.display = show ? "block" : "none";
-            if (!show) return;
-
-            pfpGrid.innerHTML = "";
-            const pickedCount = picksForDate(selectedDate).length;
-
-            hosts.forEach(host => {
-                const btn = document.createElement("div");
-                btn.className = "pfpBtn";
-                if (isPicked(selectedDate, host.uid)) btn.classList.add("active");
-
-                const allowed = canClickHost(host);
-                btn.setAttribute("aria-disabled", allowed ? "false" : "true");
-                btn.innerHTML = `<div class="pfpName">${escapeHTML(host.name || (host.email ? host.email.split("@")[0] : "User"))}</div>`;
-
-                btn.addEventListener("click", async e => {
-                    e.stopPropagation();
-
-                    if (!allowed) {
-                        toast("You can only pick your own profile");
-                        return;
-                    }
-
-                    const alreadyPicked = isPicked(selectedDate, host.uid);
-                    if (!alreadyPicked && pickedCount >= Number(appConfig.hostLimit || 3)) {
-                        toast(`Host limit reached (${appConfig.hostLimit})`);
-                        return;
-                    }
-
-                    try {
-                        if (alreadyPicked) {
-                            await removePick(selectedDate, host.uid);
-                        } else {
-                            await setPick(selectedDate, host);
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        toast("Could not update host pick");
-                    }
-                });
-
-                pfpGrid.appendChild(btn);
-            });
-        }
-
-        function renderHostBar() {
-            if (!selectedDate) {
-                hostBar.style.display = "none";
-                return;
-            }
-
-            hostBar.style.display = "flex";
-            hostBarDate.textContent = prettyDate(selectedDate);
-            const picks = picksForDate(selectedDate).slice().sort((a, b) => hostLabelFromPick(a).localeCompare(hostLabelFromPick(b)));
-            hostChips.innerHTML = "";
-
-            if (!picks.length) {
-                const empty = document.createElement("div");
-                empty.className = "chip";
-                empty.innerHTML = `<b style="color:rgba(238,241,246,.78)">No hosts picked yet</b>`;
-                hostChips.appendChild(empty);
-            } else {
-                picks.forEach(p => {
-                    const chip = document.createElement("div");
-                    chip.className = "chip";
-                    chip.innerHTML = `<b>${escapeHTML(p.hostName || (p.email ? p.email.split("@")[0] : "Host"))}</b>`;
-                    hostChips.appendChild(chip);
-                });
-            }
-
-            clearMyPickBtn.style.display = session && isPicked(selectedDate, session.uid) ? "inline-flex" : "none";
-        }
-
-        function renderCalendar() {
-            monthTitle.textContent = monthLabel(viewDate);
-            calGrid.innerHTML = "";
-            renderStatsCard();
-
-            const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-            const filterValue = document.getElementById("filterSelect").value;
-
-            const first = startOfMonth(viewDate);
-            const lead = mondayIndex(first.getDay());
-            const startCellDate = new Date(first);
-            startCellDate.setDate(first.getDate() - lead);
-
-            for (let i = 0; i < 42; i++) {
-                const cellDate = new Date(startCellDate);
-                cellDate.setDate(startCellDate.getDate() + i);
-                const iso = toISODate(cellDate);
-                const inMonth = cellDate.getMonth() === viewDate.getMonth();
-
-                let dayEvents = events.filter(e => e.date === iso);
-                const dayAvail = avail.filter(a => a.date === iso);
-                const dayPicks = hostPicks.filter(p => p.date === iso);
-
-                if (searchTerm) {
-                    dayEvents = dayEvents.filter(ev => eventMatchesSearch(ev, searchTerm));
-                }
-
-                if (filterValue === "mine" && session) {
-                    dayEvents = dayEvents.filter(ev => (ev.host || "").toLowerCase() === (session.name || "").toLowerCase() || dayPicks.some(p => p.hostUid === session.uid));
-                }
-                if (filterValue === "nohost") {
-                    if (dayPicks.length > 0 || dayEvents.some(e => e.host)) dayEvents = [];
-                }
-                if (filterValue === "pinned") {
-                    dayEvents = dayEvents.filter(e => e.pinned);
-                }
-                if (filterValue === "week" && !isoInCurrentWeek(iso)) {
-                    dayEvents = [];
-                }
-
-                const div = document.createElement("div");
-                div.className = "day";
-                if (!inMonth) div.classList.add("muted");
-                if (selectedDate === iso) div.classList.add("selected");
-                if (isPastDay(iso)) div.classList.add("past");
-                if (isToday(iso)) div.classList.add("today");
-
-                const tooltipLines = [];
-                dayEvents.forEach(ev => tooltipLines.push(`${ev.title}${ev.time ? ` • ${ev.time}` : ""}${ev.host ? ` • ${ev.host}` : ""}`));
-                if (tooltipLines.length) div.title = tooltipLines.join("\n");
-
-                const topBar = document.createElement("div");
-                topBar.className = "dayTopBar";
-
-                const dayDate = document.createElement("div");
-                dayDate.className = "dayDate";
-                dayDate.textContent = getDayHeaderLabel(cellDate);
-
-                const dayIcon = document.createElement("div");
-                dayIcon.className = "dayIcon";
-                dayIcon.textContent = getDaySymbol({ dayEvents, dayAvail, dayPicks, iso });
-
-                const body = document.createElement("div");
-                body.className = "dayBody";
-
-                topBar.append(dayDate, dayIcon);
-
-                const firstPinned = dayEvents.find(e => e.pinned);
-                if (firstPinned) {
-                    const pin = document.createElement("div");
-                    pin.className = "pinBar";
-                    div.appendChild(pin);
-                }
-
-                if (dayEvents.length) {
-                    const ev = dayEvents[0];
-
-                    if (ev.time) {
-                        const time = document.createElement("div");
-                        time.className = "miniTime";
-                        time.textContent = ev.time;
-                        body.appendChild(time);
-                    }
-
-                    const title = document.createElement("div");
-                    title.className = "miniItem";
-                    title.textContent = ev.title;
-                    body.appendChild(title);
-
-                    const meta = document.createElement("div");
-                    meta.className = "miniMeta";
-                    meta.textContent = ev.note || (ev.host ? `with ${ev.host}` : "");
-                    body.appendChild(meta);
-                } else if (dayAvail.length) {
-                    const txt = document.createElement("div");
-                    txt.className = "miniItem";
-                    txt.textContent = `${dayAvail.length} availability added`;
-                    body.appendChild(txt);
-                } else if (dayPicks.length) {
-                    const txt = document.createElement("div");
-                    txt.className = "miniItem";
-                    txt.textContent = `${dayPicks.length} host pick${dayPicks.length === 1 ? "" : "s"}`;
-                    body.appendChild(txt);
-                }
-
-                if (dayPicks.length) {
-                    const hostPreviewRow = document.createElement("div");
-                    hostPreviewRow.className = "hostPreviewRow";
-
-                    dayPicks.slice(0, 3).forEach(p => {
-                        const nameTag = document.createElement("div");
-                        nameTag.className = "badge ok";
-                        nameTag.textContent = p.hostName || (p.email ? p.email.split("@")[0] : "Host");
-                        hostPreviewRow.appendChild(nameTag);
-                    });
-
-                    if (dayPicks.length > 3) {
-                        const extra = document.createElement("div");
-                        extra.className = "miniMeta";
-                        extra.textContent = `+${dayPicks.length - 3}`;
-                        hostPreviewRow.appendChild(extra);
-                    }
-
-                    body.appendChild(hostPreviewRow);
-                }
-
-                if (!dayEvents.length && !dayAvail.length && !dayPicks.length) {
-                    const spacer = document.createElement("div");
-                    spacer.className = "miniMeta";
-                    spacer.textContent = isPastDay(iso) ? "Past day" : "";
-                    body.appendChild(spacer);
-                }
-
-                div.append(topBar, body);
-
-                div.addEventListener("click", () => {
-                    selectedDate = iso;
-                    renderCalendar();
-                    renderDetails();
-                    renderHostPicker();
-                    renderHostBar();
-
-                    if (viewMode) return;
-
-                    if (!session) {
-                        pendingOpenDate = iso;
-                        openAuth();
-                        return;
-                    }
-
-                    if (session.role === "admin") openDayModal(iso);
-                });
-
-                div.addEventListener("dragover", e => {
-                    if (!dragEventId || viewMode || session?.role !== "admin") return;
-                    e.preventDefault();
-                    div.classList.add("dropTarget");
-                });
-
-                div.addEventListener("dragleave", () => div.classList.remove("dropTarget"));
-
-                div.addEventListener("drop", async e => {
-                    e.preventDefault();
-                    div.classList.remove("dropTarget");
-                    if (!dragEventId || session?.role !== "admin") return;
-
-                    const ev = events.find(x => x.id === dragEventId);
-                    if (!ev) return;
-
-                    try {
-                        const warnings = getConflictWarnings(ev, iso, ev.id);
-                        if (warnings.length) {
-                            const ok = confirm("This move has warnings:\n\n- " + warnings.join("\n- ") + "\n\nMove anyway?");
-                            if (!ok) return;
-                        }
-
-                        await upsertEvent({ ...ev, date: iso });
-                        toast("Event moved");
-                    } catch (err) {
-                        console.error(err);
-                        toast("Could not move event");
-                    } finally {
-                        dragEventId = null;
-                    }
-                });
-
-                calGrid.appendChild(div);
-            }
-        }
-
-        function renderDetails() {
-            selectedDateText.textContent = selectedDate ? prettyDate(selectedDate) : "None";
-            detailList.innerHTML = "";
-            renderHostBar();
-            renderHostPicker();
-
-            if (!session) {
-                detailList.innerHTML = `<div class="emptyState">Login required. Create an account or log in to use the calendar.</div>`;
-                return;
-            }
-
-            if (!selectedDate) {
-                detailList.innerHTML = `<div class="emptyState">Pick a date to view events, picks, and availability.</div>`;
-                return;
-            }
-
-            const dayEvents = events.filter(e => e.date === selectedDate);
-            const dayAvail = avail.filter(a => a.date === selectedDate);
-            const dayPicks = picksForDate(selectedDate);
-
-            const picksCard = document.createElement("div");
-            picksCard.className = "detailCard";
-            picksCard.innerHTML = `
-                    <div class="detailCardTop">
-                        <h4>Picked hosts (${dayPicks.length}/${appConfig.hostLimit})</h4>
-                        <div class="badge ok">Host picks</div>
-                    </div>
-                `;
-
-            if (!dayPicks.length) {
-                picksCard.innerHTML += `<div class="emptyState">No host picks yet.</div>`;
-            } else {
-                dayPicks.forEach(pick => {
-                    const row = document.createElement("div");
-                    row.className = "pickEntry";
-
-                    row.innerHTML = `
-                            <div class="pickEntryLeft">
-                                <div>
-                                    <div class="pickEntryName">${escapeHTML(pick.hostName || (pick.email ? pick.email.split("@")[0] : "Host"))}</div>
-                                    <div class="pickEntryMeta">${escapeHTML(pick.email || "")}</div>
-                                </div>
-                            </div>
-                        `;
-
-                    const actions = document.createElement("div");
-                    actions.className = "actionsRow";
-
-                    const isMine = session && pick.hostUid === session.uid;
-                    if (!viewMode && (session.role === "admin" || isMine)) {
-                        const removeBtn = document.createElement("button");
-                        removeBtn.className = "btn small danger";
-                        removeBtn.textContent = session.role === "admin" && !isMine ? "Remove pick" : "Remove";
-                        removeBtn.onclick = async () => {
-                            try {
-                                await removePick(selectedDate, pick.hostUid);
-                                toast("Pick removed");
-                            } catch (err) {
-                                console.error(err);
-                                toast("Could not remove pick");
-                            }
-                        };
-                        actions.appendChild(removeBtn);
-                    }
-
-                    row.appendChild(actions);
-                    picksCard.appendChild(row);
-                });
-
-                if (!viewMode && session.role === "admin" && dayPicks.length) {
-                    const clearWrap = document.createElement("div");
-                    clearWrap.className = "actionsRow";
-                    clearWrap.style.marginTop = "10px";
-
-                    const clearBtn = document.createElement("button");
-                    clearBtn.className = "btn small danger";
-                    clearBtn.textContent = "Clear date picks";
-                    clearBtn.onclick = async () => {
-                        if (!confirm("Remove all host picks for this date?")) return;
-                        try {
-                            await clearPicksForDate(selectedDate);
-                            toast("Cleared picks");
-                        } catch (err) {
-                            console.error(err);
-                            toast("Could not clear picks");
-                        }
-                    };
-                    clearWrap.appendChild(clearBtn);
-                    picksCard.appendChild(clearWrap);
-                }
-            }
-
-            detailList.appendChild(picksCard);
-
-            const evCard = document.createElement("div");
-            evCard.className = "detailCard";
-            evCard.innerHTML = `
-                    <div class="detailCardTop">
-                        <h4>Official events (${dayEvents.length})</h4>
-                        <div class="badge brand">${session.role === "admin" ? "Admin" : "Staff"}</div>
-                    </div>
-                `;
-
-            if (!dayEvents.length) {
-                evCard.innerHTML += `<div class="emptyState">No official events on this day yet.</div>`;
-            } else {
-                dayEvents.sort((a, b) => (a.time || "").localeCompare(b.time || "")).forEach(ev => {
-                    const wrap = document.createElement("div");
-                    wrap.className = "eventBlock";
-                    wrap.draggable = session.role === "admin";
-                    wrap.addEventListener("dragstart", () => {
-                        if (session.role === "admin") dragEventId = ev.id;
-                    });
-
-                    const viewerTime = viewerTimeText(ev.date, ev.time);
-                    wrap.innerHTML = `
-                            <div class="detailCardTop">
-                                <div>
-                                    <div class="eventTitle">${escapeHTML(ev.title)} ${ev.pinned ? "📌" : ""}</div>
-                                    <div class="metaText">
-                                        ${escapeHTML(ev.time || "Time TBA")} •
-                                        ${escapeHTML(ev.location || "Location TBA")} •
-                                        ${escapeHTML(ev.host ? `Host: ${ev.host}` : "Host: Unassigned")}
-                                    </div>
-                                    ${viewerTime ? `<div class="metaText">Your time: ${escapeHTML(viewerTime)}</div>` : ""}
-                                    ${ev.note ? `<div class="metaText" style="margin-top:8px;">${escapeHTML(ev.note)}</div>` : ""}
-                                    ${ev.recurring ? `<div class="metaText">Repeats weekly (${ev.repeatCount || 1} total)</div>` : ""}
-                                </div>
-                                <div class="actionsRow">
-                                    ${ev.pinned ? `<span class="badge brand">Pinned</span>` : ""}
-                                    <span class="badge blue">Drag to move</span>
-                                </div>
-                            </div>
-                        `;
-
-                    if (!viewMode && session.role === "admin") {
-                        const controls = document.createElement("div");
-                        controls.className = "actionsRow";
-                        controls.style.marginTop = "10px";
-
-                        const pinBtn = document.createElement("button");
-                        pinBtn.className = "btn small warn";
-                        pinBtn.textContent = ev.pinned ? "Unpin" : "Pin";
-                        pinBtn.onclick = async () => {
-                            await upsertEvent({ ...ev, pinned: !ev.pinned });
-                            toast(ev.pinned ? "Unpinned" : "Pinned");
-                        };
-
-                        const discordBtn = document.createElement("button");
-                        discordBtn.className = "btn small blue";
-                        discordBtn.textContent = "Send to Discord";
-                        discordBtn.onclick = () => sendDiscordWebhook(ev);
-
-                        const editBtn = document.createElement("button");
-                        editBtn.className = "btn small primary";
-                        editBtn.textContent = "Edit";
-                        editBtn.onclick = () => openDayModal(selectedDate, ev);
-
-                        const delBtn = document.createElement("button");
-                        delBtn.className = "btn small danger";
-                        delBtn.textContent = "Remove";
-                        delBtn.onclick = async () => {
-                            await removeEvent(ev.id);
-                            toast("Event removed");
-                        };
-
-                        controls.append(pinBtn, discordBtn, editBtn, delBtn);
-                        wrap.appendChild(controls);
-                    }
-
-                    evCard.appendChild(wrap);
-                });
-            }
-
-            detailList.appendChild(evCard);
-
-            const avCard = document.createElement("div");
-            avCard.className = "detailCard";
-            avCard.innerHTML = `
-                    <div class="detailCardTop">
-                        <h4>Staff availability (${dayAvail.length})</h4>
-                        <div class="badge warn">Availability</div>
-                    </div>
-                `;
-
-            if (!dayAvail.length) {
-                avCard.innerHTML += `<div class="emptyState">No availability added yet.</div>`;
-            } else {
-                dayAvail.forEach(a => {
-                    const line = document.createElement("div");
-                    line.className = "availabilityBlock";
-                    line.innerHTML = `
-                            <div class="detailCardTop">
-                                <div>
-                                    <div class="eventTitle" style="margin-bottom:4px;">${escapeHTML(a.name)}</div>
-                                    <div class="metaText">${escapeHTML(a.note || "Available to host")}</div>
-                                </div>
-                                ${statusBadge(a.status || "active")}
-                            </div>
-                        `;
-
-                    if (!viewMode && (session.role === "admin" || a.uid === session.uid)) {
-                        const del = document.createElement("button");
-                        del.className = "btn small danger";
-                        del.textContent = "Remove";
-                        del.style.marginTop = "10px";
-                        del.onclick = async () => {
-                            await removeAvail(a.id);
-                            toast("Availability removed");
-                        };
-                        line.appendChild(del);
-                    }
-
-                    avCard.appendChild(line);
-                });
-            }
-
-            detailList.appendChild(avCard);
-        }
-
-        function openStatsModal() {
-            const stats = statsForMonth(viewDate);
-            const body = document.getElementById("statsModalBody");
-            body.innerHTML = `
-                    <div class="statGrid">
-                        <div><div class="tiny">Events this month</div><div class="statBig">${stats.totalEvents}</div></div>
-                        <div><div class="tiny">Unique hosts</div><div class="statBig">${stats.uniqueHosts}</div></div>
-                        <div><div class="tiny">Empty days</div><div class="statBig">${stats.emptyDays}</div></div>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="infoBlock">
-                        <div class="infoLabel">Top host</div>
-                        <div class="infoValue">${escapeHTML(stats.topHost)}${stats.topCount ? ` (${stats.topCount})` : ""}</div>
-                    </div>
-                    <div class="modalActions">
-                        <button class="btn" id="closeStatsBtn">Close</button>
-                    </div>
-                `;
-            statsBackdrop.style.display = "flex";
-            document.getElementById("closeStatsBtn").onclick = () => statsBackdrop.style.display = "none";
-        }
-
-        function renderUsersModal() {
-            userList.innerHTML = "";
-            const users = [...usersMap.values()].sort((a, b) => hostLabelFromUser(a).localeCompare(hostLabelFromUser(b)));
-
-            if (!users.length) {
-                userList.innerHTML = `<div class="emptyState">No users found.</div>`;
-                return;
-            }
-
-            users.forEach(user => {
-                const row = document.createElement("div");
-                row.className = "userRow";
-
-                const left = document.createElement("div");
-                left.innerHTML = `
-                        <div class="pickEntryName">${escapeHTML(user.name || "User")}</div>
-                        <div class="pickEntryMeta">${escapeHTML(user.email || "")}</div>
-                    `;
-
-                const roleSelect = document.createElement("select");
-                roleSelect.innerHTML = `
-                        <option value="staff">staff</option>
-                        <option value="admin">admin</option>
-                    `;
-                roleSelect.value = user.role || "staff";
-                roleSelect.disabled = session?.role !== "admin";
-
-                roleSelect.onchange = async () => {
-                    try {
-                        await updateDoc(doc(db, "users", user.uid), { role: roleSelect.value });
-                        toast("Role updated");
-                    } catch (err) {
-                        console.error(err);
-                        toast("Could not update role");
-                    }
-                };
-
-                const removeBtn = document.createElement("button");
-                removeBtn.className = "btn small danger";
-                removeBtn.textContent = "Delete doc";
-                removeBtn.disabled = session?.role !== "admin";
-                removeBtn.onclick = async () => {
-                    const ok = confirm(`Delete user profile doc for ${user.name}?`);
-                    if (!ok) return;
-                    try {
-                        await deleteDoc(doc(db, "users", user.uid));
-                        toast("User doc deleted");
-                    } catch (err) {
-                        console.error(err);
-                        toast("Could not delete user doc");
-                    }
-                };
-
-                row.append(left, roleSelect, removeBtn);
-                userList.appendChild(row);
-            });
-        }
-
-        function openDayModal(iso, editingEvent = null) {
-            if (!session || viewMode || (session.role !== "admin" && !!editingEvent)) return;
-
-            dayBackdrop.style.display = "flex";
-            dayModalTitle.textContent = prettyDate(iso);
-            dayModalSub.textContent = editingEvent ? "Edit event" : "Quick editor";
-
-            const templateOptions = (appConfig.templates?.length ? appConfig.templates : DEFAULT_TEMPLATES)
-                .map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t.split("|")[0].trim())}</option>`)
-                .join("");
-
-            dayModalBody.innerHTML = `
-                    <div class="actionsRow" style="justify-content:space-between; margin-bottom:12px;">
-                        <div class="pill">Selected: <b>${escapeHTML(iso)}</b></div>
-                        <button class="btn" id="closeDayModal" type="button">Close</button>
-                    </div>
-
-                    <div class="sectionTitle">Templates</div>
-                    <div class="editorMiniGrid">
-                        <div class="field">
-                            <label>Pick a template</label>
-                            <select id="templateSelect">
-                                <option value="">Choose template</option>
-                                ${templateOptions}
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label>AI idea helper</label>
-                            <button class="btn blue" id="ideaBtn" type="button">Generate event idea</button>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label>Event title</label>
-                        <input id="evTitle" placeholder="e.g. Time Trial" maxlength="50" value="${editingEvent ? escapeHTML(editingEvent.title || "") : ""}">
-                    </div>
-
-                    <div class="editorTriGrid">
-                        <div class="field">
-                            <label>Time</label>
-                            <input id="evTime" placeholder="e.g. 6:00PM AEST" maxlength="30" value="${editingEvent ? escapeHTML(editingEvent.time || "") : ""}">
-                        </div>
-                        <div class="field">
-                            <label>Location</label>
-                            <input id="evLoc" placeholder="e.g. Spider cave" maxlength="40" value="${editingEvent ? escapeHTML(editingEvent.location || "") : ""}">
-                        </div>
-                        <div class="field">
-                            <label>Host</label>
-                            <input id="evHost" placeholder="e.g. Nugg" maxlength="24" value="${editingEvent ? escapeHTML(editingEvent.host || "") : ""}">
-                        </div>
-                    </div>
-
-                    <div class="editorTriGrid">
-                        <div class="field">
-                            <label>Recurring weekly</label>
-                            <select id="evRecurring">
-                                <option value="no" ${editingEvent?.recurring ? "" : "selected"}>No</option>
-                                <option value="yes" ${editingEvent?.recurring ? "selected" : ""}>Yes</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label>Repeat count</label>
-                            <input id="evRepeatCount" type="number" min="1" max="20" value="${editingEvent?.repeatCount || 4}">
-                        </div>
-                        <div class="field">
-                            <label>Pinned</label>
-                            <select id="evPinned">
-                                <option value="no" ${editingEvent?.pinned ? "" : "selected"}>No</option>
-                                <option value="yes" ${editingEvent?.pinned ? "selected" : ""}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label>Notes</label>
-                        <textarea id="evNote" placeholder="Extra details or availability note">${editingEvent ? escapeHTML(editingEvent.note || "") : ""}</textarea>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="sectionTitle">Availability</div>
-
-                    <div class="editorMiniGrid">
-                        <div class="field">
-                            <label>Availability name</label>
-                            <input id="avName" placeholder="e.g. Nugg" maxlength="24" value="${session?.name ? escapeHTML(session.name) : ""}">
-                        </div>
-                        <div class="field">
-                            <label>Status</label>
-                            <select id="avStatus">
-                                <option value="active">Active</option>
-                                <option value="maybe">Maybe</option>
-                                <option value="busy">Busy</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modalActions">
-                        ${session.role === "admin" ? `<button class="btn primary" id="saveEvent" type="button">${editingEvent ? "Save event" : "Add event"}</button>` : ""}
-                        <button class="btn ok" id="saveAvail" type="button">Add availability</button>
-                    </div>
-
-                    <div class="tiny" id="conflictBox" style="margin-top:12px;"></div>
-                `;
-
-            document.getElementById("closeDayModal").onclick = () => dayBackdrop.style.display = "none";
-
-            const templateSelect = document.getElementById("templateSelect");
-            templateSelect.addEventListener("change", () => {
-                if (templateSelect.value) applyTemplateToForm(templateSelect.value);
-            });
-
-            document.getElementById("ideaBtn").onclick = () => {
-                const current = document.getElementById("evTitle").value.trim();
-                document.getElementById("evTitle").value = current || generateIdea("");
-                if (!document.getElementById("evNote").value.trim()) {
-                    document.getElementById("evNote").value = generateIdea("Fun public lobby event");
-                }
-            };
-
-            const watchConflict = () => {
-                const trial = {
-                    date: iso,
-                    time: document.getElementById("evTime").value.trim(),
-                    location: document.getElementById("evLoc").value.trim()
-                };
-                const warnings = getConflictWarnings(trial, iso, editingEvent?.id);
-                const box = document.getElementById("conflictBox");
-                if (!warnings.length) {
-                    box.innerHTML = `<span class="badge ok">No conflicts found</span>`;
-                } else {
-                    box.innerHTML = warnings.map(w => `<div class="badge warn" style="margin-right:6px; margin-bottom:6px;">${escapeHTML(w)}</div>`).join("");
-                }
-            };
-
-            ["evTime", "evLoc"].forEach(id => document.getElementById(id).addEventListener("input", watchConflict));
-            watchConflict();
-
-            const saveEventBtn = document.getElementById("saveEvent");
-            if (saveEventBtn) {
-                saveEventBtn.onclick = async () => {
-                    const title = document.getElementById("evTitle").value.trim();
-                    const time = document.getElementById("evTime").value.trim();
-                    const loc = document.getElementById("evLoc").value.trim();
-                    const host = document.getElementById("evHost").value.trim();
-                    const note = document.getElementById("evNote").value.trim();
-                    const recurring = document.getElementById("evRecurring").value === "yes";
-                    const repeatCount = Math.max(1, Number(document.getElementById("evRepeatCount").value || 1));
-                    const pinned = document.getElementById("evPinned").value === "yes";
-
-                    if (!title) {
-                        toast("Event title required");
-                        return;
-                    }
-
-                    const base = {
-                        title, time, location: loc, host, note,
-                        pinned, recurring, repeatCount,
-                        updatedAt: Date.now()
-                    };
-
-                    const warnings = getConflictWarnings({ ...base, date: iso }, iso, editingEvent?.id);
-                    if (warnings.length) {
-                        const ok = confirm("This event has warnings:\n\n- " + warnings.join("\n- ") + "\n\nSave anyway?");
-                        if (!ok) return;
-                    }
-
-                    try {
-                        if (editingEvent) {
-                            await upsertEvent({
-                                ...editingEvent,
-                                ...base,
-                                date: iso
-                            });
-                        } else if (recurring) {
-                            const jobs = [];
-                            for (let i = 0; i < repeatCount; i++) {
-                                const d = fromISODate(iso);
-                                d.setDate(d.getDate() + (i * 7));
-                                jobs.push(upsertEvent({
-                                    id: uid(),
-                                    date: toISODate(d),
-                                    ...base,
-                                    seriesId: uid()
-                                }));
-                            }
-                            await Promise.all(jobs);
-                        } else {
-                            await upsertEvent({
-                                id: uid(),
-                                date: iso,
-                                ...base
-                            });
-                        }
-
-                        toast(editingEvent ? "Event updated" : "Event added");
-                        dayBackdrop.style.display = "none";
-                    } catch (err) {
-                        console.error(err);
-                        toast("Could not save event");
-                    }
-                };
-            }
-
-            document.getElementById("saveAvail").onclick = async () => {
-                const name = document.getElementById("avName").value.trim();
-                const note = document.getElementById("evNote").value.trim();
-                const status = document.getElementById("avStatus").value;
-
-                if (!name) {
-                    toast("Availability name required");
-                    return;
-                }
-
-                try {
-                    await upsertAvail({
-                        id: uid(),
-                        date: iso,
-                        uid: session?.uid || "",
-                        name,
-                        note,
-                        status,
-                        createdAt: Date.now()
-                    });
-                    toast("Availability added");
-                    dayBackdrop.style.display = "none";
-                } catch (err) {
-                    console.error(err);
-                    toast("Could not add availability");
-                }
-            };
-        }
-
-        function clearListeners() {
-            unsubscribers.forEach(fn => {
-                try { fn(); } catch { }
-            });
-            unsubscribers = [];
-        }
-
-        function startListeners() {
-            clearListeners();
-            storageNote.textContent = "Syncing with Firebase...";
-
-            unsubscribers.push(onSnapshot(collection(db, "users"), snap => {
-                usersMap.clear();
-                hosts = snap.docs.map(d => {
-                    const data = d.data();
-                    const user = {
-                        uid: d.id,
-                        name: data.name || "User",
-                        email: data.email || "",
-                        role: data.role || "staff",
-                        photoURL: data.photoURL || ""
-                    };
-                    usersMap.set(d.id, user);
-                    return user;
-                }).sort((a, b) => hostLabelFromUser(a).localeCompare(hostLabelFromUser(b)));
-
-                if (session && usersMap.has(session.uid)) {
-                    session = { ...session, ...usersMap.get(session.uid) };
-                    renderTop();
-                }
-
-                renderHostPicker();
-                renderDetails();
-                renderUsersModal();
-            }));
-
-            unsubscribers.push(onSnapshot(collection(db, "events"), snap => {
-                events = snap.docs.map(d => d.data());
-                saveJSON(KEY_EVENTS, events);
-                renderCalendar();
-                renderDetails();
-                storageNote.textContent = "";
-            }));
-
-            unsubscribers.push(onSnapshot(collection(db, "availability"), snap => {
-                avail = snap.docs.map(d => d.data());
-                saveJSON(KEY_AVAIL, avail);
-                renderCalendar();
-                renderDetails();
-            }));
-
-            unsubscribers.push(onSnapshot(collection(db, "host_picks"), snap => {
-                hostPicks = snap.docs.map(d => d.data());
-                saveJSON(KEY_PICKS, hostPicks);
-                renderCalendar();
-                renderDetails();
-                renderHostPicker();
-                renderHostBar();
-            }));
-
-            unsubscribers.push(onSnapshot(doc(db, "app_config", "main"), snap => {
-                if (snap.exists()) {
-                    appConfig = {
-                        discordWebhook: snap.data().discordWebhook || "",
-                        hostLimit: Number(snap.data().hostLimit || 3),
-                        timezone: snap.data().timezone || "Australia/Brisbane",
-                        templates: Array.isArray(snap.data().templates) && snap.data().templates.length
-                            ? snap.data().templates
-                            : DEFAULT_TEMPLATES
-                    };
-                }
-                renderCalendar();
-                renderDetails();
-            }));
-        }
-
-        function setAuthMode(mode) {
-            authMode = mode;
-            const loginActive = mode === "login";
-            tabLogin.classList.toggle("active", loginActive);
-            tabRegister.classList.toggle("active", !loginActive);
-            confirmField.style.display = loginActive ? "none" : "block";
-            forgotPasswordWrap.style.display = loginActive ? "flex" : "none";
-            authGo.textContent = loginActive ? "Login" : "Register";
-        }
-
-        function openAuth() {
-            setAuthMode("login");
-            authBackdrop.style.display = "flex";
-        }
-        const closeAuth = () => authBackdrop.style.display = "none";
-
-        function setSettingsTab(tab) {
-            const map = {
-                profile: ["settingsProfileTab", "settingsProfilePanel"],
-                account: ["settingsAccountTab", "settingsAccountPanel"],
-                admin: ["settingsAdminTab", "settingsAdminPanel"]
-            };
-
-            Object.entries(map).forEach(([key, [tabId, panelId]]) => {
-                document.getElementById(tabId).classList.toggle("active", key === tab);
-                document.getElementById(panelId).classList.toggle("active", key === tab);
-            });
-        }
-
-        function openSettings() {
-            if (!session) return;
-            profileName.value = session.name || "";
-            profileImageData = session.photoURL || "";
-            profilePreview.src = profilePhotoOrDefault(session);
-            accountCurrentEmail.value = session.email || "";
-            accountNewEmail.value = "";
-            accountCurrentPassword.value = "";
-            accountNewPassword.value = "";
-            accountNewPassword2.value = "";
-            document.getElementById("adminWebhook").value = appConfig.discordWebhook || "";
-            document.getElementById("adminHostLimit").value = Number(appConfig.hostLimit || 3);
-            document.getElementById("adminTimezone").value = appConfig.timezone || "Australia/Brisbane";
-            document.getElementById("adminTemplates").value = (appConfig.templates || DEFAULT_TEMPLATES).join("\n");
-            setSettingsTab("profile");
-            settingsBackdrop.style.display = "flex";
-        }
-
-        const closeSettings = () => settingsBackdrop.style.display = "none";
-
-        btnLogin.addEventListener("click", openAuth);
-        btnLogout.addEventListener("click", async () => {
-            try {
-                await signOut(auth);
-                toast("Logged out");
-            } catch (err) {
-                console.error(err);
-                toast("Could not log out");
-            }
-        });
-
-        btnSettings.addEventListener("click", openSettings);
-        btnStats.addEventListener("click", openStatsModal);
-        manageUsersBtn.addEventListener("click", () => {
-            renderUsersModal();
-            usersBackdrop.style.display = "flex";
-        });
-        usersCloseBtn.addEventListener("click", () => usersBackdrop.style.display = "none");
-
-        tabLogin.addEventListener("click", () => setAuthMode("login"));
-        tabRegister.addEventListener("click", () => setAuthMode("register"));
-        document.getElementById("authClose").addEventListener("click", closeAuth);
-
-        authGo.addEventListener("click", async () => {
-            const email = authEmail.value.trim();
-            const password = authPassword.value.trim();
-            const password2 = authPassword2.value.trim();
-
-            if (!email || !password) {
-                toast("Email and password required");
-                return;
-            }
-
-            try {
-                if (authMode === "login") {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    toast("Logged in");
-                } else {
-                    if (password !== password2) {
-                        toast("Passwords do not match");
-                        return;
-                    }
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    toast("Account created");
-                }
-                closeAuth();
-            } catch (err) {
-                console.error(err);
-                toast(err.code || err.message || "Auth failed");
-            }
-        });
-
-        forgotPasswordBtn.addEventListener("click", async () => {
-            const email = authEmail.value.trim();
-            if (!email) {
-                toast("Enter your email first");
-                return;
-            }
-            try {
-                await sendPasswordResetEmail(auth, email);
-                toast("Password reset email sent");
-            } catch (err) {
-                console.error(err);
-                toast(err.code || err.message || "Reset failed");
-            }
-        });
-
-        document.getElementById("settingsClose").addEventListener("click", closeSettings);
-        document.getElementById("settingsProfileTab").addEventListener("click", () => setSettingsTab("profile"));
-        document.getElementById("settingsAccountTab").addEventListener("click", () => setSettingsTab("account"));
-        document.getElementById("settingsAdminTab").addEventListener("click", () => setSettingsTab("admin"));
-
-        profileFile.addEventListener("change", async e => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            try {
-                profileImageData = await fileToAvatarDataURL(file);
-                profilePreview.src = profileImageData;
-            } catch (err) {
-                console.error(err);
-                toast("Could not load image");
-            }
-        });
-
-        document.getElementById("removeProfilePic").addEventListener("click", () => {
-            profileImageData = "";
-            profilePreview.src = profilePhotoOrDefault({ name: profileName.value || session?.name || "User" });
-        });
-
-        document.getElementById("saveProfileBtn").addEventListener("click", async () => {
-            if (!session) return;
-            const name = profileName.value.trim();
-            if (!name) {
-                toast("Display name required");
-                return;
-            }
-
-            try {
-                await setDoc(doc(db, "users", session.uid), {
-                    name,
-                    email: session.email || "",
-                    photoURL: profileImageData || ""
-                }, { merge: true });
-
-                session.name = name;
-                session.photoURL = profileImageData || "";
-                renderTop();
-                toast("Profile saved");
-            } catch (err) {
-                console.error(err);
-                toast("Could not save profile");
-            }
-        });
-
-        document.getElementById("saveAccountBtn").addEventListener("click", async () => {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const newEmail = accountNewEmail.value.trim();
-            const currentPassword = accountCurrentPassword.value.trim();
-            const newPassword = accountNewPassword.value.trim();
-            const newPassword2 = accountNewPassword2.value.trim();
-
-            if (!newEmail && !newPassword) {
-                toast("Nothing to update");
-                return;
-            }
-
-            if (newPassword && newPassword !== newPassword2) {
-                toast("New passwords do not match");
-                return;
-            }
-
-            if (!currentPassword) {
-                toast("Current password required");
-                return;
-            }
-
-            try {
-                const credential = EmailAuthProvider.credential(user.email, currentPassword);
-                await reauthenticateWithCredential(user, credential);
-
-                if (newEmail) {
-                    await updateEmail(user, newEmail);
-                    await setDoc(doc(db, "users", session.uid), { email: newEmail }, { merge: true });
-                    session.email = newEmail;
-                }
-
-                if (newPassword) await updatePassword(user, newPassword);
-
-                renderTop();
-                accountCurrentEmail.value = session.email || "";
-                accountNewEmail.value = "";
-                accountCurrentPassword.value = "";
-                accountNewPassword.value = "";
-                accountNewPassword2.value = "";
-                toast("Account updated");
-            } catch (err) {
-                console.error(err);
-                toast(err.code || err.message || "Could not update account");
-            }
-        });
-
-        document.getElementById("saveAdminSettingsBtn").addEventListener("click", async () => {
-            if (!session || session.role !== "admin") return;
-
-            try {
-                const templates = document.getElementById("adminTemplates").value
-                    .split("\n")
-                    .map(x => x.trim())
-                    .filter(Boolean);
-
-                await setDoc(doc(db, "app_config", "main"), {
-                    discordWebhook: document.getElementById("adminWebhook").value.trim(),
-                    hostLimit: Math.max(1, Number(document.getElementById("adminHostLimit").value || 3)),
-                    timezone: document.getElementById("adminTimezone").value.trim() || "Australia/Brisbane",
-                    templates: templates.length ? templates : DEFAULT_TEMPLATES
-                }, { merge: true });
-
-                toast("Admin settings saved");
-            } catch (err) {
-                console.error(err);
-                toast("Could not save admin settings");
-            }
-        });
-
-        clearMyPickBtn.addEventListener("click", async () => {
-            if (!session || !selectedDate) return;
-            try {
-                await removePick(selectedDate, session.uid);
-                toast("Your pick was removed");
-            } catch (err) {
-                console.error(err);
-                toast("Could not remove your pick");
-            }
-        });
-
-        document.getElementById("prevMonth").addEventListener("click", () => {
-            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
-            renderCalendar();
-        });
-
-        document.getElementById("nextMonth").addEventListener("click", () => {
-            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
-            renderCalendar();
-        });
-
-        document.getElementById("todayBtn").addEventListener("click", () => {
-            viewDate = new Date();
-            selectedDate = toISODate(new Date());
-            renderCalendar();
-            renderDetails();
-        });
-
-        addEventBtn.addEventListener("click", () => {
-            if (viewMode) return;
-            if (!session) {
-                pendingOpenDate = selectedDate || toISODate(new Date());
-                openAuth();
-                return;
-            }
-            if (session.role !== "admin") return;
-            if (!selectedDate) selectedDate = toISODate(new Date());
-            openDayModal(selectedDate);
-        });
-
-        addAvailBtn.addEventListener("click", () => {
-            if (viewMode) return;
-            if (!selectedDate) selectedDate = toISODate(new Date());
-            if (!session) {
-                pendingOpenDate = selectedDate;
-                openAuth();
-                return;
-            }
-            openDayModal(selectedDate);
-        });
-
-        fabBtn.addEventListener("click", () => {
-            if (!selectedDate) selectedDate = toISODate(new Date());
-            if (!session) {
-                pendingOpenDate = selectedDate;
-                openAuth();
-                return;
-            }
-            openDayModal(selectedDate);
-        });
-
-        viewModeBtn.addEventListener("click", () => {
-            viewMode = !viewMode;
-            saveJSON(KEY_VIEWMODE, viewMode);
-            toast("View mode " + (viewMode ? "ON" : "OFF"));
-            renderTop();
-            renderCalendar();
-            renderDetails();
-        });
-
-        clearAllBtn.addEventListener("click", async () => {
-            if (!session || session.role !== "admin") return;
-
-            const ok = confirm(
-                "CLEAR ALL?\n\nThis deletes:\n- All Events\n- All Availability\n- All Host Picks\n\nThis cannot be undone."
-            );
-            if (!ok) return;
-
-            try {
-                const [evSnap, avSnap, pkSnap] = await Promise.all([
-                    getDocs(collection(db, "events")),
-                    getDocs(collection(db, "availability")),
-                    getDocs(collection(db, "host_picks"))
-                ]);
-
-                const deletes = [];
-                evSnap.forEach(d => deletes.push(deleteDoc(doc(db, "events", d.id))));
-                avSnap.forEach(d => deletes.push(deleteDoc(doc(db, "availability", d.id))));
-                pkSnap.forEach(d => deletes.push(deleteDoc(doc(db, "host_picks", d.id))));
-                await Promise.all(deletes);
-
-                toast("Cleared everything");
-            } catch (err) {
-                console.error(err);
-                toast("Clear failed");
-            }
-        });
-
-        resetBtn.addEventListener("click", () => {
-            if (!session || session.role !== "admin") return;
-            saveJSON(KEY_EVENTS, []);
-            saveJSON(KEY_AVAIL, []);
-            saveJSON(KEY_PICKS, []);
-            toast("Local cache cleared");
-        });
-
-        document.getElementById("searchInput").addEventListener("input", renderCalendar);
-        document.getElementById("filterSelect").addEventListener("change", renderCalendar);
-        document.getElementById("clearSearchBtn").addEventListener("click", () => {
-            document.getElementById("searchInput").value = "";
-            document.getElementById("filterSelect").value = "all";
-            renderCalendar();
-        });
-
-        authBackdrop.addEventListener("click", e => { if (e.target === authBackdrop) closeAuth(); });
-        settingsBackdrop.addEventListener("click", e => { if (e.target === settingsBackdrop) closeSettings(); });
-        dayBackdrop.addEventListener("click", e => { if (e.target === dayBackdrop) dayBackdrop.style.display = "none"; });
-        usersBackdrop.addEventListener("click", e => { if (e.target === usersBackdrop) usersBackdrop.style.display = "none"; });
-        statsBackdrop.addEventListener("click", e => { if (e.target === statsBackdrop) statsBackdrop.style.display = "none"; });
-
-        onAuthStateChanged(auth, async firebaseUser => {
-            try {
-                if (!firebaseUser) {
-                    session = null;
-                    renderTop();
-                    renderCalendar();
-                    renderDetails();
-                    return;
-                }
-
-                await loadSessionFromAuth(firebaseUser);
-                renderTop();
-                renderCalendar();
-                renderDetails();
-                startListeners();
-
-                if (pendingOpenDate && !viewMode) {
-                    const dateToOpen = pendingOpenDate;
-                    pendingOpenDate = null;
-                    selectedDate = dateToOpen;
-                    renderCalendar();
-                    renderDetails();
-                    openDayModal(dateToOpen);
-                } else {
-                    pendingOpenDate = null;
-                }
-            } catch (err) {
-                console.error(err);
-                toast("Could not load account");
-            }
-        });
-
-        function boot() {
-            selectedDate = toISODate(new Date());
-            renderTop();
-            renderCalendar();
-            renderDetails();
-            startListeners();
-        }
-
-        boot();
-    </script>
+        closeModal(authBackdrop);
+      }catch(err){ console.error(err); toast(err.code || err.message || (authMode === "register" ? "Could not register" : "Could not log in")); }
+    });
+
+    bindClick(settingsProfileTab, ()=>setSettingsTab("profile"));
+    bindClick(settingsAccountTab, ()=>setSettingsTab("account"));
+    bindClick(settingsAdminTab, ()=>setSettingsTab("admin"));
+    bindClick($("settingsClose"), ()=>closeModal(settingsBackdrop));
+    bindClick($("removeProfilePicBtn"), ()=>{ profileImageData = ""; profilePreview.src = defaultAvatarDataURL(profileName.value || session?.name || "User"); });
+    bindInput(profileName, ()=>{ if(!profileImageData) profilePreview.src = defaultAvatarDataURL(profileName.value || session?.name || "User"); });
+    bindChange(profileFile, async ()=>{ const file = profileFile.files?.[0]; if(!file) return; try{ profileImageData = await fileToAvatarDataURL(file); profilePreview.src = profileImageData; }catch(err){ console.error(err); toast("Could not read image"); } });
+    bindClick($("saveProfileBtn"), ()=>saveProfile().catch(err=>{ console.error(err); toast("Could not save profile"); }));
+    bindClick($("saveAccountBtn"), saveAccount);
+    bindClick($("saveAdminBtn"), ()=>saveAdminConfig().catch(err=>{ console.error(err); toast("Could not save admin settings"); }));
+
+    [authBackdrop, settingsBackdrop, dayBackdrop, usersBackdrop, statsBackdrop].forEach(backdrop=>backdrop.addEventListener("click", e=>{ if(e.target===backdrop) closeModal(backdrop); }));
+
+    setInterval(()=>{ runAutoDiscordPoster().catch(err=>console.error(err)); }, 20000);
+
+    onAuthStateChanged(auth, async firebaseUser=>{
+      stopListeners();
+      renderAll();
+      if(!firebaseUser){
+        session = null;
+        users = []; usersMap = new Map();
+        appConfig = { ...DEFAULT_CONFIG };
+        renderAll();
+        return;
+      }
+      try{
+        await ensureConfigDoc();
+        await loadSession(firebaseUser);
+        renderAll();
+        startListeners();
+        if(pendingDateToOpen && session?.role === "admin" && !viewMode){ const d=pendingDateToOpen; pendingDateToOpen=null; selectedDate=d; renderAll(); openDayModal(d); }
+        else pendingDateToOpen = null;
+      }catch(err){ console.error(err); toast("Could not load account"); renderAll(); }
+    });
+
+    function boot(){
+      selectedDate = toISODate(new Date());
+      viewDate = new Date();
+      renderAll();
+      whoLine.textContent = "Login to manage event staff, host picks, availability, and settings.";
+      storageNote.textContent = "Using local cache until Firestore finishes loading.";
+    }
+    boot();
+  </script>
 </body>
 </html>
