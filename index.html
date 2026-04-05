@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Staff Calendar</title>
+    <title>Event Staff Calendar Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -20,10 +20,9 @@
             --brand: #f5c04f;
             --brand-2: #d9a631;
             --green: #32d583;
-            --green-2: #1f7a52;
             --yellow: #f5c04f;
-            --yellow-2: #8d6a1b;
             --red: #ef6262;
+            --blue: #62a5ef;
             --dayPast: #4a1e1e;
             --dayPast2: #6d2929;
             --shadow: 0 18px 50px rgba(0,0,0,.28);
@@ -166,40 +165,6 @@
                 font-weight: 800;
             }
 
-        .menuButtons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            margin-bottom: 40px; /* space below buttons */
-            gap: 15px;
-        }
-
-        .menuCardBtn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            min-height: 52px;
-            padding: 0 18px;
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 16px;
-            background: linear-gradient(180deg, #1a241d, #151d18);
-            color: var(--text);
-            cursor: pointer;
-            text-align: center;
-            font: inherit;
-            font-weight: 700;
-            transition: .18s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,.18);
-        }
-
-            .menuCardBtn:hover {
-                transform: translateY(-2px);
-                border-color: rgba(245,192,79,.28);
-                background: linear-gradient(180deg, #202b23, #18211b);
-            }
-
         .btn {
             appearance: none;
             border: 1px solid rgba(255,255,255,.10);
@@ -236,36 +201,25 @@
                 color: #16120a;
             }
 
-                .btn.primary:hover {
-                    background: linear-gradient(135deg, #f7c75f, #dfaf3c);
-                }
-
             .btn.ok {
                 background: #1b5b40;
                 border-color: rgba(50,213,131,.26);
             }
-
-                .btn.ok:hover {
-                    background: #216c4d;
-                }
 
             .btn.warn {
                 background: #6b5319;
                 border-color: rgba(245,192,79,.24);
             }
 
-                .btn.warn:hover {
-                    background: #7a601c;
-                }
-
             .btn.danger {
                 background: #612936;
                 border-color: rgba(239,98,98,.24);
             }
 
-                .btn.danger:hover {
-                    background: #75303f;
-                }
+            .btn.blue {
+                background: #263f67;
+                border-color: rgba(98,165,239,.24);
+            }
 
             .btn.ghost {
                 background: rgba(255,255,255,.04);
@@ -280,7 +234,7 @@
 
         .mainGrid {
             display: grid;
-            grid-template-columns: minmax(0, 2.2fr) minmax(360px, .95fr);
+            grid-template-columns: minmax(0, 2.2fr) minmax(380px, 1fr);
             gap: 22px;
             align-items: start;
         }
@@ -318,6 +272,14 @@
             margin-left: 6px;
         }
 
+        .searchBar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 10px;
+        }
+
         .weekdays {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -342,7 +304,7 @@
         }
 
         .day {
-            min-height: 160px;
+            min-height: 165px;
             border-radius: 18px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,.10);
@@ -376,6 +338,11 @@
                 box-shadow: inset 0 0 0 2px rgba(245,192,79,.35);
             }
 
+            .day.dropTarget {
+                outline: 2px dashed rgba(98,165,239,.95);
+                outline-offset: -4px;
+            }
+
         .dayTopBar {
             min-height: 46px;
             display: flex;
@@ -398,6 +365,9 @@
             font-size: 12px;
             color: #f8f2de;
             opacity: .9;
+            display: flex;
+            gap: 5px;
+            align-items: center;
         }
 
         .dayBody {
@@ -439,6 +409,17 @@
             margin-top: 2px;
         }
 
+        .pinBar {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--yellow);
+            border-radius: 999px;
+            box-shadow: 0 0 14px rgba(245,192,79,.8);
+        }
+
         .sideHead {
             padding: 18px 20px;
             border-bottom: 1px solid rgba(255,255,255,.06);
@@ -473,7 +454,10 @@
         .pickEntry,
         .availabilityBlock,
         .pfpBtn,
-        .infoBox {
+        .infoBox,
+        .statGrid > div,
+        .userRow,
+        .templateBtn {
             background: #18211b;
             border: 1px solid rgba(255,255,255,.08);
             border-radius: 18px;
@@ -564,6 +548,16 @@
                 border-color: rgba(245,192,79,.18);
             }
 
+            .badge.blue {
+                background: rgba(98,165,239,.10);
+                border-color: rgba(98,165,239,.18);
+            }
+
+            .badge.red {
+                background: rgba(239,98,98,.10);
+                border-color: rgba(239,98,98,.18);
+            }
+
         .emptyState {
             padding: 14px;
             border-radius: 16px;
@@ -573,9 +567,7 @@
             background: rgba(255,255,255,.02);
         }
 
-        .eventBlock,
-        .pickEntry,
-        .availabilityBlock {
+        .eventBlock, .pickEntry, .availabilityBlock {
             padding: 12px;
             margin-top: 10px;
         }
@@ -726,13 +718,6 @@
                 font-size: 12px;
             }
 
-        .hostBarRight {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
         .modalBackdrop {
             position: fixed;
             inset: 0;
@@ -745,7 +730,7 @@
         }
 
         .modal {
-            width: min(560px, 100%);
+            width: min(760px, 100%);
             background: #141c16;
             border: 1px solid rgba(255,255,255,.10);
             border-radius: 22px;
@@ -756,7 +741,7 @@
         }
 
             .modal.slim {
-                width: min(500px, 100%);
+                width: min(560px, 100%);
             }
 
         .modalTop {
@@ -794,7 +779,7 @@
                 color: #dce8dd;
             }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             font: inherit;
             color: var(--text);
@@ -810,7 +795,7 @@
             resize: vertical;
         }
 
-            input:focus, textarea:focus {
+            input:focus, textarea:focus, select:focus {
                 border-color: rgba(245,192,79,.45);
             }
 
@@ -906,6 +891,80 @@
             gap: 10px;
         }
 
+        .editorTriGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .statsWrap {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .statGrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+            .statGrid > div {
+                padding: 12px;
+            }
+
+        .statBig {
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 6px;
+        }
+
+        .templateGrid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .templateBtn {
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .userList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .userRow {
+            padding: 12px;
+            display: grid;
+            grid-template-columns: minmax(0,1fr) auto auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .fab {
+            position: fixed;
+            right: 18px;
+            bottom: 96px;
+            width: 58px;
+            height: 58px;
+            border-radius: 999px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            z-index: 1600;
+            border: 1px solid rgba(255,255,255,.12);
+            background: linear-gradient(135deg, #f5c04f, #d9a631);
+            color: #16120a;
+            box-shadow: 0 14px 40px rgba(0,0,0,.35);
+            cursor: pointer;
+        }
+
         @media (max-width: 1220px) {
             .mainGrid {
                 grid-template-columns: 1fr;
@@ -979,13 +1038,12 @@
                 align-items: stretch;
             }
 
-            .hostBarLeft,
-            .hostBarRight {
-                min-width: 0;
+            .editorMiniGrid, .editorTriGrid, .statGrid, .templateGrid {
+                grid-template-columns: 1fr;
             }
 
-            .hostBarRight {
-                justify-content: flex-end;
+            .fab {
+                display: flex;
             }
         }
 
@@ -995,8 +1053,7 @@
                 width: 100%;
             }
 
-            .topUser,
-            .actionsRow {
+            .topUser, .actionsRow {
                 justify-content: flex-start;
             }
 
@@ -1026,7 +1083,7 @@
                 flex-direction: column;
             }
 
-            .editorMiniGrid {
+            .userRow {
                 grid-template-columns: 1fr;
             }
         }
@@ -1039,7 +1096,7 @@
                 <div class="brand">
                     <div class="brandLogo"></div>
                     <div class="brandText">
-                        <h1>Staff Calendar</h1>
+                        <h1>Event Staff Calendar Pro</h1>
                         <p id="whoLine">Loading...</p>
                     </div>
                 </div>
@@ -1051,22 +1108,13 @@
                     </div>
 
                     <div class="actionsRow">
+                        <button class="btn ghost" id="btnStats" style="display:none;">Stats</button>
                         <button class="btn ghost" id="btnSettings" style="display:none;">Settings</button>
                         <button class="btn ghost" id="btnLogin" style="display:none;">Login</button>
                         <button class="btn" id="btnLogout" style="display:none;">Logout</button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="menuButtons">
-            <button class="menuCardBtn" onclick="window.location.href='tutorial.html'">
-                Open Tutorial (MUST DO FIRST)
-            </button>
-
-            <button class="menuCardBtn" onclick="window.location.href='techtree.html'">
-                Open Resources
-            </button>
         </div>
 
         <div class="mainGrid">
@@ -1081,13 +1129,25 @@
                     <div class="actionsRow">
                         <span class="pill" id="viewHint">Click a day</span>
                     </div>
+
+                    <div class="searchBar">
+                        <input id="searchInput" placeholder="Search events or hosts">
+                        <select id="filterSelect" style="max-width:220px;">
+                            <option value="all">All days</option>
+                            <option value="mine">Only my hosted days</option>
+                            <option value="nohost">No host picked</option>
+                            <option value="pinned">Pinned only</option>
+                            <option value="week">This week</option>
+                        </select>
+                        <button class="btn small blue" id="clearSearchBtn">Clear</button>
+                    </div>
                 </div>
 
                 <div class="weekdays">
                     <div>Monday</div>
                     <div>Tuesday</div>
-                    <div>Wednesday</div>
                     <div>Thursday</div>
+                    <div>Wednesday</div>
                     <div>Friday</div>
                     <div>Saturday</div>
                     <div>Sunday</div>
@@ -1105,6 +1165,7 @@
 
                     <div class="actionsRow">
                         <button class="btn small" id="viewModeBtn" style="display:none;">View: OFF</button>
+                        <button class="btn small blue" id="manageUsersBtn" style="display:none;">Users</button>
                         <button class="btn small danger" id="clearAllBtn" style="display:none;">Clear ALL</button>
                         <button class="btn small ok" id="addEventBtn" style="display:none;">+ Add event</button>
                         <button class="btn small primary" id="addAvailBtn" style="display:none;">+ Add availability</button>
@@ -1120,6 +1181,26 @@
                         </div>
                     </div>
 
+                    <div class="divider"></div>
+
+                    <div class="statsWrap">
+                        <div class="sectionTitle">Quick stats</div>
+                        <div class="statGrid" id="statGrid">
+                            <div>
+                                <div class="tiny">Events</div>
+                                <div class="statBig" id="statEvents">0</div>
+                            </div>
+                            <div>
+                                <div class="tiny">Hosts</div>
+                                <div class="statBig" id="statHosts">0</div>
+                            </div>
+                            <div>
+                                <div class="tiny">Empty</div>
+                                <div class="statBig" id="statEmpty">0</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="pfpPickerBox" id="pfpPickerBox">
                         <div class="sectionTitle">Quick host picker</div>
                         <div class="tiny">Uses names instead of profile images.</div>
@@ -1127,11 +1208,9 @@
                     </div>
 
                     <div class="divider"></div>
-
                     <div class="detailList" id="detailList"></div>
 
                     <div class="divider"></div>
-
                     <div class="actionsRow" style="justify-content:space-between;">
                         <div class="tiny" id="storageNote">Syncing with Firebase...</div>
                         <button class="btn small danger" id="resetBtn" style="display:none;">Reset local cache</button>
@@ -1141,13 +1220,15 @@
         </div>
     </div>
 
+    <button class="fab" id="fabBtn" title="Quick add">+</button>
+
     <div class="hostBar" id="hostBar">
         <div class="hostBarLeft">
             <div class="hostBarTitle">Hosting on</div>
             <div class="hostBarDate" id="hostBarDate"></div>
         </div>
         <div class="hostChips" id="hostChips"></div>
-        <div class="hostBarRight">
+        <div class="actionsRow">
             <button class="btn small" id="clearMyPickBtn" style="display:none;">Remove my pick</button>
         </div>
     </div>
@@ -1174,6 +1255,10 @@
                     <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
                 </div>
 
+                <div class="actionsRow" id="forgotPasswordWrap" style="justify-content:flex-start; margin-top:-2px; margin-bottom:10px;">
+                    <button class="btn small ghost" id="forgotPasswordBtn" type="button">Forgot password?</button>
+                </div>
+
                 <div class="field" id="confirmField" style="display:none;">
                     <label>Confirm password</label>
                     <input id="authPassword2" type="password" placeholder="Confirm password" autocomplete="new-password">
@@ -1193,12 +1278,13 @@
         <div class="modal" role="dialog" aria-modal="true">
             <div class="modalTop">
                 <h3>Settings</h3>
-                <p>Update your profile and account details.</p>
+                <p>Update your profile, account, and admin settings.</p>
             </div>
             <div class="modalBody">
                 <div class="settingsTabs">
                     <div class="settingsTab active" id="settingsProfileTab">Profile</div>
                     <div class="settingsTab" id="settingsAccountTab">Account</div>
+                    <div class="settingsTab" id="settingsAdminTab" style="display:none;">Admin</div>
                 </div>
 
                 <div class="settingsPanel active" id="settingsProfilePanel">
@@ -1216,7 +1302,6 @@
                                 <button class="btn small" id="removeProfilePic" type="button">Use default</button>
                             </div>
                         </div>
-                        <div class="tiny">Profile image is optional, but host picks now use names.</div>
                     </div>
 
                     <div class="modalActions">
@@ -1225,30 +1310,24 @@
                 </div>
 
                 <div class="settingsPanel" id="settingsAccountPanel">
-                    <div class="infoBox">
-                        To change your email or password, enter your current password first.
-                    </div>
+                    <div class="infoBox">To change your email or password, enter your current password first.</div>
 
                     <div class="field">
                         <label>Current email</label>
                         <input id="accountCurrentEmail" type="email" disabled>
                     </div>
-
                     <div class="field">
                         <label>New email</label>
                         <input id="accountNewEmail" type="email" placeholder="Leave blank to keep current email">
                     </div>
-
                     <div class="field">
                         <label>Current password</label>
                         <input id="accountCurrentPassword" type="password" placeholder="Required for email/password changes">
                     </div>
-
                     <div class="field">
                         <label>New password</label>
                         <input id="accountNewPassword" type="password" placeholder="Leave blank to keep current password">
                     </div>
-
                     <div class="field">
                         <label>Confirm new password</label>
                         <input id="accountNewPassword2" type="password" placeholder="Confirm new password">
@@ -1256,6 +1335,37 @@
 
                     <div class="modalActions">
                         <button class="btn warn" id="saveAccountBtn" type="button">Save account changes</button>
+                    </div>
+                </div>
+
+                <div class="settingsPanel" id="settingsAdminPanel">
+                    <div class="infoBox">
+                        These settings affect the whole calendar. Keep webhook private because this is still a client-side page.
+                    </div>
+
+                    <div class="field">
+                        <label>Discord webhook URL</label>
+                        <input id="adminWebhook" placeholder="Paste webhook URL">
+                    </div>
+
+                    <div class="editorMiniGrid">
+                        <div class="field">
+                            <label>Max hosts per day</label>
+                            <input id="adminHostLimit" type="number" min="1" max="20" value="3">
+                        </div>
+                        <div class="field">
+                            <label>Default timezone</label>
+                            <input id="adminTimezone" value="Australia/Brisbane">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Saved templates (one per line: Title | Time | Location | Note)</label>
+                        <textarea id="adminTemplates"></textarea>
+                    </div>
+
+                    <div class="modalActions">
+                        <button class="btn primary" id="saveAdminSettingsBtn" type="button">Save admin settings</button>
                     </div>
                 </div>
 
@@ -1267,12 +1377,37 @@
     </div>
 
     <div class="modalBackdrop" id="dayBackdrop">
-        <div class="modal slim" role="dialog" aria-modal="true">
+        <div class="modal" role="dialog" aria-modal="true">
             <div class="modalTop">
                 <h3 id="dayModalTitle"></h3>
                 <p id="dayModalSub"></p>
             </div>
             <div class="modalBody" id="dayModalBody"></div>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="usersBackdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modalTop">
+                <h3>User manager</h3>
+                <p>Change roles and manage staff accounts.</p>
+            </div>
+            <div class="modalBody">
+                <div class="userList" id="userList"></div>
+                <div class="modalActions">
+                    <button class="btn" id="usersCloseBtn" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalBackdrop" id="statsBackdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modalTop">
+                <h3>Monthly stats</h3>
+                <p>Quick overview of event activity.</p>
+            </div>
+            <div class="modalBody" id="statsModalBody"></div>
         </div>
     </div>
 
@@ -1288,6 +1423,7 @@
             signOut,
             updateEmail,
             updatePassword,
+            sendPasswordResetEmail,
             EmailAuthProvider,
             reauthenticateWithCredential
         } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
@@ -1300,7 +1436,8 @@
             getDoc,
             getDocs,
             deleteDoc,
-            onSnapshot
+            onSnapshot,
+            updateDoc
         } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1316,10 +1453,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const KEY_EVENTS = "staffCal.events.v5";
-        const KEY_AVAIL = "staffCal.availability.v5";
-        const KEY_PICKS = "staffCal.hostPicks.v5";
-        const KEY_VIEWMODE = "staffCal.viewMode.v5";
+        const KEY_EVENTS = "staffCal.events.v6";
+        const KEY_AVAIL = "staffCal.availability.v6";
+        const KEY_PICKS = "staffCal.hostPicks.v6";
+        const KEY_VIEWMODE = "staffCal.viewMode.v6";
+
+        const DEFAULT_TEMPLATES = [
+            "Minigames Monday | 6:00PM AEST | Public Lobby | Weekly community event",
+            "Hide and Seek | 7:00PM AEST | Forest | Last player found wins",
+            "Creator Event | 5:30PM AEST | Private Lobby | Invite creators only",
+            "Staff Meeting | 8:00PM AEST | Discord VC | Weekly check-in"
+        ];
 
         const saveJSON = (key, value) => localStorage.setItem(key, JSON.stringify(value));
         const loadJSON = (key, fallback) => {
@@ -1339,12 +1483,20 @@
         let hostPicks = loadJSON(KEY_PICKS, []);
         let viewMode = loadJSON(KEY_VIEWMODE, false);
 
+        let appConfig = {
+            discordWebhook: "",
+            hostLimit: 3,
+            timezone: "Australia/Brisbane",
+            templates: DEFAULT_TEMPLATES
+        };
+
         let viewDate = new Date();
         let selectedDate = null;
         let pendingOpenDate = null;
         let authMode = "login";
         let profileImageData = null;
         let unsubscribers = [];
+        let dragEventId = null;
 
         const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
         const pad2 = n => String(n).padStart(2, "0");
@@ -1356,6 +1508,10 @@
         const startOfMonth = d => new Date(d.getFullYear(), d.getMonth(), 1);
         const monthLabel = d => d.toLocaleString(undefined, { month: "long", year: "numeric" });
         const mondayIndex = jsDay => (jsDay + 6) % 7;
+        const startOfToday = () => {
+            const t = new Date();
+            return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+        };
 
         const prettyDate = iso => fromISODate(iso).toLocaleDateString(undefined, {
             weekday: "long",
@@ -1364,12 +1520,7 @@
             day: "numeric"
         });
 
-        const isPastDay = iso => {
-            const today = new Date();
-            const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            return fromISODate(iso) < t;
-        };
-
+        const isPastDay = iso => fromISODate(iso) < startOfToday();
         const isToday = iso => iso === toISODate(new Date());
 
         const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({
@@ -1385,17 +1536,13 @@
             t.textContent = msg;
             t.style.display = "block";
             clearTimeout(toast._tm);
-            toast._tm = setTimeout(() => t.style.display = "none", 2600);
+            toast._tm = setTimeout(() => t.style.display = "none", 3000);
         }
 
         function initialsFromName(name) {
             const clean = String(name || "").trim();
             if (!clean) return "U";
-            return clean
-                .split(/\s+/)
-                .slice(0, 2)
-                .map(p => p[0]?.toUpperCase() || "")
-                .join("") || "U";
+            return clean.split(/\s+/).slice(0, 2).map(p => p[0]?.toUpperCase() || "").join("") || "U";
         }
 
         function defaultAvatarDataURL(name) {
@@ -1434,12 +1581,9 @@
             canvas.height = size;
             const ctx = canvas.getContext("2d");
 
-            const sw = img.width;
-            const sh = img.height;
-            const side = Math.min(sw, sh);
-            const sx = (sw - side) / 2;
-            const sy = (sh - side) / 2;
-
+            const side = Math.min(img.width, img.height);
+            const sx = (img.width - side) / 2;
+            const sy = (img.height - side) / 2;
             ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
             return canvas.toDataURL("image/jpeg", 0.82);
         }
@@ -1453,10 +1597,121 @@
         const hostLabelFromPick = pick =>
             pick?.hostName || (pick?.email ? pick.email.split("@")[0] : "Host");
 
+        function parseTimeString(timeText) {
+            if (!timeText) return null;
+            const clean = timeText.toUpperCase().replace(/\s+/g, "");
+            const m = clean.match(/^(\d{1,2})(?::(\d{2}))?(AM|PM)/);
+            if (!m) return null;
+            let hour = Number(m[1]);
+            const min = Number(m[2] || 0);
+            const ap = m[3];
+            if (ap === "PM" && hour !== 12) hour += 12;
+            if (ap === "AM" && hour === 12) hour = 0;
+            return { hour, min };
+        }
+
+        function viewerTimeText(dateIso, timeText) {
+            const parsed = parseTimeString(timeText);
+            if (!parsed) return "";
+            const d = fromISODate(dateIso);
+            d.setHours(parsed.hour, parsed.min, 0, 0);
+            try {
+                return d.toLocaleString(undefined, {
+                    weekday: "short",
+                    hour: "numeric",
+                    minute: "2-digit"
+                });
+            } catch {
+                return "";
+            }
+        }
+
+        function statusBadge(status) {
+            if (status === "active") return '<span class="badge ok">Active</span>';
+            if (status === "maybe") return '<span class="badge warn">Maybe</span>';
+            if (status === "busy") return '<span class="badge red">Busy</span>';
+            return '<span class="badge">Unknown</span>';
+        }
+
+        function eventMatchesSearch(ev, term) {
+            if (!term) return true;
+            const blob = [
+                ev.title, ev.time, ev.location, ev.host, ev.note,
+                ev.templateName
+            ].join(" ").toLowerCase();
+            return blob.includes(term.toLowerCase());
+        }
+
+        function isoInCurrentWeek(iso) {
+            const d = fromISODate(iso);
+            const now = new Date();
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+            monday.setHours(0, 0, 0, 0);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            sunday.setHours(23, 59, 59, 999);
+            return d >= monday && d <= sunday;
+        }
+
+        function getDayHeaderLabel(cellDate) {
+            const mon = cellDate.toLocaleString(undefined, { month: "short" }).toUpperCase();
+            return `${mon} ${cellDate.getDate()}`;
+        }
+
+        function getDaySymbol({ dayEvents, dayAvail, dayPicks, iso }) {
+            if (isPastDay(iso)) return "⏺";
+            if (dayEvents.some(e => e.pinned)) return "📌";
+            if (dayEvents.length) return "★";
+            if (dayPicks.length) return "👥";
+            if (dayAvail.length) return "•";
+            return "";
+        }
+
+        function getConflictWarnings(ev, dateOverride = null, skipId = null) {
+            const date = dateOverride || ev.date;
+            const sameDay = events.filter(x => x.date === date && x.id !== skipId);
+            const warnings = [];
+
+            const timeCollision = sameDay.some(x => (x.time || "").trim() && (x.time || "").trim() === (ev.time || "").trim());
+            if (timeCollision && ev.time) warnings.push("Another event already uses this exact time.");
+
+            const sameLocation = sameDay.some(x => (x.location || "").trim() && (x.location || "").trim().toLowerCase() === (ev.location || "").trim().toLowerCase());
+            if (sameLocation && ev.location) warnings.push("Another event already uses this location on this day.");
+
+            const dayPicks = hostPicks.filter(p => p.date === date);
+            if (dayPicks.length >= Number(appConfig.hostLimit || 3)) warnings.push("Host limit for this day has been reached.");
+
+            return warnings;
+        }
+
+        function generateIdea(seed = "") {
+            const themes = [
+                "Lava Floor Challenge",
+                "Mystery Maze Race",
+                "Last To Fall Wins",
+                "Hide and Seek Frenzy",
+                "Tag Tournament",
+                "Obstacle Sprint",
+                "Freeze Dance Elimination",
+                "Creator Showdown"
+            ];
+            const hooks = [
+                "last player standing wins",
+                "teams race for points",
+                "winner gets promo code",
+                "fastest time wins",
+                "best 2 out of 3 rounds",
+                "sudden death final round"
+            ];
+            const a = themes[Math.floor(Math.random() * themes.length)];
+            const b = hooks[Math.floor(Math.random() * hooks.length)];
+            return seed ? `${a} — ${seed}. ${b}.` : `${a} — ${b}.`;
+        }
+
         async function ensureUserDoc(firebaseUser) {
             const ref = doc(db, "users", firebaseUser.uid);
             const snap = await getDoc(ref);
-
             if (!snap.exists()) {
                 const fallbackName = (firebaseUser.email || "User").split("@")[0];
                 await setDoc(ref, {
@@ -1469,6 +1724,19 @@
             }
         }
 
+        async function ensureConfigDoc() {
+            const ref = doc(db, "app_config", "main");
+            const snap = await getDoc(ref);
+            if (!snap.exists()) {
+                await setDoc(ref, {
+                    discordWebhook: "",
+                    hostLimit: 3,
+                    timezone: "Australia/Brisbane",
+                    templates: DEFAULT_TEMPLATES
+                }, { merge: true });
+            }
+        }
+
         async function loadSessionFromAuth(firebaseUser) {
             if (!firebaseUser) {
                 session = null;
@@ -1476,6 +1744,7 @@
             }
 
             await ensureUserDoc(firebaseUser);
+            await ensureConfigDoc();
 
             const snap = await getDoc(doc(db, "users", firebaseUser.uid));
             const data = snap.exists() ? snap.data() : {};
@@ -1495,12 +1764,14 @@
             return host.uid === session.uid;
         };
 
+        const picksForDate = dateIso => hostPicks.filter(p => p.date === dateIso);
+        const isPicked = (dateIso, hostUid) => hostPicks.some(p => p.date === dateIso && p.hostUid === hostUid);
+        const pickDocId = (dateIso, hostUid) => `${dateIso}_${hostUid}`;
+
         const upsertEvent = ev => setDoc(doc(db, "events", ev.id), ev, { merge: true });
         const removeEvent = id => deleteDoc(doc(db, "events", id));
         const upsertAvail = a => setDoc(doc(db, "availability", a.id), a, { merge: true });
         const removeAvail = id => deleteDoc(doc(db, "availability", id));
-
-        const pickDocId = (dateIso, hostUid) => `${dateIso}_${hostUid}`;
 
         function setPick(dateIso, host) {
             const id = pickDocId(dateIso, host.uid);
@@ -1514,115 +1785,106 @@
             }, { merge: true });
         }
 
-        const removePick = (dateIso, hostUid) =>
-            deleteDoc(doc(db, "host_picks", pickDocId(dateIso, hostUid)));
+        const removePick = (dateIso, hostUid) => deleteDoc(doc(db, "host_picks", pickDocId(dateIso, hostUid)));
 
         async function clearPicksForDate(dateIso) {
             const picks = hostPicks.filter(p => p.date === dateIso);
             await Promise.all(picks.map(p => removePick(dateIso, p.hostUid)));
         }
 
-        const picksForDate = dateIso => hostPicks.filter(p => p.date === dateIso);
-        const isPicked = (dateIso, hostUid) => hostPicks.some(p => p.date === dateIso && p.hostUid === hostUid);
+        function statsForMonth(dateObj) {
+            const month = dateObj.getMonth();
+            const year = dateObj.getFullYear();
+            const monthEvents = events.filter(e => {
+                const d = fromISODate(e.date);
+                return d.getMonth() === month && d.getFullYear() === year;
+            });
 
-        const whoLine = document.getElementById("whoLine");
-        const topAvatar = document.getElementById("topAvatar");
-        const rolePill = document.getElementById("rolePill");
-        const btnSettings = document.getElementById("btnSettings");
-        const btnLogin = document.getElementById("btnLogin");
-        const btnLogout = document.getElementById("btnLogout");
-        const calGrid = document.getElementById("calGrid");
-        const monthTitle = document.getElementById("monthTitle");
-        const selectedDateText = document.getElementById("selectedDateText");
-        const detailList = document.getElementById("detailList");
-        const sideSub = document.getElementById("sideSub");
-        const addEventBtn = document.getElementById("addEventBtn");
-        const addAvailBtn = document.getElementById("addAvailBtn");
-        const resetBtn = document.getElementById("resetBtn");
-        const storageNote = document.getElementById("storageNote");
-        const viewModeBtn = document.getElementById("viewModeBtn");
-        const clearAllBtn = document.getElementById("clearAllBtn");
-        const pfpPickerBox = document.getElementById("pfpPickerBox");
-        const pfpGrid = document.getElementById("pfpGrid");
-        const hostBar = document.getElementById("hostBar");
-        const hostBarDate = document.getElementById("hostBarDate");
-        const hostChips = document.getElementById("hostChips");
-        const clearMyPickBtn = document.getElementById("clearMyPickBtn");
+            const eventDays = new Set(monthEvents.map(e => e.date));
+            const allMonthDates = [];
+            const first = new Date(year, month, 1);
+            const last = new Date(year, month + 1, 0);
+            for (let d = 1; d <= last.getDate(); d++) {
+                allMonthDates.push(toISODate(new Date(year, month, d)));
+            }
 
-        const authBackdrop = document.getElementById("authBackdrop");
-        const tabLogin = document.getElementById("tabLogin");
-        const tabRegister = document.getElementById("tabRegister");
-        const authEmail = document.getElementById("authEmail");
-        const authPassword = document.getElementById("authPassword");
-        const authPassword2 = document.getElementById("authPassword2");
-        const confirmField = document.getElementById("confirmField");
-        const authGo = document.getElementById("authGo");
+            const topMap = new Map();
+            monthEvents.forEach(e => {
+                const key = e.host || "Unassigned";
+                topMap.set(key, (topMap.get(key) || 0) + 1);
+            });
 
-        const settingsBackdrop = document.getElementById("settingsBackdrop");
-        const settingsProfileTab = document.getElementById("settingsProfileTab");
-        const settingsAccountTab = document.getElementById("settingsAccountTab");
-        const settingsProfilePanel = document.getElementById("settingsProfilePanel");
-        const settingsAccountPanel = document.getElementById("settingsAccountPanel");
-        const profileName = document.getElementById("profileName");
-        const profileFile = document.getElementById("profileFile");
-        const profilePreview = document.getElementById("profilePreview");
-        const accountCurrentEmail = document.getElementById("accountCurrentEmail");
-        const accountNewEmail = document.getElementById("accountNewEmail");
-        const accountCurrentPassword = document.getElementById("accountCurrentPassword");
-        const accountNewPassword = document.getElementById("accountNewPassword");
-        const accountNewPassword2 = document.getElementById("accountNewPassword2");
+            let topHost = "None";
+            let topCount = 0;
+            topMap.forEach((count, name) => {
+                if (count > topCount && name !== "Unassigned") {
+                    topCount = count;
+                    topHost = name;
+                }
+            });
 
-        const dayBackdrop = document.getElementById("dayBackdrop");
-        const dayModalTitle = document.getElementById("dayModalTitle");
-        const dayModalSub = document.getElementById("dayModalSub");
-        const dayModalBody = document.getElementById("dayModalBody");
+            const emptyDays = allMonthDates.filter(date => !hostPicks.some(p => p.date === date) && !events.some(e => e.date === date)).length;
 
-        function setAuthMode(mode) {
-            authMode = mode;
-            const loginActive = mode === "login";
-            tabLogin.classList.toggle("active", loginActive);
-            tabRegister.classList.toggle("active", !loginActive);
-            confirmField.style.display = loginActive ? "none" : "block";
-            authGo.textContent = loginActive ? "Login" : "Register";
+            return {
+                totalEvents: monthEvents.length,
+                uniqueHosts: new Set(monthEvents.map(e => e.host).filter(Boolean)).size,
+                emptyDays,
+                topHost,
+                topCount
+            };
         }
 
-        function openAuth() {
-            setAuthMode("login");
-            authBackdrop.style.display = "flex";
+        function applyTemplateToForm(line) {
+            const parts = line.split("|").map(x => x.trim());
+            const [title, time, location, note] = parts;
+            const titleEl = document.getElementById("evTitle");
+            const timeEl = document.getElementById("evTime");
+            const locEl = document.getElementById("evLoc");
+            const noteEl = document.getElementById("evNote");
+            if (titleEl) titleEl.value = title || "";
+            if (timeEl) timeEl.value = time || "";
+            if (locEl) locEl.value = location || "";
+            if (noteEl) noteEl.value = note || "";
         }
 
-        const closeAuth = () => authBackdrop.style.display = "none";
+        async function sendDiscordWebhook(ev) {
+            if (!appConfig.discordWebhook) {
+                toast("No Discord webhook saved");
+                return;
+            }
 
-        function setSettingsTab(tab) {
-            const profileActive = tab === "profile";
-            settingsProfileTab.classList.toggle("active", profileActive);
-            settingsAccountTab.classList.toggle("active", !profileActive);
-            settingsProfilePanel.classList.toggle("active", profileActive);
-            settingsAccountPanel.classList.toggle("active", !profileActive);
+            const content = [
+                `**${ev.title}**`,
+                `📅 ${prettyDate(ev.date)}`,
+                ev.time ? `⏰ ${ev.time}` : "",
+                ev.location ? `📍 ${ev.location}` : "",
+                ev.host ? `👤 Host: ${ev.host}` : "",
+                ev.note ? `📝 ${ev.note}` : ""
+            ].filter(Boolean).join("\n");
+
+            try {
+                const res = await fetch(appConfig.discordWebhook, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ content })
+                });
+                if (!res.ok) throw new Error("Webhook failed");
+                toast("Sent to Discord");
+            } catch (err) {
+                console.error(err);
+                toast("Could not send to Discord");
+            }
         }
-
-        function openSettings() {
-            if (!session) return;
-            profileName.value = session.name || "";
-            profileImageData = session.photoURL || "";
-            profilePreview.src = profilePhotoOrDefault(session);
-            accountCurrentEmail.value = session.email || "";
-            accountNewEmail.value = "";
-            accountCurrentPassword.value = "";
-            accountNewPassword.value = "";
-            accountNewPassword2.value = "";
-            setSettingsTab("profile");
-            settingsBackdrop.style.display = "flex";
-        }
-
-        const closeSettings = () => settingsBackdrop.style.display = "none";
 
         function renderTop() {
+            const settingsAdminTab = document.getElementById("settingsAdminTab");
+
             if (!session) {
                 whoLine.textContent = "Login required";
                 topAvatar.style.display = "none";
                 rolePill.style.display = "none";
                 btnSettings.style.display = "none";
+                btnStats.style.display = "none";
                 btnLogin.style.display = "inline-block";
                 btnLogout.style.display = "none";
                 addEventBtn.style.display = "none";
@@ -1630,6 +1892,9 @@
                 resetBtn.style.display = "none";
                 viewModeBtn.style.display = "none";
                 clearAllBtn.style.display = "none";
+                manageUsersBtn.style.display = "none";
+                fabBtn.style.display = "none";
+                settingsAdminTab.style.display = "none";
                 sideSub.textContent = "Log in to view and manage the calendar";
                 return;
             }
@@ -1640,21 +1905,31 @@
             rolePill.style.display = "inline-flex";
             rolePill.innerHTML = `Role: <b>${escapeHTML(session.role.toUpperCase())}</b>`;
             btnSettings.style.display = "inline-block";
+            btnStats.style.display = "inline-block";
             btnLogin.style.display = "none";
             btnLogout.style.display = "inline-block";
             viewModeBtn.style.display = "inline-block";
             viewModeBtn.textContent = "View: " + (viewMode ? "ON" : "OFF");
-
-            clearAllBtn.style.display = session.role === "admin" ? "inline-block" : "inline-block".replace("inline-block", "none");
+            clearAllBtn.style.display = session.role === "admin" ? "inline-block" : "none";
+            manageUsersBtn.style.display = session.role === "admin" ? "inline-block" : "none";
             resetBtn.style.display = session.role === "admin" ? "inline-block" : "none";
             addEventBtn.style.display = (session.role === "admin" && !viewMode) ? "inline-block" : "none";
-            addAvailBtn.style.display = (session.role === "admin" && !viewMode) ? "inline-block" : "none";
+            addAvailBtn.style.display = !viewMode ? "inline-block" : "none";
+            fabBtn.style.display = !viewMode ? "flex" : "none";
+            settingsAdminTab.style.display = session.role === "admin" ? "block" : "none";
 
             sideSub.textContent = viewMode
                 ? "View mode: clicking days will not open editor"
                 : (session.role === "admin"
-                    ? "Admin: manage events, availability, and all picks"
+                    ? "Admin: manage events, availability, users, and all picks"
                     : "Staff: click dates and pick yourself as host");
+        }
+
+        function renderStatsCard() {
+            const stats = statsForMonth(viewDate);
+            document.getElementById("statEvents").textContent = stats.totalEvents;
+            document.getElementById("statHosts").textContent = stats.uniqueHosts;
+            document.getElementById("statEmpty").textContent = stats.emptyDays;
         }
 
         function renderHostPicker() {
@@ -1663,6 +1938,7 @@
             if (!show) return;
 
             pfpGrid.innerHTML = "";
+            const pickedCount = picksForDate(selectedDate).length;
 
             hosts.forEach(host => {
                 const btn = document.createElement("div");
@@ -1671,7 +1947,6 @@
 
                 const allowed = canClickHost(host);
                 btn.setAttribute("aria-disabled", allowed ? "false" : "true");
-
                 btn.innerHTML = `<div class="pfpName">${escapeHTML(host.name || (host.email ? host.email.split("@")[0] : "User"))}</div>`;
 
                 btn.addEventListener("click", async e => {
@@ -1682,8 +1957,14 @@
                         return;
                     }
 
+                    const alreadyPicked = isPicked(selectedDate, host.uid);
+                    if (!alreadyPicked && pickedCount >= Number(appConfig.hostLimit || 3)) {
+                        toast(`Host limit reached (${appConfig.hostLimit})`);
+                        return;
+                    }
+
                     try {
-                        if (isPicked(selectedDate, host.uid)) {
+                        if (alreadyPicked) {
                             await removePick(selectedDate, host.uid);
                         } else {
                             await setPick(selectedDate, host);
@@ -1706,7 +1987,6 @@
 
             hostBar.style.display = "flex";
             hostBarDate.textContent = prettyDate(selectedDate);
-
             const picks = picksForDate(selectedDate).slice().sort((a, b) => hostLabelFromPick(a).localeCompare(hostLabelFromPick(b)));
             hostChips.innerHTML = "";
 
@@ -1727,22 +2007,13 @@
             clearMyPickBtn.style.display = session && isPicked(selectedDate, session.uid) ? "inline-flex" : "none";
         }
 
-        function getDayHeaderLabel(cellDate) {
-            const mon = cellDate.toLocaleString(undefined, { month: "short" }).toUpperCase();
-            return `${mon} ${cellDate.getDate()}`;
-        }
-
-        function getDaySymbol({ dayEvents, dayAvail, dayPicks, iso }) {
-            if (isPastDay(iso)) return "⏺";
-            if (dayEvents.length) return "★";
-            if (dayPicks.length) return "👥";
-            if (dayAvail.length) return "•";
-            return "";
-        }
-
         function renderCalendar() {
             monthTitle.textContent = monthLabel(viewDate);
             calGrid.innerHTML = "";
+            renderStatsCard();
+
+            const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+            const filterValue = document.getElementById("filterSelect").value;
 
             const first = startOfMonth(viewDate);
             const lead = mondayIndex(first.getDay());
@@ -1755,9 +2026,26 @@
                 const iso = toISODate(cellDate);
                 const inMonth = cellDate.getMonth() === viewDate.getMonth();
 
-                const dayEvents = events.filter(e => e.date === iso);
+                let dayEvents = events.filter(e => e.date === iso);
                 const dayAvail = avail.filter(a => a.date === iso);
                 const dayPicks = hostPicks.filter(p => p.date === iso);
+
+                if (searchTerm) {
+                    dayEvents = dayEvents.filter(ev => eventMatchesSearch(ev, searchTerm));
+                }
+
+                if (filterValue === "mine" && session) {
+                    dayEvents = dayEvents.filter(ev => (ev.host || "").toLowerCase() === (session.name || "").toLowerCase() || dayPicks.some(p => p.hostUid === session.uid));
+                }
+                if (filterValue === "nohost") {
+                    if (dayPicks.length > 0 || dayEvents.some(e => e.host)) dayEvents = [];
+                }
+                if (filterValue === "pinned") {
+                    dayEvents = dayEvents.filter(e => e.pinned);
+                }
+                if (filterValue === "week" && !isoInCurrentWeek(iso)) {
+                    dayEvents = [];
+                }
 
                 const div = document.createElement("div");
                 div.className = "day";
@@ -1765,6 +2053,10 @@
                 if (selectedDate === iso) div.classList.add("selected");
                 if (isPastDay(iso)) div.classList.add("past");
                 if (isToday(iso)) div.classList.add("today");
+
+                const tooltipLines = [];
+                dayEvents.forEach(ev => tooltipLines.push(`${ev.title}${ev.time ? ` • ${ev.time}` : ""}${ev.host ? ` • ${ev.host}` : ""}`));
+                if (tooltipLines.length) div.title = tooltipLines.join("\n");
 
                 const topBar = document.createElement("div");
                 topBar.className = "dayTopBar";
@@ -1781,6 +2073,13 @@
                 body.className = "dayBody";
 
                 topBar.append(dayDate, dayIcon);
+
+                const firstPinned = dayEvents.find(e => e.pinned);
+                if (firstPinned) {
+                    const pin = document.createElement("div");
+                    pin.className = "pinBar";
+                    div.appendChild(pin);
+                }
 
                 if (dayEvents.length) {
                     const ev = dayEvents[0];
@@ -1858,8 +2157,40 @@
                         return;
                     }
 
-                    if (session.role !== "admin") return;
-                    openDayModal(iso);
+                    if (session.role === "admin") openDayModal(iso);
+                });
+
+                div.addEventListener("dragover", e => {
+                    if (!dragEventId || viewMode || session?.role !== "admin") return;
+                    e.preventDefault();
+                    div.classList.add("dropTarget");
+                });
+
+                div.addEventListener("dragleave", () => div.classList.remove("dropTarget"));
+
+                div.addEventListener("drop", async e => {
+                    e.preventDefault();
+                    div.classList.remove("dropTarget");
+                    if (!dragEventId || session?.role !== "admin") return;
+
+                    const ev = events.find(x => x.id === dragEventId);
+                    if (!ev) return;
+
+                    try {
+                        const warnings = getConflictWarnings(ev, iso, ev.id);
+                        if (warnings.length) {
+                            const ok = confirm("This move has warnings:\n\n- " + warnings.join("\n- ") + "\n\nMove anyway?");
+                            if (!ok) return;
+                        }
+
+                        await upsertEvent({ ...ev, date: iso });
+                        toast("Event moved");
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not move event");
+                    } finally {
+                        dragEventId = null;
+                    }
                 });
 
                 calGrid.appendChild(div);
@@ -1890,7 +2221,7 @@
             picksCard.className = "detailCard";
             picksCard.innerHTML = `
                     <div class="detailCardTop">
-                        <h4>Picked hosts (${dayPicks.length})</h4>
+                        <h4>Picked hosts (${dayPicks.length}/${appConfig.hostLimit})</h4>
                         <div class="badge ok">Host picks</div>
                     </div>
                 `;
@@ -1915,7 +2246,6 @@
                     actions.className = "actionsRow";
 
                     const isMine = session && pick.hostUid === session.uid;
-
                     if (!viewMode && (session.role === "admin" || isMine)) {
                         const removeBtn = document.createElement("button");
                         removeBtn.className = "btn small danger";
@@ -1954,7 +2284,6 @@
                             toast("Could not clear picks");
                         }
                     };
-
                     clearWrap.appendChild(clearBtn);
                     picksCard.appendChild(clearWrap);
                 }
@@ -1974,47 +2303,72 @@
             if (!dayEvents.length) {
                 evCard.innerHTML += `<div class="emptyState">No official events on this day yet.</div>`;
             } else {
-                dayEvents
-                    .slice()
-                    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
-                    .forEach(ev => {
-                        const wrap = document.createElement("div");
-                        wrap.className = "eventBlock";
-                        wrap.innerHTML = `
-                                <div class="eventTitle">${escapeHTML(ev.title)}</div>
-                                <div class="metaText">${escapeHTML(ev.time || "Time TBA")} • ${escapeHTML(ev.location || "Location TBA")} • ${escapeHTML(ev.host ? `Host: ${ev.host}` : "Host: Unassigned")}</div>
-                                ${ev.note ? `<div class="metaText" style="margin-top:8px;">${escapeHTML(ev.note)}</div>` : ""}
-                            `;
-
-                        if (!viewMode && session.role === "admin") {
-                            const controls = document.createElement("div");
-                            controls.className = "actionsRow";
-                            controls.style.marginTop = "10px";
-
-                            const setHostBtn = document.createElement("button");
-                            setHostBtn.className = "btn small primary";
-                            setHostBtn.textContent = "Set host";
-                            setHostBtn.onclick = async () => {
-                                const name = prompt("Host name:", ev.host || "");
-                                if (name === null) return;
-                                await upsertEvent({ ...ev, host: name.trim() });
-                                toast("Host updated");
-                            };
-
-                            const delBtn = document.createElement("button");
-                            delBtn.className = "btn small danger";
-                            delBtn.textContent = "Remove";
-                            delBtn.onclick = async () => {
-                                await removeEvent(ev.id);
-                                toast("Event removed");
-                            };
-
-                            controls.append(setHostBtn, delBtn);
-                            wrap.appendChild(controls);
-                        }
-
-                        evCard.appendChild(wrap);
+                dayEvents.sort((a, b) => (a.time || "").localeCompare(b.time || "")).forEach(ev => {
+                    const wrap = document.createElement("div");
+                    wrap.className = "eventBlock";
+                    wrap.draggable = session.role === "admin";
+                    wrap.addEventListener("dragstart", () => {
+                        if (session.role === "admin") dragEventId = ev.id;
                     });
+
+                    const viewerTime = viewerTimeText(ev.date, ev.time);
+                    wrap.innerHTML = `
+                            <div class="detailCardTop">
+                                <div>
+                                    <div class="eventTitle">${escapeHTML(ev.title)} ${ev.pinned ? "📌" : ""}</div>
+                                    <div class="metaText">
+                                        ${escapeHTML(ev.time || "Time TBA")} •
+                                        ${escapeHTML(ev.location || "Location TBA")} •
+                                        ${escapeHTML(ev.host ? `Host: ${ev.host}` : "Host: Unassigned")}
+                                    </div>
+                                    ${viewerTime ? `<div class="metaText">Your time: ${escapeHTML(viewerTime)}</div>` : ""}
+                                    ${ev.note ? `<div class="metaText" style="margin-top:8px;">${escapeHTML(ev.note)}</div>` : ""}
+                                    ${ev.recurring ? `<div class="metaText">Repeats weekly (${ev.repeatCount || 1} total)</div>` : ""}
+                                </div>
+                                <div class="actionsRow">
+                                    ${ev.pinned ? `<span class="badge brand">Pinned</span>` : ""}
+                                    <span class="badge blue">Drag to move</span>
+                                </div>
+                            </div>
+                        `;
+
+                    if (!viewMode && session.role === "admin") {
+                        const controls = document.createElement("div");
+                        controls.className = "actionsRow";
+                        controls.style.marginTop = "10px";
+
+                        const pinBtn = document.createElement("button");
+                        pinBtn.className = "btn small warn";
+                        pinBtn.textContent = ev.pinned ? "Unpin" : "Pin";
+                        pinBtn.onclick = async () => {
+                            await upsertEvent({ ...ev, pinned: !ev.pinned });
+                            toast(ev.pinned ? "Unpinned" : "Pinned");
+                        };
+
+                        const discordBtn = document.createElement("button");
+                        discordBtn.className = "btn small blue";
+                        discordBtn.textContent = "Send to Discord";
+                        discordBtn.onclick = () => sendDiscordWebhook(ev);
+
+                        const editBtn = document.createElement("button");
+                        editBtn.className = "btn small primary";
+                        editBtn.textContent = "Edit";
+                        editBtn.onclick = () => openDayModal(selectedDate, ev);
+
+                        const delBtn = document.createElement("button");
+                        delBtn.className = "btn small danger";
+                        delBtn.textContent = "Remove";
+                        delBtn.onclick = async () => {
+                            await removeEvent(ev.id);
+                            toast("Event removed");
+                        };
+
+                        controls.append(pinBtn, discordBtn, editBtn, delBtn);
+                        wrap.appendChild(controls);
+                    }
+
+                    evCard.appendChild(wrap);
+                });
             }
 
             detailList.appendChild(evCard);
@@ -2035,11 +2389,16 @@
                     const line = document.createElement("div");
                     line.className = "availabilityBlock";
                     line.innerHTML = `
-                            <div class="eventTitle" style="margin-bottom:4px;">${escapeHTML(a.name)}</div>
-                            <div class="metaText">${escapeHTML(a.note || "Available to host")}</div>
+                            <div class="detailCardTop">
+                                <div>
+                                    <div class="eventTitle" style="margin-bottom:4px;">${escapeHTML(a.name)}</div>
+                                    <div class="metaText">${escapeHTML(a.note || "Available to host")}</div>
+                                </div>
+                                ${statusBadge(a.status || "active")}
+                            </div>
                         `;
 
-                    if (!viewMode && session.role === "admin") {
+                    if (!viewMode && (session.role === "admin" || a.uid === session.uid)) {
                         const del = document.createElement("button");
                         del.className = "btn small danger";
                         del.textContent = "Remove";
@@ -2058,12 +2417,96 @@
             detailList.appendChild(avCard);
         }
 
-        function openDayModal(iso) {
-            if (!session || viewMode || session.role !== "admin") return;
+        function openStatsModal() {
+            const stats = statsForMonth(viewDate);
+            const body = document.getElementById("statsModalBody");
+            body.innerHTML = `
+                    <div class="statGrid">
+                        <div><div class="tiny">Events this month</div><div class="statBig">${stats.totalEvents}</div></div>
+                        <div><div class="tiny">Unique hosts</div><div class="statBig">${stats.uniqueHosts}</div></div>
+                        <div><div class="tiny">Empty days</div><div class="statBig">${stats.emptyDays}</div></div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="infoBlock">
+                        <div class="infoLabel">Top host</div>
+                        <div class="infoValue">${escapeHTML(stats.topHost)}${stats.topCount ? ` (${stats.topCount})` : ""}</div>
+                    </div>
+                    <div class="modalActions">
+                        <button class="btn" id="closeStatsBtn">Close</button>
+                    </div>
+                `;
+            statsBackdrop.style.display = "flex";
+            document.getElementById("closeStatsBtn").onclick = () => statsBackdrop.style.display = "none";
+        }
+
+        function renderUsersModal() {
+            userList.innerHTML = "";
+            const users = [...usersMap.values()].sort((a, b) => hostLabelFromUser(a).localeCompare(hostLabelFromUser(b)));
+
+            if (!users.length) {
+                userList.innerHTML = `<div class="emptyState">No users found.</div>`;
+                return;
+            }
+
+            users.forEach(user => {
+                const row = document.createElement("div");
+                row.className = "userRow";
+
+                const left = document.createElement("div");
+                left.innerHTML = `
+                        <div class="pickEntryName">${escapeHTML(user.name || "User")}</div>
+                        <div class="pickEntryMeta">${escapeHTML(user.email || "")}</div>
+                    `;
+
+                const roleSelect = document.createElement("select");
+                roleSelect.innerHTML = `
+                        <option value="staff">staff</option>
+                        <option value="admin">admin</option>
+                    `;
+                roleSelect.value = user.role || "staff";
+                roleSelect.disabled = session?.role !== "admin";
+
+                roleSelect.onchange = async () => {
+                    try {
+                        await updateDoc(doc(db, "users", user.uid), { role: roleSelect.value });
+                        toast("Role updated");
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not update role");
+                    }
+                };
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "btn small danger";
+                removeBtn.textContent = "Delete doc";
+                removeBtn.disabled = session?.role !== "admin";
+                removeBtn.onclick = async () => {
+                    const ok = confirm(`Delete user profile doc for ${user.name}?`);
+                    if (!ok) return;
+                    try {
+                        await deleteDoc(doc(db, "users", user.uid));
+                        toast("User doc deleted");
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not delete user doc");
+                    }
+                };
+
+                row.append(left, roleSelect, removeBtn);
+                userList.appendChild(row);
+            });
+        }
+
+        function openDayModal(iso, editingEvent = null) {
+            if (!session || viewMode || (session.role !== "admin" && !!editingEvent)) return;
 
             dayBackdrop.style.display = "flex";
             dayModalTitle.textContent = prettyDate(iso);
-            dayModalSub.textContent = "Small quick editor for admins.";
+            dayModalSub.textContent = editingEvent ? "Edit event" : "Quick editor";
+
+            const templateOptions = (appConfig.templates?.length ? appConfig.templates : DEFAULT_TEMPLATES)
+                .map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t.split("|")[0].trim())}</option>`)
+                .join("");
 
             dayModalBody.innerHTML = `
                     <div class="actionsRow" style="justify-content:space-between; margin-bottom:12px;">
@@ -2071,75 +2514,219 @@
                         <button class="btn" id="closeDayModal" type="button">Close</button>
                     </div>
 
-                    <div class="field">
-                        <label>Event title</label>
-                        <input id="evTitle" placeholder="e.g. Time Trial" maxlength="50">
-                    </div>
-
+                    <div class="sectionTitle">Templates</div>
                     <div class="editorMiniGrid">
                         <div class="field">
+                            <label>Pick a template</label>
+                            <select id="templateSelect">
+                                <option value="">Choose template</option>
+                                ${templateOptions}
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>AI idea helper</label>
+                            <button class="btn blue" id="ideaBtn" type="button">Generate event idea</button>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Event title</label>
+                        <input id="evTitle" placeholder="e.g. Time Trial" maxlength="50" value="${editingEvent ? escapeHTML(editingEvent.title || "") : ""}">
+                    </div>
+
+                    <div class="editorTriGrid">
+                        <div class="field">
                             <label>Time</label>
-                            <input id="evTime" placeholder="e.g. 6:00PM AEST" maxlength="30">
+                            <input id="evTime" placeholder="e.g. 6:00PM AEST" maxlength="30" value="${editingEvent ? escapeHTML(editingEvent.time || "") : ""}">
                         </div>
                         <div class="field">
                             <label>Location</label>
-                            <input id="evLoc" placeholder="e.g. Spider cave" maxlength="40">
+                            <input id="evLoc" placeholder="e.g. Spider cave" maxlength="40" value="${editingEvent ? escapeHTML(editingEvent.location || "") : ""}">
+                        </div>
+                        <div class="field">
+                            <label>Host</label>
+                            <input id="evHost" placeholder="e.g. Nugg" maxlength="24" value="${editingEvent ? escapeHTML(editingEvent.host || "") : ""}">
                         </div>
                     </div>
 
-                    <div class="editorMiniGrid">
+                    <div class="editorTriGrid">
                         <div class="field">
-                            <label>Host</label>
-                            <input id="evHost" placeholder="e.g. Nugg" maxlength="24">
+                            <label>Recurring weekly</label>
+                            <select id="evRecurring">
+                                <option value="no" ${editingEvent?.recurring ? "" : "selected"}>No</option>
+                                <option value="yes" ${editingEvent?.recurring ? "selected" : ""}>Yes</option>
+                            </select>
                         </div>
                         <div class="field">
-                            <label>Availability name</label>
-                            <input id="avName" placeholder="e.g. Nugg" maxlength="24">
+                            <label>Repeat count</label>
+                            <input id="evRepeatCount" type="number" min="1" max="20" value="${editingEvent?.repeatCount || 4}">
+                        </div>
+                        <div class="field">
+                            <label>Pinned</label>
+                            <select id="evPinned">
+                                <option value="no" ${editingEvent?.pinned ? "" : "selected"}>No</option>
+                                <option value="yes" ${editingEvent?.pinned ? "selected" : ""}>Yes</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Notes</label>
-                        <textarea id="evNote" placeholder="Extra details or availability note"></textarea>
+                        <textarea id="evNote" placeholder="Extra details or availability note">${editingEvent ? escapeHTML(editingEvent.note || "") : ""}</textarea>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="sectionTitle">Availability</div>
+
+                    <div class="editorMiniGrid">
+                        <div class="field">
+                            <label>Availability name</label>
+                            <input id="avName" placeholder="e.g. Nugg" maxlength="24" value="${session?.name ? escapeHTML(session.name) : ""}">
+                        </div>
+                        <div class="field">
+                            <label>Status</label>
+                            <select id="avStatus">
+                                <option value="active">Active</option>
+                                <option value="maybe">Maybe</option>
+                                <option value="busy">Busy</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="modalActions">
-                        <button class="btn primary" id="saveEvent" type="button">Add event</button>
+                        ${session.role === "admin" ? `<button class="btn primary" id="saveEvent" type="button">${editingEvent ? "Save event" : "Add event"}</button>` : ""}
                         <button class="btn ok" id="saveAvail" type="button">Add availability</button>
                     </div>
+
+                    <div class="tiny" id="conflictBox" style="margin-top:12px;"></div>
                 `;
 
             document.getElementById("closeDayModal").onclick = () => dayBackdrop.style.display = "none";
 
-            document.getElementById("saveEvent").onclick = async () => {
-                const title = document.getElementById("evTitle").value.trim();
-                const time = document.getElementById("evTime").value.trim();
-                const loc = document.getElementById("evLoc").value.trim();
-                const host = document.getElementById("evHost").value.trim();
-                const note = document.getElementById("evNote").value.trim();
+            const templateSelect = document.getElementById("templateSelect");
+            templateSelect.addEventListener("change", () => {
+                if (templateSelect.value) applyTemplateToForm(templateSelect.value);
+            });
 
-                if (!title) {
-                    toast("Event title required");
-                    return;
+            document.getElementById("ideaBtn").onclick = () => {
+                const current = document.getElementById("evTitle").value.trim();
+                document.getElementById("evTitle").value = current || generateIdea("");
+                if (!document.getElementById("evNote").value.trim()) {
+                    document.getElementById("evNote").value = generateIdea("Fun public lobby event");
                 }
-
-                await upsertEvent({ id: uid(), date: iso, title, time, location: loc, host, note });
-                toast("Event added");
-                dayBackdrop.style.display = "none";
             };
+
+            const watchConflict = () => {
+                const trial = {
+                    date: iso,
+                    time: document.getElementById("evTime").value.trim(),
+                    location: document.getElementById("evLoc").value.trim()
+                };
+                const warnings = getConflictWarnings(trial, iso, editingEvent?.id);
+                const box = document.getElementById("conflictBox");
+                if (!warnings.length) {
+                    box.innerHTML = `<span class="badge ok">No conflicts found</span>`;
+                } else {
+                    box.innerHTML = warnings.map(w => `<div class="badge warn" style="margin-right:6px; margin-bottom:6px;">${escapeHTML(w)}</div>`).join("");
+                }
+            };
+
+            ["evTime", "evLoc"].forEach(id => document.getElementById(id).addEventListener("input", watchConflict));
+            watchConflict();
+
+            const saveEventBtn = document.getElementById("saveEvent");
+            if (saveEventBtn) {
+                saveEventBtn.onclick = async () => {
+                    const title = document.getElementById("evTitle").value.trim();
+                    const time = document.getElementById("evTime").value.trim();
+                    const loc = document.getElementById("evLoc").value.trim();
+                    const host = document.getElementById("evHost").value.trim();
+                    const note = document.getElementById("evNote").value.trim();
+                    const recurring = document.getElementById("evRecurring").value === "yes";
+                    const repeatCount = Math.max(1, Number(document.getElementById("evRepeatCount").value || 1));
+                    const pinned = document.getElementById("evPinned").value === "yes";
+
+                    if (!title) {
+                        toast("Event title required");
+                        return;
+                    }
+
+                    const base = {
+                        title, time, location: loc, host, note,
+                        pinned, recurring, repeatCount,
+                        updatedAt: Date.now()
+                    };
+
+                    const warnings = getConflictWarnings({ ...base, date: iso }, iso, editingEvent?.id);
+                    if (warnings.length) {
+                        const ok = confirm("This event has warnings:\n\n- " + warnings.join("\n- ") + "\n\nSave anyway?");
+                        if (!ok) return;
+                    }
+
+                    try {
+                        if (editingEvent) {
+                            await upsertEvent({
+                                ...editingEvent,
+                                ...base,
+                                date: iso
+                            });
+                        } else if (recurring) {
+                            const jobs = [];
+                            for (let i = 0; i < repeatCount; i++) {
+                                const d = fromISODate(iso);
+                                d.setDate(d.getDate() + (i * 7));
+                                jobs.push(upsertEvent({
+                                    id: uid(),
+                                    date: toISODate(d),
+                                    ...base,
+                                    seriesId: uid()
+                                }));
+                            }
+                            await Promise.all(jobs);
+                        } else {
+                            await upsertEvent({
+                                id: uid(),
+                                date: iso,
+                                ...base
+                            });
+                        }
+
+                        toast(editingEvent ? "Event updated" : "Event added");
+                        dayBackdrop.style.display = "none";
+                    } catch (err) {
+                        console.error(err);
+                        toast("Could not save event");
+                    }
+                };
+            }
 
             document.getElementById("saveAvail").onclick = async () => {
                 const name = document.getElementById("avName").value.trim();
                 const note = document.getElementById("evNote").value.trim();
+                const status = document.getElementById("avStatus").value;
 
                 if (!name) {
                     toast("Availability name required");
                     return;
                 }
 
-                await upsertAvail({ id: uid(), date: iso, name, note });
-                toast("Availability added");
-                dayBackdrop.style.display = "none";
+                try {
+                    await upsertAvail({
+                        id: uid(),
+                        date: iso,
+                        uid: session?.uid || "",
+                        name,
+                        note,
+                        status,
+                        createdAt: Date.now()
+                    });
+                    toast("Availability added");
+                    dayBackdrop.style.display = "none";
+                } catch (err) {
+                    console.error(err);
+                    toast("Could not add availability");
+                }
             };
         }
 
@@ -2176,6 +2763,7 @@
 
                 renderHostPicker();
                 renderDetails();
+                renderUsersModal();
             }));
 
             unsubscribers.push(onSnapshot(collection(db, "events"), snap => {
@@ -2183,7 +2771,7 @@
                 saveJSON(KEY_EVENTS, events);
                 renderCalendar();
                 renderDetails();
-                storageNote.textContent = "Synced with Firebase";
+                storageNote.textContent = "";
             }));
 
             unsubscribers.push(onSnapshot(collection(db, "availability"), snap => {
@@ -2201,21 +2789,90 @@
                 renderHostPicker();
                 renderHostBar();
             }));
+
+            unsubscribers.push(onSnapshot(doc(db, "app_config", "main"), snap => {
+                if (snap.exists()) {
+                    appConfig = {
+                        discordWebhook: snap.data().discordWebhook || "",
+                        hostLimit: Number(snap.data().hostLimit || 3),
+                        timezone: snap.data().timezone || "Australia/Brisbane",
+                        templates: Array.isArray(snap.data().templates) && snap.data().templates.length
+                            ? snap.data().templates
+                            : DEFAULT_TEMPLATES
+                    };
+                }
+                renderCalendar();
+                renderDetails();
+            }));
         }
 
-        btnLogin.addEventListener("click", openAuth);
+        function setAuthMode(mode) {
+            authMode = mode;
+            const loginActive = mode === "login";
+            tabLogin.classList.toggle("active", loginActive);
+            tabRegister.classList.toggle("active", !loginActive);
+            confirmField.style.display = loginActive ? "none" : "block";
+            forgotPasswordWrap.style.display = loginActive ? "flex" : "none";
+            authGo.textContent = loginActive ? "Login" : "Register";
+        }
 
+        function openAuth() {
+            setAuthMode("login");
+            authBackdrop.style.display = "flex";
+        }
+        const closeAuth = () => authBackdrop.style.display = "none";
+
+        function setSettingsTab(tab) {
+            const map = {
+                profile: ["settingsProfileTab", "settingsProfilePanel"],
+                account: ["settingsAccountTab", "settingsAccountPanel"],
+                admin: ["settingsAdminTab", "settingsAdminPanel"]
+            };
+
+            Object.entries(map).forEach(([key, [tabId, panelId]]) => {
+                document.getElementById(tabId).classList.toggle("active", key === tab);
+                document.getElementById(panelId).classList.toggle("active", key === tab);
+            });
+        }
+
+        function openSettings() {
+            if (!session) return;
+            profileName.value = session.name || "";
+            profileImageData = session.photoURL || "";
+            profilePreview.src = profilePhotoOrDefault(session);
+            accountCurrentEmail.value = session.email || "";
+            accountNewEmail.value = "";
+            accountCurrentPassword.value = "";
+            accountNewPassword.value = "";
+            accountNewPassword2.value = "";
+            document.getElementById("adminWebhook").value = appConfig.discordWebhook || "";
+            document.getElementById("adminHostLimit").value = Number(appConfig.hostLimit || 3);
+            document.getElementById("adminTimezone").value = appConfig.timezone || "Australia/Brisbane";
+            document.getElementById("adminTemplates").value = (appConfig.templates || DEFAULT_TEMPLATES).join("\n");
+            setSettingsTab("profile");
+            settingsBackdrop.style.display = "flex";
+        }
+
+        const closeSettings = () => settingsBackdrop.style.display = "none";
+
+        btnLogin.addEventListener("click", openAuth);
         btnLogout.addEventListener("click", async () => {
             try {
                 await signOut(auth);
                 toast("Logged out");
             } catch (err) {
                 console.error(err);
-                toast("Logout failed");
+                toast("Could not log out");
             }
         });
 
         btnSettings.addEventListener("click", openSettings);
+        btnStats.addEventListener("click", openStatsModal);
+        manageUsersBtn.addEventListener("click", () => {
+            renderUsersModal();
+            usersBackdrop.style.display = "flex";
+        });
+        usersCloseBtn.addEventListener("click", () => usersBackdrop.style.display = "none");
 
         tabLogin.addEventListener("click", () => setAuthMode("login"));
         tabRegister.addEventListener("click", () => setAuthMode("register"));
@@ -2223,105 +2880,88 @@
 
         authGo.addEventListener("click", async () => {
             const email = authEmail.value.trim();
-            const password = authPassword.value;
-            const password2 = authPassword2.value;
+            const password = authPassword.value.trim();
+            const password2 = authPassword2.value.trim();
 
             if (!email || !password) {
-                toast("Enter email and password");
-                return;
-            }
-
-            if (authMode === "register") {
-                if (password.length < 6) {
-                    toast("Password must be at least 6 characters");
-                    return;
-                }
-
-                if (password !== password2) {
-                    toast("Passwords do not match");
-                    return;
-                }
-
-                try {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    closeAuth();
-                    toast("Account created");
-                } catch (err) {
-                    console.error("REGISTER ERROR:", err);
-                    toast(err.code || err.message || "Could not register");
-                }
+                toast("Email and password required");
                 return;
             }
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                if (authMode === "login") {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    toast("Logged in");
+                } else {
+                    if (password !== password2) {
+                        toast("Passwords do not match");
+                        return;
+                    }
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    toast("Account created");
+                }
                 closeAuth();
-                toast("Logged in");
             } catch (err) {
-                console.error("LOGIN ERROR:", err);
-                toast(err.code || err.message || "Login failed");
+                console.error(err);
+                toast(err.code || err.message || "Auth failed");
             }
         });
 
-        settingsProfileTab.addEventListener("click", () => setSettingsTab("profile"));
-        settingsAccountTab.addEventListener("click", () => setSettingsTab("account"));
+        forgotPasswordBtn.addEventListener("click", async () => {
+            const email = authEmail.value.trim();
+            if (!email) {
+                toast("Enter your email first");
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                toast("Password reset email sent");
+            } catch (err) {
+                console.error(err);
+                toast(err.code || err.message || "Reset failed");
+            }
+        });
+
         document.getElementById("settingsClose").addEventListener("click", closeSettings);
+        document.getElementById("settingsProfileTab").addEventListener("click", () => setSettingsTab("profile"));
+        document.getElementById("settingsAccountTab").addEventListener("click", () => setSettingsTab("account"));
+        document.getElementById("settingsAdminTab").addEventListener("click", () => setSettingsTab("admin"));
 
-        profileFile.addEventListener("change", async () => {
-            const file = profileFile.files?.[0];
+        profileFile.addEventListener("change", async e => {
+            const file = e.target.files?.[0];
             if (!file) return;
-
             try {
                 profileImageData = await fileToAvatarDataURL(file);
                 profilePreview.src = profileImageData;
             } catch (err) {
                 console.error(err);
-                toast("Could not read image");
+                toast("Could not load image");
             }
         });
 
         document.getElementById("removeProfilePic").addEventListener("click", () => {
             profileImageData = "";
-            profileFile.value = "";
-            profilePreview.src = defaultAvatarDataURL(profileName.value || session?.name || "User");
-        });
-
-        profileName.addEventListener("input", () => {
-            if (!profileImageData) {
-                profilePreview.src = defaultAvatarDataURL(profileName.value || "User");
-            }
+            profilePreview.src = profilePhotoOrDefault({ name: profileName.value || session?.name || "User" });
         });
 
         document.getElementById("saveProfileBtn").addEventListener("click", async () => {
             if (!session) return;
-
             const name = profileName.value.trim();
-            if (name.length < 2) {
-                toast("Display name must be at least 2 characters");
+            if (!name) {
+                toast("Display name required");
                 return;
             }
 
             try {
-                const existing = await getDoc(doc(db, "users", session.uid));
-                const current = existing.exists() ? existing.data() : {};
                 await setDoc(doc(db, "users", session.uid), {
                     name,
-                    email: session.email || current.email || "",
-                    role: current.role || "staff",
+                    email: session.email || "",
                     photoURL: profileImageData || ""
                 }, { merge: true });
 
-                session = {
-                    ...session,
-                    name,
-                    photoURL: profileImageData || "",
-                    role: current.role || session.role || "staff"
-                };
-
-                topAvatar.src = profilePhotoOrDefault(session);
+                session.name = name;
+                session.photoURL = profileImageData || "";
                 renderTop();
-                renderHostPicker();
-                renderDetails();
                 toast("Profile saved");
             } catch (err) {
                 console.error(err);
@@ -2331,25 +2971,15 @@
 
         document.getElementById("saveAccountBtn").addEventListener("click", async () => {
             const user = auth.currentUser;
-            if (!user || !session) return;
+            if (!user) return;
 
             const newEmail = accountNewEmail.value.trim();
-            const currentPassword = accountCurrentPassword.value;
-            const newPassword = accountNewPassword.value;
-            const newPassword2 = accountNewPassword2.value;
+            const currentPassword = accountCurrentPassword.value.trim();
+            const newPassword = accountNewPassword.value.trim();
+            const newPassword2 = accountNewPassword2.value.trim();
 
             if (!newEmail && !newPassword) {
-                toast("No account changes entered");
-                return;
-            }
-
-            if (!currentPassword) {
-                toast("Enter your current password");
-                return;
-            }
-
-            if (newPassword && newPassword.length < 6) {
-                toast("New password must be at least 6 characters");
+                toast("Nothing to update");
                 return;
             }
 
@@ -2358,40 +2988,67 @@
                 return;
             }
 
+            if (!currentPassword) {
+                toast("Current password required");
+                return;
+            }
+
             try {
                 const credential = EmailAuthProvider.credential(user.email, currentPassword);
                 await reauthenticateWithCredential(user, credential);
 
-                if (newEmail) await updateEmail(user, newEmail);
+                if (newEmail) {
+                    await updateEmail(user, newEmail);
+                    await setDoc(doc(db, "users", session.uid), { email: newEmail }, { merge: true });
+                    session.email = newEmail;
+                }
+
                 if (newPassword) await updatePassword(user, newPassword);
 
-                await setDoc(doc(db, "users", session.uid), {
-                    email: newEmail || user.email || session.email || ""
-                }, { merge: true });
-
-                session.email = newEmail || user.email || session.email || "";
-                accountCurrentEmail.value = session.email;
+                renderTop();
+                accountCurrentEmail.value = session.email || "";
                 accountNewEmail.value = "";
                 accountCurrentPassword.value = "";
                 accountNewPassword.value = "";
                 accountNewPassword2.value = "";
-
                 toast("Account updated");
             } catch (err) {
-                console.error("ACCOUNT UPDATE ERROR:", err);
+                console.error(err);
                 toast(err.code || err.message || "Could not update account");
+            }
+        });
+
+        document.getElementById("saveAdminSettingsBtn").addEventListener("click", async () => {
+            if (!session || session.role !== "admin") return;
+
+            try {
+                const templates = document.getElementById("adminTemplates").value
+                    .split("\n")
+                    .map(x => x.trim())
+                    .filter(Boolean);
+
+                await setDoc(doc(db, "app_config", "main"), {
+                    discordWebhook: document.getElementById("adminWebhook").value.trim(),
+                    hostLimit: Math.max(1, Number(document.getElementById("adminHostLimit").value || 3)),
+                    timezone: document.getElementById("adminTimezone").value.trim() || "Australia/Brisbane",
+                    templates: templates.length ? templates : DEFAULT_TEMPLATES
+                }, { merge: true });
+
+                toast("Admin settings saved");
+            } catch (err) {
+                console.error(err);
+                toast("Could not save admin settings");
             }
         });
 
         clearMyPickBtn.addEventListener("click", async () => {
             if (!session || !selectedDate) return;
-
             try {
                 await removePick(selectedDate, session.uid);
-                toast("Removed your pick");
+                toast("Your pick was removed");
             } catch (err) {
                 console.error(err);
-                toast("Could not remove pick");
+                toast("Could not remove your pick");
             }
         });
 
@@ -2410,16 +3067,6 @@
             selectedDate = toISODate(new Date());
             renderCalendar();
             renderDetails();
-
-            if (viewMode) return;
-
-            if (!session) {
-                pendingOpenDate = selectedDate;
-                openAuth();
-                return;
-            }
-
-            if (session.role === "admin") openDayModal(selectedDate);
         });
 
         addEventBtn.addEventListener("click", () => {
@@ -2436,13 +3083,22 @@
 
         addAvailBtn.addEventListener("click", () => {
             if (viewMode) return;
+            if (!selectedDate) selectedDate = toISODate(new Date());
             if (!session) {
-                pendingOpenDate = selectedDate || toISODate(new Date());
+                pendingOpenDate = selectedDate;
                 openAuth();
                 return;
             }
-            if (session.role !== "admin") return;
+            openDayModal(selectedDate);
+        });
+
+        fabBtn.addEventListener("click", () => {
             if (!selectedDate) selectedDate = toISODate(new Date());
+            if (!session) {
+                pendingOpenDate = selectedDate;
+                openAuth();
+                return;
+            }
             openDayModal(selectedDate);
         });
 
@@ -2491,17 +3147,19 @@
             toast("Local cache cleared");
         });
 
-        authBackdrop.addEventListener("click", e => {
-            if (e.target === authBackdrop) closeAuth();
+        document.getElementById("searchInput").addEventListener("input", renderCalendar);
+        document.getElementById("filterSelect").addEventListener("change", renderCalendar);
+        document.getElementById("clearSearchBtn").addEventListener("click", () => {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("filterSelect").value = "all";
+            renderCalendar();
         });
 
-        settingsBackdrop.addEventListener("click", e => {
-            if (e.target === settingsBackdrop) closeSettings();
-        });
-
-        dayBackdrop.addEventListener("click", e => {
-            if (e.target === dayBackdrop) dayBackdrop.style.display = "none";
-        });
+        authBackdrop.addEventListener("click", e => { if (e.target === authBackdrop) closeAuth(); });
+        settingsBackdrop.addEventListener("click", e => { if (e.target === settingsBackdrop) closeSettings(); });
+        dayBackdrop.addEventListener("click", e => { if (e.target === dayBackdrop) dayBackdrop.style.display = "none"; });
+        usersBackdrop.addEventListener("click", e => { if (e.target === usersBackdrop) usersBackdrop.style.display = "none"; });
+        statsBackdrop.addEventListener("click", e => { if (e.target === statsBackdrop) statsBackdrop.style.display = "none"; });
 
         onAuthStateChanged(auth, async firebaseUser => {
             try {
@@ -2519,7 +3177,7 @@
                 renderDetails();
                 startListeners();
 
-                if (pendingOpenDate && session?.role === "admin" && !viewMode) {
+                if (pendingOpenDate && !viewMode) {
                     const dateToOpen = pendingOpenDate;
                     pendingOpenDate = null;
                     selectedDate = dateToOpen;
